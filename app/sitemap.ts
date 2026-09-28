@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { getCatalog } from "@/lib/catalog";
 
 function getSiteUrl() {
   return process.env.NEXT_PUBLIC_SITE_URL
@@ -6,32 +7,18 @@ function getSiteUrl() {
     : `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL || process.env.VERCEL_URL || "localhost:3000"}`;
 }
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const siteUrl = getSiteUrl().replace(/\/$/, "");
-  const categories = [
-    "action",
-    "adventure",
-    "arcade",
-    "racing",
-    "sports",
-    "puzzle",
-    "shooting",
-    "strategy",
-    "multiplayer",
-    "2-player",
-    "io-games",
-    "skill",
-    "horror",
-    "zombie",
-  ];
+  const categories = ["action","adventure","arcade","racing","sports","puzzle","shooting","strategy","multiplayer","2-player","io-games","skill","horror","zombie"];
+
+  let games: Awaited<ReturnType<typeof getCatalog>> = [];
+  try { games = await getCatalog(); } catch {}
 
   return [
-    { url: `${siteUrl}/`, lastModified: new Date() },
-    { url: `${siteUrl}/games`, lastModified: new Date() },
-    { url: `${siteUrl}/categories`, lastModified: new Date() },
-    ...categories.map((slug) => ({
-      url: `${siteUrl}/category/${slug}`,
-      lastModified: new Date(),
-    })),
+    { url: siteUrl + "/", lastModified: new Date() },
+    { url: siteUrl + "/games", lastModified: new Date() },
+    { url: siteUrl + "/categories", lastModified: new Date() },
+    ...categories.map(slug => ({ url: siteUrl + "/category/" + slug, lastModified: new Date() })),
+    ...games.map(game => ({ url: siteUrl + "/game/" + game.slug, lastModified: game.publishedAt ? new Date(game.publishedAt) : new Date() }))
   ];
 }
