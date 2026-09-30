@@ -52,6 +52,8 @@ class ArcadeDatabase {
         $sql = preg_replace('/\bRAND\(\)/i', 'RANDOM()', $sql);
         $sql = preg_replace('/\s+AFTER\s+"[^"]+"/i', '', $sql);
 
+        $sql = preg_replace('/\\bAS\\s+UNSIGNED\\b/i', 'AS INTEGER', $sql);
+
         if (preg_match('/^\s*SHOW\s+COLUMNS\s+FROM\s+"([^"]+)"\s+LIKE\s+\'([^\']+)\'/i', $sql, $m)) {
             $table = $m[1];
             $column = str_replace("'", "''", $m[2]);
