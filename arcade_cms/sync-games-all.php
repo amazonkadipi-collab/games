@@ -36,6 +36,8 @@ if (!$lock) out(['ok'=>false,'error'=>'import_already_running'],409);
 $categoryParam = trim((string)($_GET['category'] ?? 'All'));
 $popularityParam = trim((string)($_GET['popularity'] ?? 'newest'));
 $amountParam = trim((string)($_GET['amount'] ?? 'All'));
+$pageParam = (int)($_GET['page'] ?? 0);
+if ($pageParam < 0) $pageParam = 0;
 $allowedPopularity = ['newest','oldest','popular','trending','best','random'];
 if (!in_array(strtolower($popularityParam), $allowedPopularity, true)) {
     $popularityParam = 'newest';
@@ -53,10 +55,13 @@ $feedQuery = http_build_query([
     'company' => 'All',
     'amount' => $amountParam,
 ]);
-$feedUrls = [
- 'https://rss.gamemonetize.com/rssfeed.php?' . $feedQuery,
- 'https://gamemonetize.com/rssfeed.php?' . $feedQuery
-];
+$legacyPageUrl = 'https://gamemonetize.com/feed.php?format=0&page=' . max(1, $pageParam);
+$feedUrls = $pageParam > 0
+    ? [$legacyPageUrl]
+    : [
+        'https://rss.gamemonetize.com/rssfeed.php?' . $feedQuery,
+        'https://gamemonetize.com/rssfeed.php?' . $feedQuery
+      ];
 $body=''; $used=''; $errors=[];
 foreach($feedUrls as $feed){
     $ch=curl_init($feed);
@@ -77,9 +82,12 @@ if($body==='') out(['ok'=>false,'error'=>'feed_unavailable','details'=>$errors],
 $data=json_decode($body,true);
 if(!is_array($data)) out(['ok'=>false,'error'=>'invalid_feed_json'],502);
 if(isset($data['games']) && is_array($data['games'])) $data=$data['games'];
-$isFullCatalogRequest = strtolower($categoryParam) === 'all' && strtolower($amountParam) === 'all' && strtolower($popularityParam) === 'newest';
+$isFullCatalogRequest = $pageParam === 0 && strtolower($categoryParam) === 'all' && strtolower($amountParam) === 'all' && strtolower($popularityParam) === 'newest';
 if ($isFullCatalogRequest && count($data) < 10000) {
     out(['ok'=>false,'error'=>'feed_did_not_return_full_catalog','source_count'=>count($data),'feed_url'=>$used],502);
+}
+if ($pageParam > 0 && count($data) === 0) {
+    out(['ok'=>true,'page'=>$pageParam,'source_count'=>0,'prepared_rows'=>0,'inserted'=>0,'skipped_existing'=>0,'skipped_invalid'=>0,'total_games'=>(int)$pdo->query('SELECT COUNT(*) FROM gm_games')->fetchColumn(),'categories'=>(int)$pdo->query('SELECT COUNT(*) FROM gm_categories')->fetchColumn(),'feed_url'=>$used,'done'=>true]);
 }
 
 /* Normalize and create every source category encountered in the feed. */
@@ -183,4 +191,4 @@ $pdo->prepare('UPDATE gm_setting SET custom_game_feed_url=? WHERE id=1')->execut
 $total=(int)$pdo->query('SELECT COUNT(*) FROM gm_games')->fetchColumn();
 $catCount=(int)$pdo->query('SELECT COUNT(*) FROM gm_categories')->fetchColumn();
 
-out(['ok'=>true,'source_count'=>count($data),'prepared_rows'=>count($rows),'inserted'=>$inserted,'skipped_existing'=>$dupe,'skipped_invalid'=>$invalid,'total_games'=>$total,'categories'=>$catCount,'feed_url'=>$used]);
+out(['ok'=>true,'page'=>$pageParam,'source_count'=>count($data),'prepared_rows'=>count($rows),'inserted'=>$inserted,'skipped_existing'=>$dupe,'skipped_invalid'=>$invalid,'total_games'=>$total,'categories'=>$catCount,'feed_url'=>$used,'done'=>($pageParam>0 && count($data)<1000)]);
