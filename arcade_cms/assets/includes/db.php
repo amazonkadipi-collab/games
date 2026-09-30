@@ -83,4 +83,19 @@ class ArcadeDatabase {
     }
 
     public function set_charset($charset) { return true; }
+
+    public function begin_transaction() {
+        if (!$this->pdo) return false;
+        try { return $this->pdo->beginTransaction(); } catch (Throwable $e) { $this->error = $e->getMessage(); return false; }
+    }
+
+    public function commit() {
+        if (!$this->pdo) return false;
+        try { return $this->pdo->commit(); } catch (Throwable $e) { $this->error = $e->getMessage(); return false; }
+    }
+
+    public function rollback() {
+        if (!$this->pdo) return false;
+        try { return $this->pdo->rollBack(); } catch (Throwable $e) { $this->error = $e->getMessage(); return false; }
+    }
 }
