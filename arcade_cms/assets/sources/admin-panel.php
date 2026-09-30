@@ -14,6 +14,15 @@ $themeData['cms'] = "<script src='https://api.gamemonetize.com/cms.js?" . $date 
 
 global $totalRowLength;
 
+// Keep /admin protected, but make the unauthenticated entry point useful.
+// Previously the admin controller rendered the generic homepage/error shell
+// when the session was missing, which made /admin look like a broken route.
+if (!is_logged() || empty($userData['admin'])) {
+    $redirectTarget = '/admin';
+    header('Location: /login?redirect=' . rawurlencode($redirectTarget), true, 302);
+    exit;
+}
+
 if (is_logged() && $userData['admin']) {
 	// Admin pages read only the local catalog. The portal is contacted from a
 	// successful administrator login: every 3 days for PRO or 7 days for Free.
