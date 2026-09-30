@@ -2043,11 +2043,13 @@ function installDefaultGames(){
                     $allTagsId = [];
                     foreach($allTags as $tag){
                             $tag_data = getTagsLikeName(trim($tag));
-                            $allTagsId[] = "\"{$tag_data["id"]}\"";
+                            if ($tag_data !== null && isset($tag_data["id"])) {
+                                    $allTagsId[] = "\"{$tag_data["id"]}\"";
+                            }
                     }
-                    if(count($allTagsId) > 0){
-                            $tags = "[".implode(",", $allTagsId)."]";
-                    }
+                    $tags = count($allTagsId) > 0
+                            ? "[".implode(",", $allTagsId)."]"
+                            : "[]";
 
                     $isSuccess = $GameMonetizeConnect->query("INSERT INTO gm_games (
                             catalog_id, 
