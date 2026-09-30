@@ -583,7 +583,7 @@ function getGame2($id)
 {
     global $GameMonetizeConnect;
 
-    $sql_query_game = $GameMonetizeConnect->query("SELECT g.*, c.id as category_id, c.name as category_name, c.image as category_image, c.total_games as category_total_games FROM ".GAMES." g LEFT JOIN ".CATEGORIES." c ON g.category = c.id WHERE g.game_name='{$id}'");
+    $sql_query_game = $GameMonetizeConnect->query("SELECT g.*, c.id as category_id, c.name as category_name, c.image as category_image, (SELECT COUNT(*) FROM ".GAMES." cg WHERE cg.category = g.category) as category_total_games FROM ".GAMES." g LEFT JOIN ".CATEGORIES." c ON g.category = c.id WHERE g.game_name='{$id}'");
     if ($sql_query_game->num_rows == 1) {
         if ($game = $sql_query_game->fetch_array()) {
             return $game;
