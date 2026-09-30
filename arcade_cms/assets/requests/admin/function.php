@@ -139,121 +139,98 @@ if ($html === '') syncFail('Missing HTML content');
 
 $html = strip_tags($html, '<p><a><strong><b><em><i><h3><h4><br><ul><ol><li>');
 
-$db = new mysqli($dbGM['host'], $dbGM['user'], $dbGM['pass'], $dbGM['name']);
+require_once $rootPath . '/assets/includes/db.php';
 
-if ($db->connect_error) {
-	syncFail('DB connection failed');
+$db = new ArcadeDatabase([]);
+if ($db->connect_errno) {
+    syncFail('DB connection failed', 503);
 }
 
-$db->set_charset('utf8mb4');
-
 function columnExists($db, $table, $column) {
-	$table = $db->real_escape_string($table);
-	$column = $db->real_escape_string($column);
-
-	$res = $db->query("SHOW COLUMNS FROM `$table` LIKE '$column'");
-	return ($res && $res->num_rows > 0);
+    $safeTable = $db->real_escape_string($table);
+    $safeColumn = $db->real_escape_string($column);
+    $res = $db->query("SELECT column_name FROM information_schema.columns WHERE table_schema=current_schema() AND table_name='{$safeTable}' AND column_name='{$safeColumn}' LIMIT 1");
+    return ($res && $res->num_rows > 0);
 }
 
 if ($type === 'game') {
-	$table = 'gm_games';
-	$idCol = columnExists($db, $table, 'game_id') ? 'game_id' : 'id';
-	$textCol = 'description';
+    $table = 'gm_games';
+    $idCol = columnExists($db, $table, 'game_id') ? 'game_id' : 'id';
+    $textCol = 'description';
 } else {
-	$table = 'gm_tags';
-	$idCol = columnExists($db, $table, 'tag_id') ? 'tag_id' : 'id';
-	$textCol = 'footer_description';
+    $table = 'gm_tags';
+    $idCol = columnExists($db, $table, 'tag_id') ? 'tag_id' : 'id';
+    $textCol = 'footer_description';
 }
 
 if (!columnExists($db, $table, $textCol)) {
-	syncFail("Missing column: $table.$textCol");
+    syncFail("Missing column: $table.$textCol");
 }
 
-$stmt = $db->prepare("SELECT `$textCol` FROM `$table` WHERE `$idCol` = ? LIMIT 1");
-$stmt->bind_param('i', $id);
-$stmt->execute();
-$res = $stmt->get_result();
+$safeTable = '"' . str_replace('"', '""', $table) . '"';
+$safeIdCol = '"' . str_replace('"', '""', $idCol) . '"';
+$safeTextCol = '"' . str_replace('"', '""', $textCol) . '"';
+$safeId = (int)$id;
 
-if (!$row = $res->fetch_assoc()) {
+$res = $db->query("SELECT $safeTextCol FROM $safeTable WHERE $safeIdCol = $safeId LIMIT 1");
+$row = $res ? $res->fetch_assoc() : null;
 
-    $fallback = $db->query("
-        SELECT `$idCol`
-        FROM `$table`
-        ORDER BY RAND()
-        LIMIT 1
-    ");
-
-    if ($fallback && $fallbackRow = $fallback->fetch_assoc()) {
-
+if (!$row) {
+    $fallback = $db->query("SELECT $safeIdCol FROM $safeTable ORDER BY RANDOM() LIMIT 1");
+    if ($fallback && ($fallbackRow = $fallback->fetch_assoc())) {
         $id = (int)$fallbackRow[$idCol];
-
-        $stmt = $db->prepare("
-            SELECT `$textCol`
-            FROM `$table`
-            WHERE `$idCol` = ?
-            LIMIT 1
-        ");
-
-        $stmt->bind_param('i', $id);
-        $stmt->execute();
-
-        $res = $stmt->get_result();
-        $row = $res->fetch_assoc();
-
+        $safeId = $id;
+        $res = $db->query("SELECT $safeTextCol FROM $safeTable WHERE $safeIdCol = $safeId LIMIT 1");
+        $row = $res ? $res->fetch_assoc() : null;
     } else {
         syncFail('ID not found');
     }
 }
 
-$oldText = $row[$textCol] ?? '';
+$oldText = (string)($row[$textCol] ?? '');
 
 if (strpos($oldText, $html) !== false) {
-	 
+    $publicUrl = '';
 
-	$publicUrl = '';
+    if ($type === 'game' && columnExists($db, $table, 'game_name')) {
+        $urlRes = $db->query("SELECT \"game_name\" FROM $safeTable WHERE $safeIdCol = $safeId LIMIT 1");
+        if ($urlRes && ($urlRow = $urlRes->fetch_assoc())) {
+            $slug = strtolower(trim(preg_replace('/[^a-z0-9]+/i', '-', $urlRow['game_name']), '-'));
+            $publicUrl = 'https://' . ($_SERVER['HTTP_HOST'] ?? '') . '/game/' . $slug;
+        }
+    }
 
-if ($type === 'game' && columnExists($db, $table, 'game_name')) {
-	$urlRes = $db->query("SELECT `game_name` FROM `$table` WHERE `$idCol` = " . (int)$id . " LIMIT 1");
-	if ($urlRes && $urlRow = $urlRes->fetch_assoc()) {
-		$slug = strtolower(trim(preg_replace('/[^a-z0-9]+/i', '-', $urlRow['game_name']), '-'));
-		$publicUrl = 'https://' . ($_SERVER['HTTP_HOST'] ?? '') . '/game/' . $slug;
-	}
-}
+    if ($type === 'tag' && columnExists($db, $table, 'url')) {
+        $urlRes = $db->query("SELECT \"url\" FROM $safeTable WHERE $safeIdCol = $safeId LIMIT 1");
+        if ($urlRes && ($urlRow = $urlRes->fetch_assoc())) {
+            $publicUrl = 'https://' . ($_SERVER['HTTP_HOST'] ?? '') . '/tag/' . trim($urlRow['url'], '/');
+        }
+    }
 
-if ($type === 'tag' && columnExists($db, $table, 'url')) {
-	$urlRes = $db->query("SELECT `url` FROM `$table` WHERE `$idCol` = " . (int)$id . " LIMIT 1");
-	if ($urlRes && $urlRow = $urlRes->fetch_assoc()) {
-		$publicUrl = 'https://' . ($_SERVER['HTTP_HOST'] ?? '') . '/tag/' . trim($urlRow['url'], '/');
-	}
-}
-
-echo json_encode([
-	'ok' => true,
-	'message' => 'Backlink inserted',
-	'type' => $type,
-	'id' => $id,
-	'used_id' => $id,
-	'public_url' => $publicUrl,
-	'table' => $table,
-	'column' => $textCol
-]);
-	exit;
+    echo json_encode([
+        'ok' => true,
+        'message' => 'Backlink inserted',
+        'type' => $type,
+        'id' => $id,
+        'used_id' => $id,
+        'public_url' => $publicUrl,
+        'table' => $table,
+        'column' => $textCol
+    ]);
+    exit;
 }
 
 $newText = trim($oldText . "\n\n" . $html);
-
-$stmt = $db->prepare("UPDATE `$table` SET `$textCol` = ? WHERE `$idCol` = ? LIMIT 1");
-$stmt->bind_param('si', $newText, $id);
-
-if (!$stmt->execute()) {
-	syncFail('Update failed');
+$safeText = $db->real_escape_string($newText);
+if (!$db->query("UPDATE $safeTable SET $safeTextCol = '$safeText' WHERE $safeIdCol = $safeId")) {
+    syncFail('Update failed');
 }
 
 echo json_encode([
-	'ok' => true,
-	'message' => 'Backlink inserted',
-	'type' => $type,
-	'id' => $id,
-	'table' => $table,
-	'column' => $textCol
+    'ok' => true,
+    'message' => 'Backlink inserted',
+    'type' => $type,
+    'id' => $id,
+    'table' => $table,
+    'column' => $textCol
 ]);
