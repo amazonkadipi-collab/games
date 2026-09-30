@@ -21,8 +21,7 @@ if ( td_installing() ) {
     /**
     * Connecting to MySql server
     */
-    require_once ABSPATH . 'assets/includes/db.php';
-    $GameMonetizeConnect = new ArcadeDatabase($dbGM);
+    $GameMonetizeConnect = @new mysqli($dbGM['host'], $dbGM['user'], $dbGM['pass'], $dbGM['name']);
 
     /**
     * Set up connection charset
