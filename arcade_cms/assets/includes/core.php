@@ -445,7 +445,7 @@ function secureEncode($string)
     global $GameMonetizeConnect;
     $string = trim($string);
     if (!$GameMonetizeConnect->connect_errno) {
-    $string = mysqli_real_escape_string($GameMonetizeConnect, $string);
+    $string = $GameMonetizeConnect->real_escape_string($string);
     }
     $string = htmlspecialchars($string, ENT_QUOTES);
     $string = str_replace('\\r\\n', '<br>',$string);
@@ -735,7 +735,7 @@ function getMedia($file_id=0)
     $sql_query_one = $GameMonetizeConnect->query($query_one);
     
     if ($sql_query_one->num_rows == 1) {
-        $sql_fetch_one = mysqli_fetch_assoc($sql_query_one);
+        $sql_fetch_one = $sql_query_one->fetch_assoc();
         $sql_fetch_one['complete'] = siteUrl().'/'.$sql_fetch_one['url'] . '.' . $sql_fetch_one['extension'];
         $sql_fetch_one['large'] = siteUrl().'/'.$sql_fetch_one['url'] . '_100x75.' . $sql_fetch_one['extension'];
         $sql_fetch_one['medium'] = siteUrl().'/'.$sql_fetch_one['url'] . '_100x100.' . $sql_fetch_one['extension'];
@@ -780,7 +780,7 @@ function uploadMedia($upload)
                 $sql_query_one = $GameMonetizeConnect->query($query_one);
                 
                 if ($sql_query_one) {
-                    $sql_id = mysqli_insert_id($GameMonetizeConnect);
+                    $sql_id = $GameMonetizeConnect->insert_id;
                     $original_file_name = $photo_dir . '/' . generateKey() . '_' . $sql_id . '_' . md5($sql_id);
                     $original_file = $original_file_name . '.' . $ext;
                     
