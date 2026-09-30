@@ -268,16 +268,16 @@ INSERT INTO "gm_sidebar" ("id", "name", "type", "category_tags_id", "custom_link
 (9, 'Dress Up', 'tags', 3, '', 'fa-solid fa-person-pregnant', '47');
 
 ALTER TABLE "gm_setting"
-    ADD COLUMN "recaptcha_site_key" VARCHAR(100) NULL, 
-    ADD COLUMN "recaptcha_secret_key" VARCHAR(100) NULL,
-    ADD COLUMN "is_sidebar_enabled" BOOLEAN NOT NULL DEFAULT FALSE;
+    ADD COLUMN IF NOT EXISTS "recaptcha_site_key" VARCHAR(100) NULL, 
+    ADD COLUMN IF NOT EXISTS "recaptcha_secret_key" VARCHAR(100) NULL,
+    ADD COLUMN IF NOT EXISTS "is_sidebar_enabled" BOOLEAN NOT NULL DEFAULT FALSE;
 
 ALTER TABLE "gm_games" 
-    ADD COLUMN "is_last_rewrite" smallint NOT NULL DEFAULT '0';
+    ADD COLUMN IF NOT EXISTS "is_last_rewrite" smallint NOT NULL DEFAULT '0';
 
 ALTER TABLE "gm_tags" 
-    ADD COLUMN "is_last_rewrite" smallint NOT NULL DEFAULT '0',
-    ADD COLUMN "is_rewrited" smallint NOT NULL DEFAULT '0';
+    ADD COLUMN IF NOT EXISTS "is_last_rewrite" smallint NOT NULL DEFAULT '0',
+    ADD COLUMN IF NOT EXISTS "is_rewrited" smallint NOT NULL DEFAULT '0';
 
 
 CREATE TABLE IF NOT EXISTS "gm_game_actions" (
