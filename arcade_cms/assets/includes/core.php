@@ -645,7 +645,7 @@ function getTagsLikeName($title)
         return $sql_query->fetch_assoc();
     }else{
         // Create tags if not exist
-        $sql_query = $GameMonetizeConnect->query("INSERT INTO ".TAGS." (url, name, footer_description) VALUES ('{$url}', '$title', '')", MYSQLI_USE_RESULT);
+        $sql_query = $GameMonetizeConnect->query("INSERT INTO ".TAGS." (url, name, footer_description) VALUES ('{$url}', '$title', '')");
 
         if($sql_query){
             return array("id"=>$GameMonetizeConnect->insert_id);
@@ -1971,28 +1971,26 @@ function getCarouselWidget($type='carousel_random_games', $items=2)
 }
 
 function installDefaultGames(){
-    include( ABSPATH . 'assets/includes/config.php');
-    include ABSPATH . 'assets/includes/tables.php';
-        
-    /**
-    * Connecting to MySql server
-    */
     global $GameMonetizeConnect;
-    $GameMonetizeConnect = @new mysqli($dbGM['host'], $dbGM['user'], $dbGM['pass'], $dbGM['name']);
-    /**
-    * Set up connection charset
-    */
-    //$GameMonetizeConnect->set_charset("utf8");
 
-    /**
-    * Check connection status
-    */
-    if ($GameMonetizeConnect->connect_errno > 0) 
+    if (!($GameMonetizeConnect instanceof ArcadeDatabase)) {
+        $dbGM = [];
+        if (file_exists(ABSPATH . 'assets/includes/config.php')) {
+            require_once ABSPATH . 'assets/includes/config.php';
+        }
+        if (!class_exists('ArcadeDatabase')) {
+            require_once ABSPATH . 'assets/includes/db.php';
+        }
+        $GameMonetizeConnect = new ArcadeDatabase($dbGM);
+    }
+
+    if ($GameMonetizeConnect->connect_errno > 0) {
         exit($GameMonetizeConnect->connect_errno);
+    }
 
-    include ABSPATH . 'assets/classes/load.php';
-    include ABSPATH . 'gm-content/addons/load.php';
-    include ABSPATH . 'assets/includes/engine.php';
+    require_once ABSPATH . 'assets/classes/load.php';
+    require_once ABSPATH . 'gm-content/addons/load.php';
+    require_once ABSPATH . 'assets/includes/engine.php';
     $time = ceil( time() );
 
     // Get custom game feed url
