@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import { getCatalog } from "@/lib/catalog";
 import type { Game } from "@/lib/catalog";
 
 
