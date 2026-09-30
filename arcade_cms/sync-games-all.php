@@ -33,9 +33,29 @@ if ($token==='' || $stored==='' || !hash_equals($stored,$token)) out(['ok'=>fals
 $lock = (bool)$pdo->query('SELECT pg_try_advisory_lock(91472026)')->fetchColumn();
 if (!$lock) out(['ok'=>false,'error'=>'import_already_running'],409);
 
+$categoryParam = trim((string)($_GET['category'] ?? 'All'));
+$popularityParam = trim((string)($_GET['popularity'] ?? 'newest'));
+$amountParam = trim((string)($_GET['amount'] ?? 'All'));
+$allowedPopularity = ['newest','oldest','popular','trending','best','random'];
+if (!in_array(strtolower($popularityParam), $allowedPopularity, true)) {
+    $popularityParam = 'newest';
+}
+if ($amountParam === '' || !preg_match('/^(?:All|[1-9][0-9]{0,4})$/i', $amountParam)) {
+    $amountParam = 'All';
+}
+$categoryParam = $categoryParam === '' ? 'All' : $categoryParam;
+
+$feedQuery = http_build_query([
+    'format' => 'json',
+    'category' => $categoryParam,
+    'type' => 'html5',
+    'popularity' => $popularityParam,
+    'company' => 'All',
+    'amount' => $amountParam,
+]);
 $feedUrls = [
- 'https://rss.gamemonetize.com/rssfeed.php?format=json&category=All&type=html5&popularity=newest&company=All&amount=All',
- 'https://gamemonetize.com/rssfeed.php?format=json&category=All&type=html5&popularity=newest&company=All&amount=All'
+ 'https://rss.gamemonetize.com/rssfeed.php?' . $feedQuery,
+ 'https://gamemonetize.com/rssfeed.php?' . $feedQuery
 ];
 $body=''; $used=''; $errors=[];
 foreach($feedUrls as $feed){
@@ -57,7 +77,10 @@ if($body==='') out(['ok'=>false,'error'=>'feed_unavailable','details'=>$errors],
 $data=json_decode($body,true);
 if(!is_array($data)) out(['ok'=>false,'error'=>'invalid_feed_json'],502);
 if(isset($data['games']) && is_array($data['games'])) $data=$data['games'];
-if(count($data)<10000) out(['ok'=>false,'error'=>'feed_did_not_return_full_catalog','source_count'=>count($data),'feed_url'=>$used],502);
+$isFullCatalogRequest = strtolower($categoryParam) === 'all' && strtolower($amountParam) === 'all' && strtolower($popularityParam) === 'newest';
+if ($isFullCatalogRequest && count($data) < 10000) {
+    out(['ok'=>false,'error'=>'feed_did_not_return_full_catalog','source_count'=>count($data),'feed_url'=>$used],502);
+}
 
 /* Normalize and create every source category encountered in the feed. */
 $slug=function(string $s): string {
