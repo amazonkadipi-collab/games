@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { getCatalog } from "@/lib/catalog";
 export const metadata={title:"All Free Online Games",description:"Browse free online browser games by genre and discover new games to play instantly."};
 
@@ -9,7 +10,7 @@ export default async function GamesPage(){
     <p style={{color:"var(--muted)",lineHeight:1.7}}>Browse the live game catalog and play browser games instantly.</p>
     <div className="grid" style={{marginTop:28}}>
       {games.map(game=><a className="card" href={"/game/"+game.slug} key={game.id}>
-        <div className="thumb">{game.thumbnail ? <img src={game.thumbnail} alt={game.title} loading="lazy"/> : game.title}</div>
+        <div className="thumb">{game.thumbnail ? <Image src={game.thumbnail} alt={game.title} width={640} height={360} loading="lazy"/> : game.title}</div>
         <div className="cardBody"><div className="cardTitle">{game.title}</div><div className="meta">{game.category} · Play online</div></div>
       </a>)}
     </div>
