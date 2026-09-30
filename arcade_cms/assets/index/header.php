@@ -74,8 +74,25 @@ if ($_GET['p'] != 'login') {
 		|| is_page('home')
 	) {
 
-		$json = file_get_contents('https://api.gamemonetize.com/cms.json');
-		$arr = json_decode($json, true);
+        // The GameMonetize CMS check is optional for rendering the site.
+        // Never allow an upstream outage to hold the request until Vercel times out.
+        $json = false;
+        $ch = curl_init('https://api.gamemonetize.com/cms.json');
+        if ($ch !== false) {
+            curl_setopt_array($ch, [
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_CONNECTTIMEOUT => 2,
+                CURLOPT_TIMEOUT => 4,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_MAXREDIRS => 2,
+                CURLOPT_SSL_VERIFYPEER => true,
+                CURLOPT_SSL_VERIFYHOST => 2,
+                CURLOPT_USERAGENT => 'ArcadeCMS/1.0',
+            ]);
+            $json = curl_exec($ch);
+            curl_close($ch);
+        }
+        $arr = is_string($json) ? json_decode($json, true) : null;
 		$domain = $_SERVER['HTTP_HOST'];
 		$domain = preg_replace('#^(http(s)?://)?w{3}\.#', '$1', $domain);
 
