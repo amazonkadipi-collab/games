@@ -1,0 +1,409 @@
+<?php
+declare(strict_types=1);
+
+const GPS_PRO_FEATURE_CATALOG_PRO_TTL = 259200;
+const GPS_PRO_FEATURE_CATALOG_FREE_TTL = 604800;
+const GPS_PRO_FEATURE_CATALOG_SCHEMA_VERSION = 34;
+const GPS_PRO_FEATURE_CATALOG_URL = 'https://api.gameportalscript.com/cms-pro-features.php';
+
+function gps_pro_feature_catalog_defaults(): array
+{
+    $defaults = [
+        ['slug' => 'google_login', 'title' => 'Login with Google', 'description' => 'Secure Google administrator login.', 'delivery' => 'package', 'sort_order' => 10, 'version' => ''],
+        ['slug' => 'pagespeed_optimization', 'title' => 'Google PageSpeed Optimization', 'description' => 'Core Web Vitals optimizations for every template.', 'release_notes' => 'v1.4.2: Disable browser, CDN and server HTML caching so template and language changes are visible immediately while retaining render-time optimization.', 'delivery' => 'package', 'sort_order' => 20, 'version' => '1.4.2'],
+        ['slug' => 'crazy_visual_presets', 'title' => 'Crazy Visual Presets', 'description' => 'Optional color styles for the CrazyGames template.', 'delivery' => 'package', 'sort_order' => 25, 'version' => ''],
+        ['slug' => 'translate', 'title' => 'Translate', 'description' => 'A visitor language selector with popular languages first and browser-only preferences.', 'delivery' => 'package', 'sort_order' => 30, 'version' => ''],
+        ['slug' => 'menu_design', 'title' => 'Menu Design', 'description' => 'Responsive discovery menus and matching Home layouts for every public template.', 'release_notes' => "v1.6.6: Neutralize legacy Search positioning so the Y8 field stays usable in the desktop header.\nv1.6.5: Keep Y8 Search inside the top header row on every desktop page.\nv1.6.4: Reliable Y8 played-game tracking with the most recently played game first on Home and Played Games.\nv1.6.3: Fast native Y8 search suggestions with compact images and a reliable full-results fallback.\nv1.6.2: Remove the obsolete Y8 category/tag menu from every public page.\nv1.6.1: Larger semantic Y8 footer icons for Categories, Blog, YouTube, Contact, Theme and Translate.", 'delivery' => 'package', 'sort_order' => 35, 'version' => '1.6.6'],
+        ['slug' => 'crazygames_professional', 'title' => 'CrazyGames Professional Theme', 'description' => 'Premium CrazyGames dashboard with shared navigation, hover previews, real player goals, achievements and period leaderboards.', 'release_notes' => "v1.1.0: Complete reference dashboard, functional progress panels and one shared top, left and footer navigation across every CrazyGames page.\nv1.0.2: Complete compact history rails, six ordered category showcases and an always-present Play on Mobile panel.\nv1.0.1: Full independent PRO shell matching the approved CrazyGames reference, with compact navigation, header, rails and persistent right dashboard.", 'delivery' => 'package', 'sort_order' => 37, 'version' => '1.1.0'],
+        ['slug' => 'professional_showcase', 'title' => 'Poki & Kizi Professional Themes', 'description' => 'Independent Poki PRO mosaic and Kizi PRO arcade-board themes while preserving both classic templates.', 'release_notes' => "v1.0.0: Adds separate Poki PRO and Kizi PRO templates, responsive shared navigation on every page, local optimized images and interaction-aware loading.", 'delivery' => 'package', 'sort_order' => 38, 'version' => '1.0.0'],
+        ['slug' => 'language', 'title' => 'Language', 'description' => 'Complete stored-language manager for every PRO template, with API-gated configuration, XLSX import/export, validation, history and cron.', 'release_notes' => 'v1.0.0: Dedicated PRO dashboard card and direct access to the installed language manager.', 'delivery' => 'package', 'sort_order' => 39, 'version' => '1.0.0'],
+        ['slug' => 'other_fixes', 'title' => 'Other Fixes', 'description' => 'Small public-site corrections delivered separately from major PRO features.', 'release_notes' => "v1.6.2: Show Language as its own PRO dashboard plugin with licensed status and direct access, while retaining its protected Other Fixes delivery.\nv1.6.1: Move the stored-language manager out of Links into its own licensed Language menu and Admin route for all four PRO templates.\nv1.6.0: Add the complete stored-language manager to all four PRO templates, require a fresh license API approval for every PRO configuration change, and keep already-installed public PRO runtime available after term expiry.\nv1.3.8: Theme changes clear the public HTML cache immediately and cache entries are isolated by active theme, preventing Home from showing the previous template.\nv1.3.7: Close every Y8 search-result card link so game URLs never wrap the SEO description below the results.\nv1.3.6: Y8 Home uses exact 173x129 game cards and image-led category/tag sliders with counts and Explore links.\nv1.3.5: Y8 game pages show transparent Similar Games columns beside the player, with 4:3 thumbnails, ellipsized long titles and red Y8 hover accents.\nv1.3.4: Poki Home keeps every optimized 4:3 game image completely visible inside its mosaic card.\nv1.3.3: Roll back the Y8 listing-card resize and restore the previous Y8 layout.\nv1.3.1: Poki mosaic artwork fills every large and small game card without empty lower strips.\nv1.3.0: Optional Google tag ID in Admin Settings; no tag code or request is emitted when empty.\nv1.2.0: NEW badges appear only during the first 24 hours after a game is published, in every template.\nv1.1.0: Favorite Games page, persistent heart toggle, menu link, and responsive game sliders.\nv1.0.0: Category and tag pages show one short sentence above the games without duplicate text or Show more.", 'delivery' => 'package', 'sort_order' => 40, 'version' => '1.6.2'],
+    ];
+    $otherFixesIndex = count($defaults) - 1;
+    if ($otherFixesIndex >= 0 && ($defaults[$otherFixesIndex]['slug'] ?? '') === 'other_fixes') {
+        $defaults[$otherFixesIndex]['version'] = '1.18.3';
+        $defaults[$otherFixesIndex]['release_notes'] = "v1.18.3: Let the official GameMonetize walkthrough render its own video poster and play controls, loading the video API only after the visitor scrolls near the section.\n"
+            . "v1.18.2: Keep Poki PRO game pages hidden behind the neutral first-paint surface until the complete final player mosaic is mounted, preventing the legacy layout flash.\n"
+            . "v1.18.1: Refine the Poki PRO game-page tail with two additional real tag cards, one unique 114px game and removal of the two trailing medium cards on desktop.\n"
+            . "v1.18.0: Match the complete Poki PRO game page to the verified 114px reference mosaic and defer player/walkthrough video sources until an explicit user interaction.\n"
+            . "v1.17.4: Remove the inherited 20px desktop game-tree offset so the Poki card, player and right advertisement share the exact same top coordinate.\n"
+            . "v1.17.3: Align the game player vertically with the Poki card and promote the fourth right-side recommendation to the verified 374px feature tile beneath the first three 114px games.\n"
+            . "v1.17.2: Match the Poki desktop proportions with a 1008px player, a 374px right rail and three 114px recommendation tiles beneath the centered 300px advertisement.\n"
+            . "v1.17.1: Match the verified Poki game-page frame: player and 300px advertisement start on the top line, the left 114px game rail begins beneath the Poki card, and game-page Login/header tiles are removed.\n"
+            . "v1.17.0: Remove the Played slider from Poki PRO game pages, lift the player to the top grid line and reserve one exact 114px game tile beside Login before the 300x300 advertising column.\n"
+              . "v1.16.9: Prevent Poki PRO from exposing its illustrated background or standalone Language control while the final menu and mosaic are being mounted, and start listing composition during HTML parsing.\n"
+              . "v1.16.8: Compact the Poki PRO Played Games page and restore its complete Categories and Popular Tags sections instead of showing only the More cards.\n"
+              . "v1.16.7: Add a compact View all action directly over the right edge of the Poki PRO header slider, linked to the active New or Played collection.\n"
+            . "v1.16.6: Switch the Poki PRO header from New to the visitor's real Played history after the first game, clean legacy New-game history pollution and always expose Played Games in every PRO menu.\n"
+            . "v1.16.5: Track guest game starts in the current browser and immediately reflect unique games, weekly games, today's game and earned play points in Daily Challenges across all four PRO templates.\n"
+            . "v1.16.4: Preserve the intended 1414px Poki PRO game stage so the 838px player, 300x300 right advertisement and both 114px recommendation rails keep their exact desktop widths.\n"
+            . "v1.16.3: Complete the two empty Home sidebar cells with unique real games and suppress the empty legacy 300x250 listing-ad row so Categories follows at the normal 16px distance.\n"
+            . "v1.16.0: Complete the Popular/Best Games footer row with two additional unique published database games and extend its More games rail by two real tiles.\n"
+            . "v1.15.99: Keep Category and Tag detail pages focused on their real database games by removing the repeated generic Categories and Popular Tags discovery panels below each listing.\n"
+            . "v1.15.98: Rebuild Poki PRO game pages around the existing compact 114px game rails, a correctly sized player, a working 300x300 right-side advertising position and a centered 728x90 banner below the player, followed by orderly small recommendations.\n"
+            . "v1.15.97: Finish every Poki PRO desktop mosaic as a balanced full-width composition by adapting the final medium cards, removing isolated tail cards and the remaining end-of-list gaps.\n"
+            . "v1.15.96: Balance every Poki PRO game listing with a tail-safe repeating mix of large, medium and small cards, prevent internal holes at the end of shorter result sets, reveal the verified final layout without a delayed animation frame, and safely skip absent legacy drag/search controls.\n"
+            . "v1.15.95: Activate Poki PRO before first paint and reveal pages only after the compact header and listing layout are ready, eliminating the legacy UI flash.\n"
+            . "v1.15.94: Keep Poki PRO discovery artwork valid on nested routes and include the Tags index in the shared deferred player sidebar layout.\n"
+            . "v1.15.93: Match Poki PRO Home to the Popular page composition and restore configured social links in every shared PRO footer.\n"
+			. "v1.15.92: Prevent the legacy Poki menu from flashing before the PRO menu, share one compact Home game pool across the header, tags and mosaic, memoize repeated request data and skip duplicate PRO runtimes.\n"
+            . "v1.15.91: Skip discarded Poki PRO work, collapse Home and game-language lookups, reuse signed license state within one request and defer background panels away from navigation.\n"
+            . "v1.15.90: Remove the measured Poki PRO language-selector duplicate work and collapse Home's 15 extra-tag queries into two grouped lookups without changing the interface.\n"
+            . "v1.15.89: Keep Poki PRO Search results in the same 114/244/374px Home mosaic and prevent legacy Search rules from stretching the first card.\n"
+            . "v1.15.88: Match Poki PRO discovery pages to Home's 1024px mosaic, 244px Daily Challenges/game sidebar and full-width image-led Categories/Popular Tags sections, while removing the redundant synchronous blocklist roundtrip and first-response database queries for faster navigation.\n"
+            . "v1.15.87: Improve Poki Classic game-page artwork through licensed Other Fixes with a correctly proportioned 4:3 cover, richer controlled backdrop and cleaner interactive recommendation cards.\n"
+            . "v1.15.85: Match every internal Poki PRO header to Home's exact 1284px width and 114px desktop height, keeping every menu, slider, title, quick-game and account card perfectly aligned.\n"
+            . "v1.15.84: Remove the Recently Played or New Games title row and View all link from every Poki PRO header, aligning the slider cards directly with the menu.\n"
+            . "v1.15.83: Fill the remaining Poki PRO Daily Challenges space with the real Play 1 game today activity and its live XP progress.\n"
+            . "v1.15.82: Move Category and Tag titles into the top-right header tile and let the unchanged Home-order game mosaic begin directly below the menu.\n"
+            . "v1.15.81: Remove the inherited full-page content-panel background from every internal Poki PRO page while preserving individual cards and sections.\n"
+            . "v1.15.80: Fill the complete Poki PRO header slider on every internal page by using the same measured space allocation as Home.\n"
+            . "v1.15.79: Rebuild the Poki PRO game page around a compact 16:9 player, balanced 114px recommendation rails and a clean Poki-style information bar.\n"
+			. "v1.15.78: Preserve the complete Poki PRO Home header on every public page, including its recent/new slider, two quick-game icons and Player Hub or Login card.\n"
+			. "v1.15.77: Match Poki PRO discovery pages to Home with a filled header, square mosaic game icons, image-led taxonomy cards and a consistent footer description.\n"
+			. "v1.15.76: Fill the Poki PRO game-page header gap with the same Recently Played or guest New Games slider used on Home.\n"
+			. "v1.15.75: Restyle the Poki PRO language chooser and Google username onboarding as white, cyan and blue Poki panels.\n"
+			. "v1.15.74: Show a New Games slider and a 114px Login card on Poki PRO Home for signed-out visitors while preserving Recently Played and Player Hub for signed-in players.\n"
+			. "v1.15.73: Show administrator-managed social links in every PRO footer and align every Poki PRO page header/menu to the centered 1284px Home shell.\n"
+			. "v1.15.72: Add Telegram, Google Play and Discord to the administrator-managed Poki PRO footer social links with automatic domain-matched icons.\n"
+			. "v1.15.71: Match Poki PRO game-card hover titles and bottom fade to the Poki reference, and play each available local MP4 preview only while its card is hovered or keyboard-focused.\n"
+			. "v1.15.70: Add a real image-led 3D Games tag card before More Tags so the final Poki PRO Popular Tags row is complete.\n"
+			. "v1.15.69: Add administrator-managed Poki PRO footer social URLs with automatic icons, use one Arial-based typography system, and preserve saved H2/H3/H4 description headings.\n"
+			. "v1.15.68: Turn the Poki PRO footer language label into the real validated-language selector, show the current language, and hide the control when no alternative website language is ready.\n"
+			. "v1.15.67: Remove the Advertise shortcut from the Poki PRO footer while retaining Contact and every legal link.\n"
+			. "v1.15.66: Automatically identify every Poki PRO Follow us link by its social domain and render a reliable inline brand icon without depending on the theme icon font.\n"
+			. "v1.15.65: Replace Poki PRO's demo About card with the saved Home Footer Description, a Poki-style Learn more dialog and latest-content date.\n"
+			. "v1.15.64: Remove the redundant Categories and Popular Tags View all links on Poki PRO Home and add four real image-led tag cards.\n"
+			. "v1.15.63: Fill Poki PRO's complete pre-category canvas with a mathematically closed game mosaic and a full-height game column beside Daily Challenges.\n"
+			. "v1.15.62: Replace Poki PRO's duplicate top Favorites and sidebar Achievements shortcuts with real game cards, enlarge the signed-in player control into a 114px avatar-and-name tile, and restore image-led Categories, Popular Tags and the site description beneath the game mosaic.\n"
+			. "v1.15.61: Pack the complete Poki PRO Home game mosaic into one dense 114/244/374px grid, hydrate dynamically appended cards near the viewport, remove the artificial 999-row page height, and keep Categories, Popular Tags, About and Footer directly after the games.\n"
+			. "v1.15.60: Replace the Poki PRO search bar that covered the game board with the same focused left-side search drawer used by Poki Free, including live game results, clear, close, Escape and outside-click controls.\n"
+			. "v1.15.59: Fix the Poki PRO Favorites control at 114px, preserve the exact 114/244/374 game mosaic directly below the top menu, and present Categories followed by Popular Tags after every game band.\n"
+			. "v1.15.58: Stop the transparent legacy Poki header navigation layer from intercepting hover and clicks over Recently Played while keeping its visible Favorites control fully interactive.\n"
+			. "v1.15.57: Fill the complete Poki PRO Recently Played row up to the player controls with as many genuine recent games as fit, retain up to twelve in its slider, and use same-category popular recommendations only for remaining positions.\n"
+			. "v1.15.56: Restyle the Poki PRO Player Hub in white, cyan and blue, and fill empty Recently Played positions with clearly marked popular recommendations from the first played game's category.\n"
+			. "v1.15.55: Style Poki PRO Recently Played as a branded compact slider with its title, View all action and real per-player play-count progress under six 114x114 cards, while leaving every other theme unchanged.\n"
+			. "v1.15.54: Keep the large Poki PRO search field hidden until the compact menu's Search icon is used, align up to six 114x114 Recently Played cards immediately beside the 114x114 menu, and integrate Daily Challenges beside the first mosaic rows as one 244x374 block, while leaving every other theme unchanged.\n"
+			. "v1.15.53: Load the independent Poki PRO mosaic renderer before Home is built, use Poki's 114/244/374 card scale, size the compact menu to 114x114 and hydrate visible mosaic artwork without waiting for interaction, while leaving every other theme unchanged.\n"
+			. "v1.15.52: Keep the administrator preview theme value in form submission, add all four Classic templates, preserve private previews across public pages, and keep authenticated PRO Player Hubs reliable without server cache files.\n"
+			. "v1.15.51: Preserve Material icon ligatures during localization and contain translated Crazy PRO menu labels inside the narrow navigation rail.\n"
+			. "v1.15.50: Make the administrator-only PRO theme tester self-contained on supported CMS releases that do not preload the browser preview helpers.\n"
+			. "v1.15.49: Keep the Crazy PRO Language globe available on older supported CMS releases that still echo the public view directly.\n"
+			. "v1.15.48: Remove New Games, Random Game and Blog from the Crazy PRO top header while keeping their navigation routes, and restore the Language globe beside the account even before language tables are installed.\n"
+			. "v1.15.47: Add a compact admin-only PRO theme tester on public pages that previews each PRO template only in the administrator's browser without changing the live website.\n"
+			. "v1.15.46: Fill the complete dynamic mobile viewport in portrait game mode and add a Landscape/Portrait control beside Exit, with a CSS rotation fallback when native orientation lock is unavailable.\n"
+			. "v1.15.45: Show the configured Crazy Pro website name beside its mascot in the compact mobile header, with safe truncation on narrow screens.\n"
+			. "v1.15.44: Keep the Crazy Pro mobile header and hamburger visible above the opened navigation, position the drawer below the header and contain its scrolling inside the remaining viewport.\n"
+			. "v1.15.43: Optionally rotate the saved Crazy Pro mascots in gallery order on every page each visitor opens, using browser state and no server cache or public-page database writes.\n"
+			. "v1.15.42: Add Active Time, Games Played and Games Liked ranking buttons to the signed-in PRO Player Hub and query only the selected ranking after the panel opens.\n"
+			. "v1.15.41: Keep every distinct uploaded Crazy Pro mascot in a selectable Settings gallery for fast reuse while retaining the transparent 70x70 WebP and 3 KB limits.\n"
+			. "v1.15.40: Save uploaded Crazy Pro header icons as transparent 70x70 WebP files capped at 3 KB and remove the menu background behind custom icons.\n"
+			. "v1.15.39: Keep the complete Crazy Pro right player panel above the footer by reserving the footer's visible viewport area during synchronized sidebar scrolling.\n"
+			. "v1.15.38: Keep already purchased and installed PRO features fully configurable after subscription expiry, including languages, themes and settings; require renewal only for plugin installs and updates.\n"
+			. "v1.15.37: Stop all automatic license API retries after a locally authoritative inactive, expired, revoked, suspended or disabled result; PRO saves and checks now fail locally until explicit reactivation.\n"
+			. "v1.15.36: Add a Crazy PRO header-icon upload in Settings that securely center-crops PNG, JPG or WebP input and atomically replaces one exact 128x128 WebP file.\n"
+			. "v1.15.35: Reuse a valid signed license approval silently for up to three hours on PRO saves and changes, preventing refresh-limit errors without weakening domain, installation, feature, status or expiry checks.\n"
+			. "v1.15.34: Let desktop visitors scroll the complete Crazy PRO left menu with the mouse wheel while the pointer is over it, without moving the center page.\n"
+			. "v1.15.33: Add Crazy PRO header title, subtitle, built-in icon and custom icon URL controls directly to Admin Settings and save them with the normal Settings action.\n"
+			. "v1.15.32: Keep Player Hub available and show browser favorites even when legacy account adoption cannot be prepared by the current database server.\n"
+			. "v1.15.31: Read Favorite Games directly in the deferred Player Hub request so existing browser favorites are adopted and counted reliably.\n"
+			. "v1.15.30: Open the real Crazy PRO Favorite Games page, synchronize browser favorites with the signed-in account, and show the actual saved count in Player Hub.\n"
+			. "v1.15.29: Match the Crazy PRO left menu to the Admin ordering and labels, and synchronize both side columns with central-page scrolling.\n"
+			. "v1.15.28: Disable file-based runtime CSS/JavaScript extraction so PRO pages cannot create unbounded cache files or exhaust hosting inode quotas.\n"
+			. "v1.15.27: Preserve every existing Free game, category, tag, blog, account, favorite, slider and sidebar row during PRO database migrations; reject and roll back any migration that would remove them.\n"
+			. "v1.15.26: Allow returning from an unlicensed PRO theme to Classic and hide unavailable PRO themes from settings.\n"
+			. "v1.15.25: Match Recently Played thumbnails and hover arrows to the game sliders; load muted video previews only on interaction.\n"
+			. "v1.15.24: Add a visible, CSRF-protected Log out action beside Edit profile in the PRO Player Hub, with readable mobile controls.\n"
+			. "v1.15.23: Keep a shared Recently Played slider at the top of every PRO Home, including guest history, replay-safe newest-first ordering and an honest empty state.\n"
+			. "v1.15.22: Let Google players choose a private nickname once, with random suggestions, server validation and saved account confirmation; use a temporary alias before confirmation.\n"
+			. "v1.15.21: Show a clear purple Log in button for guests in the Crazy PRO header; keep the avatar dropdown for signed-in players.\n"
+			. "v1.15.20: Remove My Leaderboard and Community Love from the public PRO player sidebar while retaining challenges and achievements.\n"
+			. "v1.15.19: Render final player panels and account identity on first load instead of replacing legacy widgets after images finish; keep personalized data inline and HTML uncached.\n"
+			. "v1.15.18: Scroll the Crazy PRO left menu and right player panels gradually with the games page, with accessible ends and native manual scrolling.\n"
+			. "v1.15.17: Make every PRO leaderboard private so signed-in players see only their own rank, name, avatar and score, while anonymous visitors see no player identities.\n"
+			. "v1.15.16: Display every daily and long-term challenge permanently and remove the Show More/Show Less control from all PRO player panels.\n"
+			. "v1.15.15: Disable all generated HTML caching so every PRO template and language change is visible immediately while retaining fresh-response optimization.\n"
+			. "v1.15.14: Restore the licensed PageSpeed bootstrap on every public route, keep deferred jQuery compatible with legacy inline ready callbacks, and guard localized pages that omit the legacy PageType global.\n"
+			. "v1.15.13: Generate separate sitemap files for every enabled language using only stored ready translations, and include them in the main sitemap index.\n"
+			. "v1.15.12: Serialize automatic blog publication and skip an already-existing title or URL so overlapping requests cannot create duplicate posts.\n"
+			. "v1.15.11: Use Google Translate Free first, then only the provider, API key and model selected on the Admin ChatGPT page when Google is unavailable.\n"
+			. "v1.15.10: Keep each localization cron request below the shared-host gateway limit and return a successful deferred/retry JSON result instead of an Nginx timeout when external translation providers are slow.\n"
+			. "v1.15.9: Translate PRO menus and player panels that are inserted or refreshed after the localized page has loaded, while leaving Free templates unchanged.\n"
+			. "v1.15.8: Keep Profile and Played Games outside the anonymous PRO page cache so private player data and noindex headers are always generated per request without changing Home caching.\n"
+			. "v1.15.7: Keep New Games, Blogs and Tags cron translations moving by failing over across configured AI providers and cooling down failed rows instead of blocking every later content group.\n"
+			. "v1.15.6: Open approved CrazyGames, Poki, Y8 and Kizi PRO theme demos from dedicated public links while keeping Free installations unchanged.\n"
+			. "v1.15.5: Add a complete per-language coverage audit and missing-only XLSX export, translate PRO menus and interface labels, and process English-only publications through a locked one-item cron using free Google Translate first with configured API fallback.\n"
+			. "v1.15.4: Complete large validated language imports in efficient chunks and keep localized game routes compatible with CMS game tables that do not contain a meta-description column.\n"
+			. "v1.15.3: Preserve valid deferred icon styles without corrupting preload markup, restoring every PRO interface while retaining the faster cached runtime.\n"
+			. "v1.15.2: Recheck a domain- and installation-bound signed license proof on every PRO language or theme mutation, while reusing a valid approval for up to three hours to prevent API spam.\n"
+			. "v1.15.1: Preserve originals before every PRO file replacement and restore them atomically when the feature is removed; keep deferred player panels working through the protected endpoint and make the cache follow every performance-runtime update.\n"
+			. "v1.15.0: Accelerate every PRO template by caching reusable Other Fixes CSS and JavaScript, loading personalized account and player panels after first paint, deferring footer scripts, and caching leaderboard snapshots briefly.\n"
+            . "v1.14.16: Match Kizi Pro Home to the reference category-row layout with responsive real-game carousels and Kizi navigation controls.\n"
+            . "v1.14.15: Fit legacy static-page description containers to the Kizi Pro mobile viewport.\n"
+            . "v1.14.14: Give every internal Kizi Pro route the full-width blue shell and a larger, cleaner responsive description card.\n"
+            . "v1.14.13: Replace Kizi Pro Home's native horizontal game sliders with one clean row of larger cards and a Play now hover action.\n"
+            . "v1.14.12: Show Kizi Pro Home lead-card artwork without the blue color wash, retaining only a neutral readability shadow behind its text.\n"
+            . "v1.14.11: Remove Kizi Pro Home's obsolete top gap and place Challenges, Achievements, Leaderboard and Community in a responsive right sidebar.\n"
+            . "v1.14.10: Remove Y8 Pro's duplicate desktop Language control, retain the single mobile control, and keep the mobile Search panel inside the viewport across every page after a complete desktop/mobile route audit.\n"
+            . "v1.14.9: Restore the full Poki Pro game board width so every recommendation remains visible, and keep Player Hub inside the compact header on desktop and mobile.\n"
+            . "v1.14.8: Use Poki blue for Poki Pro primary actions and remove the duplicate bottom Language control while retaining the header selector.\n"
+            . "v1.14.7: Remove Poki Pro's duplicate Profile shortcut and enforce the CrazyGames Pro readability floor across all four PRO themes.\n"
+            . "v1.14.6: Replace Poki Pro's left rail with a compact logo/Home/Menu/Search card backed by every Admin Manage Sidebar item.\n"
+            . "v1.14.5: Keep Poki Pro mosaic cards at exact 374x374, 244x244 and 114x114 sizes across browser resizing.\n"
+            . "v1.14.4: Match the Poki Pro floating Language button to Poki's white, blue and cyan interface.\n"
+            . "v1.14.3: Show the same globe control and Language panel in the visible header of CrazyGames Pro, Y8 Pro, Kizi Pro and Poki Pro.\n"
+            . "v1.14.2: Prevent game-page HTTP 500 errors by making the stored-language slug sanitizer available on every localization entry point.\n"
+            . "v1.14.1: Verify the PRO license online before a browser theme change and safely reuse a successful signed approval for up to three hours.\n"
+            . "v1.14.0: Add the validated stored-language chooser to the top menu and page bottom in all four PRO themes, with browser persistence and Google-account sync.\n"
+            . "v1.13.1: Add a responsive Kizi Pro search control on every public page while preserving the original search behavior in every Free template.\n"
+			. "v1.13.0: Bring the complete Player Hub, personalized recommendations, daily missions, profile tools and achievement sharing to every PRO theme, plus a persistent footer chooser for all Classic and PRO templates.\n"
+            . "v1.12.5: Recommend unplayed games by each player's strongest category and tag affinities, with a visible reason for every match.\n"
+            . "v1.12.4: Make the Crazy Pro hamburger control reliable on asynchronously mounted internal pages and place the site identity beside it.\n"
+            . "v1.12.3: Give every Crazy Pro achievement a distinct identity, clear earning instructions and progress, plus a shareable branded achievement image and website link.\n"
+            . "v1.12.2: Make Crazy Pro mobile child-friendly with full-width Popular and slider sections, larger visible game cards and a fully visible Play Now control.\n"
+            . "v1.12.1: Prevent the legacy CrazyGames layout from flashing before the licensed Crazy Pro shell is ready on every public page.\n"
+            . "v1.12.0: Add personalized Player Hub return loops and a real rotating daily category/tag surprise mission that counts distinct games only after three active minutes.\n"
+            . "v1.11.3: Enlarge every Crazy Pro Player Hub label to match the approved readable reference while preserving its responsive layout.\n"
+            . "v1.11.2: Remove duplicate Crazy Pro public-menu destinations while keeping the latest Admin-configured label and icon.\n"
+            . "v1.11.1: Restore saved lead images on Crazy Pro sliders appended after scroll by initializing their complete color and image style variables.\n"
+            . "v1.11.0: Replace the Crazy Pro mobile promo with a polished locally generated QR card for the current page and an Open Mobile Games action.\n"
+            . "v1.10.1: Let the Crazy Pro desktop sidebar extend naturally with the page instead of using an internal scrollbar, and shorten Popular Games to Popular.\n"
+            . "v1.10.0: Increase the remaining tiny Crazy Pro Recently Played, play-count, navigation and player-widget labels while preserving the compact layout.\n"
+            . "v1.9.9: Match the reference 16px game-title overlay and improve readability in the Crazy Pro left menu and right player panels.\n"
+            . "v1.9.8: Add licensed 728x312 WebP lead-image upload controls to Featured, New, Best and Played rows in Admin Sliders and render each saved image on Crazy Pro Home.\n"
+            . "v1.9.7: Render real Crazy Pro Popular plus three Admin-ordered sliders initially, then query and mount every remaining real slider only as the visitor scrolls.\n"
+            . "v1.9.6: Build the Crazy Pro left menu exactly from Admin Manage Sidebar order, names, types, targets and icons, with a no-cache live data refresh.\n"
+            . "v1.9.5: Preserve the full 16:9 Crazy Pro desktop player instead of height-cropping it and replace inherited Classic blue player surfaces with the Crazy Pro navy/violet palette.\n"
+            . "v1.9.4: Align image-backed Crazy Pro Category/Tag lead text from the left edge of the colored panel instead of centering it.\n"
+            . "v1.9.3: Remove the duplicated top spacing on Crazy Pro public pages and apply the navy surface during the first paint to prevent the blue flash.\n"
+            . "v1.9.2: Read the Crazy Pro Home footer card directly from the saved Home Footer Description record, including its optional extended content.\n"
+            . "v1.9.1: Use the approved navy background across Crazy Pro pages and replace white description panels with readable dark surfaces.\n"
+            . "v1.9.0: Restore image-backed Crazy Pro Category/Tag lead cards and add licensed drag/drop 728x312 WebP replacement controls in Admin Sliders.\n"
+            . "v1.8.5: Replace unsupported blank Crazy Pro challenge icons with compatible Play and finish-flag symbols.\n"
+            . "v1.8.4: Remove the duplicate Continue Playing row and show its real play progress directly on the top Recently Played cards.\n"
+            . "v1.8.3: Auto-rotate the preserved Crazy Pro Popular mosaic through its complete game groups every five seconds while idle.\n"
+            . "v1.8.2: Remove the separate Crazy Pro attraction slider and keep only the original Popular one-large-plus-four-small mosaic.\n"
+            . "v1.8.1: Fix the restored Popular controls so each click moves one complete one-large-plus-four-small group.\n"
+            . "v1.8.0: Keep the rotating Crazy Pro attraction slider above the restored original Popular mosaic of three one-large-plus-four-small groups.\n"
+            . "v1.7.9: Server-render the stored Crazy Pro Home description in the footer as an ellipsis-ended SEO summary while retaining the full Show more dialog.\n"
+            . "v1.7.8: Keep the Crazy Pro left menu attached from the desktop header to the true viewport bottom and reveal its scrollbar channel only on hover or keyboard focus.\n"
+            . "v1.7.7: Give every Admin-ordered Crazy Pro slider a two-card-wide colored icon lead and clean 170x127 game artwork with titles revealed only on hover or focus.\n"
+            . "v1.7.6: Rebuild Crazy Pro Popular as one reference-style stage with a fixed-size hero, fourteen unique mini games, left/right navigation and an automatic hero rotation.\n"
+            . "v1.7.5: Use the Popular-style purple hover outline on every Crazy Pro game card and play its available video preview only while hovered or focused.\n"
+            . "v1.7.4: Hide the Crazy Pro sidebar scrollbar until the menu is hovered or keyboard-focused.\n"
+            . "v1.7.3: Keep player history in Recently Played and remove the duplicate Crazy Pro Continue Playing slider.\n"
+            . "v1.7.2: Let signed-in Crazy Pro players safely change their username and upload a centered 96x96 WebP profile photo.\n"
+            . "v1.7.1: Restore the missing right and left navigation controls on the Crazy Pro Popular mosaic slider.\n"
+            . "v1.7.0: Add the signed-in Crazy Pro Player Hub with Google photo, engagement shortcuts, active-time achievements and Today/Week/Month/Year time rankings.\n"
+            . "v1.6.9: Match the Crazy Pro top menu reference with configurable icon, title and subtitle plus working navigation controls.\n"
+            . "v1.6.8: Show the stored Home description as a compact Crazy Pro footer summary with an accessible full-description popup.\n"
+            . "v1.6.7: Match the Crazy Pro Feeling Lucky card with a glowing mystery box, colorful sparks and a polished random-game action.\n"
+            . "v1.6.6: Match the compact Crazy Pro Leaderboard card with real Google profile photos, Today/Week/Month/Year periods and a polished full-ranking popup.\n"
+            . "v1.6.5: Match the compact Crazy Pro Achievements card with four hexagonal badges, real 24-milestone progress and an expandable full player list.\n"
+            . "v1.6.4: Match the compact Crazy Pro Daily Challenges card with three personalized previews, a live daily timer, XP rewards, real progress and an expandable full player list.\n"
+            . "v1.6.3: Match the compact Crazy Pro More Categories grid, restore readable footer contrast over Custom CSS, and remove Discover More plus the legacy floating Translate control.\n"
+            . "v1.5.8: Restore the complete Crazy Pro category icon rail, remove Random, More and the App promo, and add independent wheel, touch and pointer-drag scrolling with muted lavender navigation colors.\n"
+            . "v1.5.7: Keep Crazy Pro mosaic cards clean at rest, then reveal a purple outline plus a larger shadowed title only on hover or keyboard focus.\n"
+            . "v1.5.6: Show 60x60 Crazy Pro slider navigation buttons only while the slider is hovered or keyboard-focused.\n"
+            . "v1.5.5: Use 15 games per PRO slider in Admin order, render Crazy Pro Popular as three fixed 1-large-plus-4-small groups, and load only the first 7 images per slider until player interaction across Crazy Pro, Kizi Pro and Y8 Pro.\n"
+            . "v1.5.4: Match the shared real player hub to each PRO brand with Poki blue, Y8 red and Kizi blue icon accents and hover feedback while preserving all real data and Free themes.\n"
+            . "v1.5.3: Present Poki Pro real challenges, Community Love, achievements and leaderboards as a compact white-and-blue player sidebar while preserving every period and metric and hiding unavailable community data.\n"
+            . "v1.5.2: Remove the unused reCAPTCHA Site Key and Secret Key controls from Settings in Crazy Pro, Y8 Pro, Kizi Pro and Poki Pro while preserving stored values, backend compatibility and every Free template.\n"
+            . "v1.5.1: Remove the unused Theme Custom CSS editor from Settings in Crazy Pro, Y8 Pro, Kizi Pro and Poki Pro while preserving existing CSS files and every Free template.\n"
+            . "v1.5.0: Crazy Pro fixed discovery mosaic with one 354x265 hero and 170x127 game cards that keep their size inside horizontal overflow, plus real Today/Week/Month/Year/Top leaderboards by plays, likes, favorites and social shares and Google-account player chat with profanity masking across every PRO Home.\n"
+            . "v1.4.1: Real Community Love from published-game votes and active player accounts, plus visible zero-state challenges across every PRO Home without fabricated ratings, users or testimonials.\n"
+            . "v1.4.0: Real Home-only Player Goals, achievements and Today/Week/Month/Year/All Time leaderboards across every PRO template, with anonymous browser progress and Google-account persistence.\n"
+            . "v1.3.9: Crazy Pro, Kizi Pro and Y8 Pro Home slider rows follow Admin Sliders ordering and use each configured slider type, category or tag before their legacy fallback.\n"
+            . (string)$defaults[$otherFixesIndex]['release_notes'];
+    }
+    return $defaults;
+}
+
+function gps_pro_feature_catalog_normalize(array $items): array
+{
+    $result = [];
+    $retiredSlugs = ['game_cards', 'homepage_layouts'];
+    foreach ($items as $item) {
+        if (!is_array($item)) {
+            continue;
+        }
+        $slug = strtolower(trim((string)($item['slug'] ?? '')));
+        $title = trim((string)($item['title'] ?? ''));
+        $delivery = strtolower(trim((string)($item['delivery'] ?? 'coming_soon')));
+        if (in_array($slug, $retiredSlugs, true) || !preg_match('/^[a-z0-9_]{2,64}$/', $slug) || $title === '' || isset($result[$slug])) {
+            continue;
+        }
+        // The CMS feature screen lists only real installable packages. General
+        // benefits and future ideas belong on the public PRO information page.
+        if ($delivery !== 'package') {
+            continue;
+        }
+        $version = trim((string)($item['version'] ?? ''));
+        if ($version !== '' && !preg_match('/^[0-9]+(?:\.[0-9A-Za-z_-]+)*$/', $version)) {
+            $version = '';
+        }
+        $result[$slug] = [
+            'slug' => $slug,
+            'title' => substr($title, 0, 120),
+            'description' => substr(trim((string)($item['description'] ?? '')), 0, 300),
+            'release_notes' => substr(trim((string)($item['release_notes'] ?? '')), 0, 600),
+            'delivery' => $delivery,
+            'sort_order' => max(0, min(9999, (int)($item['sort_order'] ?? 100))),
+            'version' => $version,
+            'published_at' => substr(trim((string)($item['published_at'] ?? '')), 0, 40),
+        ];
+        if (count($result) >= 50) {
+            break;
+        }
+    }
+    $result = array_values($result);
+    usort($result, static fn(array $a, array $b): int => [$a['sort_order'], $a['title']] <=> [$b['sort_order'], $b['title']]);
+    return $result;
+}
+
+function gps_pro_feature_catalog_merge_defaults(array $items): array
+{
+    $merged = [];
+    foreach (gps_pro_feature_catalog_normalize(gps_pro_feature_catalog_defaults()) as $item) {
+        $merged[(string)$item['slug']] = $item;
+    }
+    foreach (gps_pro_feature_catalog_normalize($items) as $item) {
+        $merged[(string)$item['slug']] = $item;
+    }
+    $merged = array_values($merged);
+    usort($merged, static fn(array $a, array $b): int => [$a['sort_order'], $a['title']] <=> [$b['sort_order'], $b['title']]);
+    return $merged;
+}
+
+function gps_pro_feature_catalog_cache_file(): string
+{
+    return rtrim(ABSPATH, '/\\') . '/assets/cache/gameportalscript-pro-features.json';
+}
+
+function gps_pro_feature_update_notices_file(): string
+{
+    return rtrim(ABSPATH, '/\\') . '/assets/cache/gameportalscript-pro-update-notices.json';
+}
+
+function gps_pro_feature_update_notices(): array
+{
+    $decoded = @json_decode((string)@file_get_contents(gps_pro_feature_update_notices_file()), true);
+    return is_array($decoded) ? (array)($decoded['features'] ?? []) : [];
+}
+
+function gps_pro_feature_update_notice_record(string $slug, string $version, string $publishedAt = ''): void
+{
+    if (!preg_match('/^[a-z][a-z0-9_]{1,63}$/', $slug)
+        || !preg_match('/^[0-9]+(?:\.[0-9A-Za-z_-]+)*$/', $version)) {
+        throw new RuntimeException('The pushed PRO feature update is invalid.');
+    }
+
+    $notices = gps_pro_feature_update_notices();
+    $current = trim((string)($notices[$slug]['version'] ?? ''));
+    if ($current !== '' && version_compare($version, $current, '<')) {
+        return;
+    }
+    $notices[$slug] = [
+        'version' => $version,
+        'published_at' => substr(trim($publishedAt), 0, 40),
+        'received_at' => gmdate('c'),
+    ];
+
+    $file = gps_pro_feature_update_notices_file();
+    $directory = dirname($file);
+    if (!is_dir($directory) && !mkdir($directory, 0755, true) && !is_dir($directory)) {
+        throw new RuntimeException('The PRO update notification directory is unavailable.');
+    }
+    $temporary = $file . '.tmp-' . bin2hex(random_bytes(4));
+    $json = json_encode(['features' => $notices], JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR);
+    if (file_put_contents($temporary, $json, LOCK_EX) === false || !rename($temporary, $file)) {
+        @unlink($temporary);
+        throw new RuntimeException('The PRO update notification could not be saved.');
+    }
+}
+
+function gps_pro_feature_catalog_apply_notices(array $items): array
+{
+    $notices = gps_pro_feature_update_notices();
+    foreach ($items as &$item) {
+        $slug = (string)($item['slug'] ?? '');
+        $noticeVersion = trim((string)($notices[$slug]['version'] ?? ''));
+        $catalogVersion = trim((string)($item['version'] ?? ''));
+        if ($noticeVersion !== '' && ($catalogVersion === '' || version_compare($noticeVersion, $catalogVersion, '>'))) {
+            $item['version'] = $noticeVersion;
+            $item['published_at'] = (string)($notices[$slug]['published_at'] ?? '');
+        }
+    }
+    unset($item);
+    return $items;
+}
+
+function gps_pro_feature_catalog_load(bool $allowRemote = false, int $ttl = GPS_PRO_FEATURE_CATALOG_PRO_TTL): array
+{
+    $cacheFile = gps_pro_feature_catalog_cache_file();
+    $cached = is_file($cacheFile) ? json_decode((string)@file_get_contents($cacheFile), true) : null;
+    $cachedItems = is_array($cached) ? gps_pro_feature_catalog_merge_defaults((array)($cached['features'] ?? [])) : [];
+    $fetchedAt = is_array($cached) ? (int)($cached['fetched_at'] ?? 0) : 0;
+    $cacheSchemaVersion = is_array($cached) ? (int)($cached['schema_version'] ?? 0) : 0;
+    if (!$allowRemote) {
+        if ($cacheSchemaVersion < GPS_PRO_FEATURE_CATALOG_SCHEMA_VERSION) {
+            return gps_pro_feature_catalog_apply_notices(gps_pro_feature_catalog_defaults());
+        }
+        return gps_pro_feature_catalog_apply_notices($cachedItems !== [] ? $cachedItems : gps_pro_feature_catalog_defaults());
+    }
+    $ttl = max(0, $ttl);
+    if ($cachedItems !== []
+        && $cacheSchemaVersion >= GPS_PRO_FEATURE_CATALOG_SCHEMA_VERSION
+        && $fetchedAt >= time() - $ttl) {
+        return gps_pro_feature_catalog_apply_notices($cachedItems);
+    }
+
+    $context = stream_context_create(['http' => ['timeout' => 3, 'ignore_errors' => true], 'https' => ['timeout' => 3, 'ignore_errors' => true]]);
+    $raw = @file_get_contents(GPS_PRO_FEATURE_CATALOG_URL, false, $context);
+    if ((!is_string($raw) || $raw === '') && function_exists('curl_init')) {
+        $curl = curl_init(GPS_PRO_FEATURE_CATALOG_URL);
+        curl_setopt_array($curl, [CURLOPT_RETURNTRANSFER => true, CURLOPT_CONNECTTIMEOUT => 3, CURLOPT_TIMEOUT => 5, CURLOPT_SSL_VERIFYPEER => true]);
+        $raw = curl_exec($curl);
+        curl_close($curl);
+    }
+    $remote = is_string($raw) ? json_decode($raw, true) : null;
+    $remoteItems = is_array($remote) && !empty($remote['ok'])
+        ? gps_pro_feature_catalog_merge_defaults((array)($remote['features'] ?? []))
+        : [];
+    if ($remoteItems !== []) {
+        $directory = dirname($cacheFile);
+        if (!is_dir($directory)) {
+            @mkdir($directory, 0755, true);
+        }
+        @file_put_contents($cacheFile, json_encode([
+            'schema_version' => GPS_PRO_FEATURE_CATALOG_SCHEMA_VERSION,
+            'fetched_at' => time(),
+            'updated_at' => (string)($remote['updated_at'] ?? ''),
+            'features' => $remoteItems,
+        ], JSON_UNESCAPED_SLASHES), LOCK_EX);
+        return gps_pro_feature_catalog_apply_notices($remoteItems);
+    }
+    return gps_pro_feature_catalog_apply_notices($cachedItems !== [] ? $cachedItems : gps_pro_feature_catalog_defaults());
+}
+
+function gps_pro_feature_catalog_has_active_pro(): bool
+{
+    if (!function_exists('gps_license_cached_bound_claims')) {
+        return false;
+    }
+    $claims = gps_license_cached_bound_claims();
+    if ($claims === [] || strtolower(trim((string)($claims['status'] ?? ''))) !== 'active') {
+        return false;
+    }
+    $expiryRaw = trim((string)($claims['license_expires_at'] ?? ''));
+    $expiry = $expiryRaw !== '' ? strtotime($expiryRaw . ' UTC') : false;
+    return $expiry === false || $expiry >= time();
+}
+
+function gps_pro_feature_catalog_refresh_on_admin_login(): array
+{
+    $ttl = gps_pro_feature_catalog_has_active_pro()
+        ? GPS_PRO_FEATURE_CATALOG_PRO_TTL
+        : GPS_PRO_FEATURE_CATALOG_FREE_TTL;
+    return gps_pro_feature_catalog_load(true, $ttl);
+}

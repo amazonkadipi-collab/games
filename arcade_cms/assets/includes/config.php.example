@@ -1,0 +1,8 @@
+<?php
+$dbGM = array(
+    'host' => 'localhost',
+    'user' => 'CHANGE_ME',
+    'pass' => 'CHANGE_ME',
+    'name' => 'CHANGE_ME'
+);
+$encryption = 'GENERATE_A_RANDOM_64_HEX_CHARACTER_KEY';

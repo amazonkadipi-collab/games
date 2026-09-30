@@ -1,0 +1,6 @@
+# Server-specific CMS configuration and install state
+assets/includes/config.php
+.gameportalscript-installed
+
+# Runtime-generated CMS data
+error_log

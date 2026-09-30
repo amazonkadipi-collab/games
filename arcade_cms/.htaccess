@@ -1,0 +1,82 @@
+Options -Indexes
+DirectoryIndex index.php
+
+<IfModule mod_rewrite.c>
+RewriteEngine On
+
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-l
+
+RewriteRule ^home/?$ index.php?p=home [QSA,L]
+RewriteRule ^feed/?$ feed.php [QSA,L]
+RewriteRule ^new-games/?$ index.php?p=new-games [QSA,L]
+RewriteRule ^best-games/?$ index.php?p=best-games [QSA,L]
+RewriteRule ^random/?$ index.php?p=random [QSA,L]
+RewriteRule ^about/?$ index.php?p=about [QSA,L]
+RewriteRule ^tags/?$ index.php?p=tags [QSA,L]
+RewriteRule ^privacy/?$ index.php?p=privacy [QSA,L]
+RewriteRule ^terms/?$ index.php?p=terms [QSA,L]
+RewriteRule ^contact/?$ index.php?p=contact [QSA,L]
+RewriteRule ^featured-games/?$ index.php?p=featured-games [QSA,L]
+RewriteRule ^played-games/?$ index.php?p=played-games [QSA,L]
+RewriteRule ^favorite-games/?$ index.php?p=favorite-games [QSA,L]
+RewriteRule ^categories/?$ index.php?p=categories [QSA,L]
+RewriteRule ^blogs/?$ index.php?p=blogs [QSA,L]
+RewriteRule ^login/?$ index.php?p=login [QSA,L]
+RewriteRule ^setting/?$ index.php?p=setting&section=info [QSA,L]
+RewriteRule ^setting/avatar/?$ index.php?p=setting&section=avatar [QSA,L]
+RewriteRule ^setting/password/?$ index.php?p=setting&section=password [QSA,L]
+RewriteRule ^logout/(.*)$ index.php?p=logout&token=$1 [QSA,L]
+RewriteRule ^error/?$ index.php?p=error [QSA,L]
+
+RewriteRule ^admin/?$ index.php?p=admin&section=global [QSA,L]
+RewriteRule ^admin/addgame/?$ index.php?p=admin&section=addgame [QSA,L]
+RewriteRule ^admin/setting/?$ index.php?p=admin&section=setting [QSA,L]
+RewriteRule ^admin/games/?$ index.php?p=admin&section=games [QSA,L]
+RewriteRule ^admin/games/edit/(.*)$ index.php?p=admin&section=games&action=edit&gid=$1 [QSA,L]
+RewriteRule ^admin/games/(.*)$ index.php?p=admin&section=games&page=$1 [QSA,L]
+RewriteRule ^admin/games-images-and-videos/?$ index.php?p=admin&section=games-images-and-videos [QSA,L]
+RewriteRule ^admin/categories/?$ index.php?p=admin&section=categories [QSA,L]
+RewriteRule ^admin/categories/add/?$ index.php?p=admin&section=categories&action=add [QSA,L]
+RewriteRule ^admin/categories/edit/(.*)$ index.php?p=admin&section=categories&action=edit&cid=$1 [QSA,L]
+RewriteRule ^admin/blogs/?$ index.php?p=admin&section=blogs [QSA,L]
+RewriteRule ^admin/blogs/add/?$ index.php?p=admin&section=blogs&action=add [QSA,L]
+RewriteRule ^admin/blogs/edit/(.*)$ index.php?p=admin&section=blogs&action=edit&cid=$1 [QSA,L]
+RewriteRule ^admin/tags/?$ index.php?p=admin&section=tags [QSA,L]
+RewriteRule ^admin/tags/add/?$ index.php?p=admin&section=tags&action=add [QSA,L]
+RewriteRule ^admin/tags/edit/(.*)$ index.php?p=admin&section=tags&action=edit&cid=$1 [QSA,L]
+RewriteRule ^admin/footerdescription/?$ index.php?p=admin&section=footerdescription [QSA,L]
+RewriteRule ^admin/footerdescription/edit/(.*)$ index.php?p=admin&section=footerdescription&action=edit&cid=$1 [QSA,L]
+RewriteRule ^admin/users/?$ index.php?p=admin&section=users [QSA,L]
+RewriteRule ^admin/users/edit/(.*)$ index.php?p=admin&section=users&action=edit&uid=$1 [QSA,L]
+RewriteRule ^admin/ads/?$ index.php?p=admin&section=ads [QSA,L]
+RewriteRule ^admin/chatgpt/?$ index.php?p=admin&section=chatgpt [QSA,L]
+RewriteRule ^admin/links/?$ index.php?p=admin&section=links [QSA,L]
+RewriteRule ^admin/sliders/?$ index.php?p=admin&section=sliders [QSA,L]
+RewriteRule ^admin/sliders/add/?$ index.php?p=admin&section=sliders&action=add [QSA,L]
+RewriteRule ^admin/sliders/edit/(.*)$ index.php?p=admin&section=sliders&action=edit&cid=$1 [QSA,L]
+RewriteRule ^admin/sidebar/?$ index.php?p=admin&section=sidebar [QSA,L]
+RewriteRule ^admin/sidebar/add/?$ index.php?p=admin&section=sidebar&action=add [QSA,L]
+RewriteRule ^admin/sidebar/edit/(.*)$ index.php?p=admin&section=sidebar&action=edit&cid=$1 [QSA,L]
+RewriteRule ^admin/adstxt/?$ index.php?p=admin&section=adstxt [QSA,L]
+RewriteRule ^admin/report/?$ index.php?p=admin&section=report [QSA,L]
+RewriteRule ^admin/gameDescriptionDownload/?$ index.php?p=admin&section=gamedescription&action=download [QSA,L]
+
+RewriteRule ^login/url/(.*)$ index.php?p=login&redirect_url=$1 [QSA,L]
+RewriteRule ^category/(.*)$ index.php?p=categories&category=$1 [QSA,L]
+RewriteRule ^tag/(.*)$ index.php?p=tagspage&tag=$1 [QSA,L]
+RewriteRule ^blog/(.*)$ index.php?p=blogs&blog=$1 [QSA,L]
+RewriteRule ^profile/(.*)$ index.php?p=profile&id=$1 [QSA,L]
+RewriteRule ^game/(.*)$ index.php?p=play&id=$1 [QSA,L]
+RewriteRule ^search/(.*)$ index.php?p=search&q=$1 [QSA,L]
+RewriteRule ^search-handler/(.*)$ index.php?p=search-handler&q=$1 [QSA,L]
+RewriteRule ^([A-Za-z0-9.-]+)-games/?$ index.php?cat=$1 [QSA,L]
+
+RewriteRule ^api/v1/sandbox/game/(.*)$ gm-api.php?l=game-sandbox&gid=$1 [QSA,L]
+ErrorDocument 404 /index.php?p=error
+</IfModule>
+
+IndexIgnore *
+
+RewriteRule ^links/911db5c65c10eac73497a69a745dd018b2ef3a2f$ index.php?p=public
