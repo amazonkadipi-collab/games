@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { getCatalog } from "@/lib/catalog";
 import { notFound } from "next/navigation";
 
@@ -39,6 +40,6 @@ export default async function GamePage({params}: Props) {
       </section>
       <aside className="gameInfo"><div><span>Category</span><a href={"/category/"+game.category.toLowerCase().replaceAll(" ","-")}>{game.category}</a></div><div><span>Platform</span><b>Web browser</b></div><div><span>Mobile ready</span><b>{game.mobileReady?"Yes":"Check game"}</b></div><div><span>Provider</span><b>GameMonetize</b></div></aside>
     </div>
-    {similar.length>0 && <section className="section"><div className="sectionHead"><div><div className="kicker">KEEP PLAYING</div><h2>More Games</h2></div><a href="/games">View all →</a></div><div className="grid">{similar.map(item=><a className="card" href={"/game/"+item.slug} key={item.id}><div className="thumb">{item.thumbnail ? <img src={item.thumbnail} alt={item.title} loading="lazy"/> : item.title}</div><div className="cardBody"><div className="cardTitle">{item.title}</div><div className="meta">{item.category} · Play now</div></div></a>)}</div></section>}
+    {similar.length>0 && <section className="section"><div className="sectionHead"><div><div className="kicker">KEEP PLAYING</div><h2>More Games</h2></div><a href="/games">View all →</a></div><div className="grid">{similar.map(item=><a className="card" href={"/game/"+item.slug} key={item.id}><div className="thumb">{item.thumbnail ? <Image src={item.thumbnail} alt={item.title} width={640} height={360} loading="lazy"/> : item.title}</div><div className="cardBody"><div className="cardTitle">{item.title}</div><div className="meta">{item.category} · Play now</div></div></a>)}</div></section>}
   </main>;
 }
