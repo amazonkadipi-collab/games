@@ -15,7 +15,11 @@ $date = date("j/m/y g:iA", $time);
 $access = true;
 
 if ( td_installing() ) {
-    require_once( ABSPATH . 'assets/includes/config.php');
+    if (file_exists(ABSPATH . 'assets/includes/config.php')) {
+        require_once ABSPATH . 'assets/includes/config.php';
+    } else {
+        $dbGM = [];
+    }
     require_once ABSPATH . 'assets/includes/tables.php';
 
     /**
@@ -1416,13 +1420,16 @@ function addon_path($file)
 
 function td_installing($install_step=0) 
 {
+    $hasDatabaseConfig = file_exists(ABSPATH . 'assets/includes/config.php') || (bool) getenv('DATABASE_URL');
+    $hasInstallMarker = file_exists(ABSPATH . 'assets/includes/install-blank.php');
+
     if ($install_step == 1) {
-        return ( file_exists( ABSPATH . 'assets/includes/config.php') ) ? true : false;
+        return $hasDatabaseConfig;
     } elseif ($install_step == 2) {
-        return ( file_exists( ABSPATH . 'assets/includes/install-blank.php') ) ? true : false;
-    } else {
-        return ( file_exists( ABSPATH . 'assets/includes/config.php') && file_exists( ABSPATH . 'assets/includes/install-blank.php') ) ? true : false;
+        return $hasInstallMarker;
     }
+
+    return $hasDatabaseConfig && $hasInstallMarker;
 }
 
 
