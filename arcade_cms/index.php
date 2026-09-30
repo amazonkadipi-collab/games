@@ -124,11 +124,7 @@ if (!isset($_GET['p'])) {
 
 require_once dirname( __FILE__ ) . '/gm-load.php';
 
-/*
- * Reliable CMS login bridge for the Neon-backed deployment.
- * The legacy CMS expects gm_ac_u/gm_ac_p cookies. Keep that contract,
- * but handle the login POST explicitly before rendering the page.
- */
+/* Neon-backed admin login bridge. */
 if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST'
     && (($_GET['p'] ?? '') === 'login' || trim((string)parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH), '/') === 'login')
     && isset($_POST['login_id'], $_POST['login_key'])) {
@@ -144,125 +140,8 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST'
         if ($account && $account->num_rows === 1) {
             $candidate = $account->fetch_assoc();
             $storedPassword = (string)($candidate['password'] ?? '');
-            $passwordOk = hash_equals($storedPassword, $loginKey);
 
-            if (!$passwordOk && str_starts_with($storedPassword, '$2y
-
-// Generic loader for the separately delivered PageSpeed PRO package. The
-// Free CMS contains no optimization implementation and continues normally
-// when the signed feature package is not installed for this host.
-$gpsPageSpeedBootstrap = ABSPATH . 'assets/pro/pagespeed/bootstrap.php';
-if (is_file($gpsPageSpeedBootstrap)) {
-    require_once ABSPATH . 'assets/includes/license/bootstrap.php';
-    if (gps_license_installed_feature_allowed('pagespeed_optimization')) {
-        require_once $gpsPageSpeedBootstrap;
-    }
-}
-
-// Load the separately delivered Crazy Visual Presets implementation only
-// after its signed, domain-bound PRO entitlement has been verified.
-$gpsVisualPresetsBootstrap = ABSPATH . 'assets/pro/crazy_visual_presets/bootstrap.php';
-if (is_file($gpsVisualPresetsBootstrap)) {
-    require_once ABSPATH . 'assets/includes/license/bootstrap.php';
-    // Other Fixes also owns the protected browser-level Classic/PRO theme
-    // chooser. The palette controls remain harmless when no Crazy PRO theme
-    // is selected, while Free installations still never load this runtime.
-    if (gps_license_installed_feature_allowed('crazy_visual_presets')
-        || gps_license_installed_feature_allowed('other_fixes')) {
-        require_once $gpsVisualPresetsBootstrap;
-    }
-}
-
-// Load the separately delivered visitor translation feature only when its
-// signed package belongs to this exact licensed domain and installation.
-$gpsTranslateBootstrap = ABSPATH . 'assets/pro/translate/bootstrap.php';
-if (is_file($gpsTranslateBootstrap)) {
-    require_once ABSPATH . 'assets/includes/license/bootstrap.php';
-    if (gps_license_installed_feature_allowed('translate')) {
-        require_once $gpsTranslateBootstrap;
-    }
-}
-
-// Small public-site corrections remain isolated in their separately signed
-// and domain-bound PRO package. Free installations keep their legacy output.
-$gpsOtherFixesBootstrap = ABSPATH . 'assets/pro/other_fixes/bootstrap.php';
-if (is_file($gpsOtherFixesBootstrap)) {
-    require_once ABSPATH . 'assets/includes/license/bootstrap.php';
-    if (gps_license_installed_feature_allowed('other_fixes')) {
-        require_once $gpsOtherFixesBootstrap;
-    }
-}
-
-// Menu layouts are delivered as their own protected PRO feature. During the
-// transition from the earlier combined package, an existing PRO installation
-// may use the cached entitlement until the dedicated package marker is added.
-$gpsMenuDesignBootstrap = ABSPATH . 'assets/pro/menu_design/bootstrap.php';
-if (is_file($gpsMenuDesignBootstrap)) {
-    require_once ABSPATH . 'assets/includes/license/bootstrap.php';
-    $gpsMenuDesignAllowed = gps_license_installed_feature_allowed('menu_design');
-    if (!$gpsMenuDesignAllowed && gps_license_installed_feature_allowed('other_fixes')) {
-        $gpsMenuDesignClaims = function_exists('gps_license_cached_bound_claims')
-            ? gps_license_cached_bound_claims()
-            : [];
-        $gpsMenuDesignStatus = strtolower(trim((string)($gpsMenuDesignClaims['status'] ?? '')));
-        $gpsMenuDesignPlan = strtolower(trim((string)($gpsMenuDesignClaims['plan'] ?? 'free')));
-        $gpsMenuDesignExpiryRaw = trim((string)($gpsMenuDesignClaims['license_expires_at'] ?? ''));
-        $gpsMenuDesignExpiry = $gpsMenuDesignExpiryRaw === ''
-            ? false
-            : strtotime($gpsMenuDesignExpiryRaw . ' UTC');
-        $gpsMenuDesignAllowed = $gpsMenuDesignClaims !== []
-            && $gpsMenuDesignPlan !== 'free'
-            && ($gpsMenuDesignStatus === '' || $gpsMenuDesignStatus === 'active')
-            && ($gpsMenuDesignExpiry === false || $gpsMenuDesignExpiry >= time());
-    }
-    if ($gpsMenuDesignAllowed) {
-        require_once $gpsMenuDesignBootstrap;
-    }
-}
-
-// The redesigned CrazyGames dashboard and its player engagement system are
-// installed as one dedicated, domain-bound PRO package. Free installations
-// never load its UI or its database-backed runtime.
-$gpsCrazyProfessionalBootstrap = ABSPATH . 'assets/pro/crazygames_professional/bootstrap.php';
-if (is_file($gpsCrazyProfessionalBootstrap)) {
-    require_once ABSPATH . 'assets/includes/license/bootstrap.php';
-    if (gps_license_installed_feature_allowed('crazygames_professional')) {
-        require_once $gpsCrazyProfessionalBootstrap;
-    }
-}
-
-// The Poki PRO and Kizi PRO themes are delivered together as a protected
-// presentation package. Classic templates never load this implementation.
-$gpsProfessionalShowcaseBootstrap = ABSPATH . 'assets/pro/professional_showcase/bootstrap.php';
-if (is_file($gpsProfessionalShowcaseBootstrap)) {
-    require_once ABSPATH . 'assets/includes/license/bootstrap.php';
-    $gpsProfessionalShowcaseAllowed = gps_license_installed_feature_allowed('professional_showcase')
-        || gps_license_installed_feature_allowed('other_fixes');
-    if ($gpsProfessionalShowcaseAllowed) {
-        require_once $gpsProfessionalShowcaseBootstrap;
-    }
-}
-
-require_once ABSPATH . 'assets/index/header_tags.php';
-require_once ABSPATH . 'assets/index/header.php';
-require_once ABSPATH . 'assets/index/footer.php';
-require_once ABSPATH . 'assets/index/page.php';
-$gpsRenderedIndex = \GameMonetize\UI::view('index');
-if (function_exists('gmLocalizationApplyCorePage')) {
-    gmLocalizationApplyCorePage($themeData);
-    $gpsRenderedIndex = \GameMonetize\UI::view('index');
-}
-if (function_exists('gps_other_fixes_localization_render')) {
-    $gpsRenderedIndex = gps_other_fixes_localization_render($gpsRenderedIndex);
-}
-echo $gpsRenderedIndex;
-
-$GameMonetizeConnect->close();
-)) {
-                $passwordOk = password_verify($loginKey, $storedPassword);
-            }
-
-            if ($passwordOk) {
+            if ($storedPassword !== '' && hash_equals($storedPassword, $loginKey)) {
                 $cookieOptions = [
                     'expires' => time() + (60 * 60 * 24 * 30),
                     'path' => '/',
@@ -272,16 +151,7 @@ $GameMonetizeConnect->close();
                 ];
                 setcookie('gm_ac_u', (string)$candidate['id'], $cookieOptions);
                 setcookie('gm_ac_p', $storedPassword, $cookieOptions);
-
-                $redirect = isset($_POST['redirect_url']) ? (string)$_POST['redirect_url'] : '/';
-                if ($redirect === '' || $redirect[0] !== '/') {
-                    $redirect = '/';
-                }
-                if (!empty($candidate['admin'])) {
-                    $redirect = '/admin';
-                }
-
-                header('Location: ' . $redirect, true, 302);
+                header('Location: /admin', true, 302);
                 exit;
             }
         }
