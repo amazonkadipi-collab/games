@@ -19,9 +19,10 @@ if ( td_installing() ) {
     require_once ABSPATH . 'assets/includes/tables.php';
 
     /**
-    * Connecting to MySql server
+    * Connecting to PostgreSQL / Neon through the CMS compatibility layer.
     */
-    $GameMonetizeConnect = @new mysqli($dbGM['host'], $dbGM['user'], $dbGM['pass'], $dbGM['name']);
+    require_once ABSPATH . 'assets/includes/db.php';
+    $GameMonetizeConnect = new ArcadeDatabase($dbGM);
 
     /**
     * Set up connection charset
@@ -2713,7 +2714,7 @@ function shouldCacheGameImagesLocally()
     }
 
     global $GameMonetizeConnect;
-    if (!isset($GameMonetizeConnect) || !($GameMonetizeConnect instanceof mysqli) || $GameMonetizeConnect->connect_errno) {
+    if (!isset($GameMonetizeConnect) || !($GameMonetizeConnect instanceof ArcadeDatabase) || $GameMonetizeConnect->connect_errno) {
         return true;
     }
 
@@ -2736,7 +2737,7 @@ function gpsEnsureAutopostFailureCounter()
     }
 
     global $GameMonetizeConnect;
-    if (!isset($GameMonetizeConnect) || !($GameMonetizeConnect instanceof mysqli) || !empty($GameMonetizeConnect->connect_errno)) {
+    if (!isset($GameMonetizeConnect) || !($GameMonetizeConnect instanceof ArcadeDatabase) || !empty($GameMonetizeConnect->connect_errno)) {
         return false;
     }
 
