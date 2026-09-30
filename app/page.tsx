@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { getCatalog, type Game } from "@/lib/catalog";
 
 const fallbackPopular = [
@@ -12,7 +13,7 @@ function DemoCard({title,category,label}:{title:string;category:string;label?:st
   return <a className="card" href={`/game/${title.toLowerCase().replaceAll(" ","-")}`}><div className="thumb"><span>{title}</span></div><div className="cardBody"><div className="cardTitle">{title}</div><div className="meta">{category} · {label || "Play now"}</div></div></a>;
 }
 function LiveCard({game}:{game:Game}) {
-  return <a className="card" href={`/game/${game.slug}`}><div className="thumb">{game.thumbnail ? <img src={game.thumbnail} alt="" loading="lazy" /> : <span>{game.title}</span>}</div><div className="cardBody"><div className="cardTitle">{game.title}</div><div className="meta">{game.category || "Online Game"} · Play now</div></div></a>;
+  return <a className="card" href={`/game/${game.slug}`}><div className="thumb">{game.thumbnail ? <Image src={game.thumbnail} alt={game.title} width={640} height={360} loading="lazy" /> : <span>{game.title}</span>}</div><div className="cardBody"><div className="cardTitle">{game.title}</div><div className="meta">{game.category || "Online Game"} · Play now</div></div></a>;
 }
 
 export default async function Home() {
