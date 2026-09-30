@@ -24,15 +24,11 @@ CREATE TABLE IF NOT EXISTS "gm_account" (
                 PRIMARY KEY ("id") 
             );
 
-INSERT INTO "gm_account" ("id", "name", "username", "password", "admin", "email", "xp", "language", "profile_theme", "ip", "registration_date", "active") VALUES (1, 'Administrator', '{$admin_user}', '{$admin_password}', '1', 'admin@admin.com', 0, 'english', 'style-1', '::0', 1478417322, '1');
-
 CREATE TABLE IF NOT EXISTS "gm_users" (
                 "user_id" integer NOT NULL,
                 "gender" text NOT NULL DEFAULT '1',
-                "about" text NOT NULL, UNIQUE ("user_id")
+                "about" text NOT NULL DEFAULT '', UNIQUE ("user_id")
             );
-
-INSERT INTO "gm_users" ("user_id", "gender") VALUES (1, '1');
 
 CREATE TABLE IF NOT EXISTS "gm_ads" (
                 "id" integer NOT NULL,
@@ -75,7 +71,7 @@ CREATE TABLE IF NOT EXISTS "gm_games" (
                 "image" varchar(500) NOT NULL,
                 "import" text NOT NULL DEFAULT '0',
                 "category" integer NOT NULL,
-                "plays" integer NOT NULL,
+                "plays" integer NOT NULL DEFAULT 0,
                 "rating" text NOT NULL DEFAULT '0',
                 "description" varchar(15000) NOT NULL,
                 "instructions" varchar(600) NOT NULL,
@@ -86,18 +82,18 @@ CREATE TABLE IF NOT EXISTS "gm_games" (
                 "date_added" integer NOT NULL,
                 "published" text NOT NULL,
                 "featured" text NOT NULL DEFAULT '0',
-                "mobile" integer NOT NULL,
-                "featured_sorting" varchar(255) NOT NULL,
-                "field_1" varchar(500) NOT NULL,
-                "field_2" varchar(500) NOT NULL,
-                "field_3" varchar(500) NOT NULL,
-                "field_4" varchar(500) NOT NULL,
-                "field_5" varchar(500) NOT NULL,
-                "field_6" varchar(500) NOT NULL,
-                "field_7" varchar(500) NOT NULL,
-                "field_8" varchar(500) NOT NULL,
-                "field_9" varchar(500) NOT NULL,
-                "field_10" varchar(500) NOT NULL,
+                "mobile" integer NOT NULL DEFAULT 0,
+                "featured_sorting" varchar(255) NOT NULL DEFAULT '',
+                "field_1" varchar(500) NOT NULL DEFAULT '',
+                "field_2" varchar(500) NOT NULL DEFAULT '',
+                "field_3" varchar(500) NOT NULL DEFAULT '',
+                "field_4" varchar(500) NOT NULL DEFAULT '',
+                "field_5" varchar(500) NOT NULL DEFAULT '',
+                "field_6" varchar(500) NOT NULL DEFAULT '',
+                "field_7" varchar(500) NOT NULL DEFAULT '',
+                "field_8" varchar(500) NOT NULL DEFAULT '',
+                "field_9" varchar(500) NOT NULL DEFAULT '',
+                "field_10" varchar(500) NOT NULL DEFAULT '',
                 "tags_ids" jsonb NULL DEFAULT NULL,
                 "video_url" VARCHAR(100) NULL DEFAULT NULL,
                 "like_count" integer NOT NULL DEFAULT 0,
@@ -132,25 +128,41 @@ CREATE TABLE IF NOT EXISTS "gm_setting" (
                 "xp_register" integer NOT NULL,
                 "plays" integer NOT NULL,
                 "custom_game_feed_url" VARCHAR(1000) DEFAULT NULL,
-                "settings_1" varchar(500) NOT NULL,
-                "settings_2" varchar(500) NOT NULL,
-                "settings_3" varchar(500) NOT NULL,
-                "settings_4" varchar(500) NOT NULL,
-                "settings_5" varchar(500) NOT NULL,
-                "settings_6" varchar(500) NOT NULL,
-                "settings_7" varchar(500) NOT NULL,
-                "settings_8" varchar(500) NOT NULL,
-                "settings_9" varchar(500) NOT NULL,
-                "settings_10" varchar(500) NOT NULL,
+                "settings_1" varchar(500) NOT NULL DEFAULT '',
+                "settings_2" varchar(500) NOT NULL DEFAULT '',
+                "settings_3" varchar(500) NOT NULL DEFAULT '',
+                "settings_4" varchar(500) NOT NULL DEFAULT '',
+                "settings_5" varchar(500) NOT NULL DEFAULT '',
+                "settings_6" varchar(500) NOT NULL DEFAULT '',
+                "settings_7" varchar(500) NOT NULL DEFAULT '',
+                "settings_8" varchar(500) NOT NULL DEFAULT '',
+                "settings_9" varchar(500) NOT NULL DEFAULT '',
+                "settings_10" varchar(500) NOT NULL DEFAULT '',
                 PRIMARY KEY ("id")
             );
 
-INSERT INTO "gm_setting" ("id", "site_name", "site_url", "site_theme", "ad_time", "language", "featured_game_limit", "mp_game_limit", "xp_play", "xp_report", "xp_register", "custom_game_feed_url") VALUES (1, '{$site_title}', '{$site_url}', 'kizi', 10, 'english', 8, 12, 50, 100, 10, '{$default_link}');
+INSERT INTO "gm_setting" (
+    "id","site_name","site_url","site_theme","site_description","site_keywords",
+    "ads_status","ad_time","language","featured_game_limit","mp_game_limit",
+    "xp_play","xp_report","xp_register","plays","custom_game_feed_url",
+    "settings_1","settings_2","settings_3","settings_4","settings_5",
+    "settings_6","settings_7","settings_8","settings_9","settings_10"
+  ) VALUES (
+    1,
+    'Poki Crazy Games',
+    'https://pokicrazygames.vercel.app',
+    'kizi',
+    'Best Free Online Games',
+    'games, online, arcade, html5, free games',
+    '0',10,'english',8,12,50,100,10,0,
+    'https://gamemonetize.com/feed.php?format=0&num=60',
+    '','','','','','','','','',''
+  );
 
 CREATE TABLE IF NOT EXISTS "gm_theme" (
                 "theme_id" integer NOT NULL GENERATED BY DEFAULT AS IDENTITY,
                 "theme_class" varchar(250) NOT NULL,
-                PRIMARY KEY ("theme_id"), UNIQUE ("theme_class"), UNIQUE ("theme_class")
+                PRIMARY KEY ("theme_id"), UNIQUE ("theme_class")
             );
 
 INSERT INTO "gm_theme" ("theme_id", "theme_class") VALUES (1, 'style-1'), (2, 'style-1-image'), (3, 'style-2'), (4, 'style-2-image'), (5, 'style-3'), (6, 'style-3-image'), (7, 'style-4'), (8, 'style-5'), (9, 'style-6'), (10, 'style-7');
@@ -211,8 +223,10 @@ CREATE TABLE IF NOT EXISTS "gm_chatgpt" (
     PRIMARY KEY ("id")
 );
 
-INSERT INTO "gm_chatgpt" ("id", "api_key", "template_game", "template_category", "template_tags", "template_footer", "random_words_before_tags", "random_words_after_tags", "chatgpt_model", "maximum_words") VALUES
-(1, '  API chat gpt', 'test', 'test', 'test', '', 'test', ' test', 'gpt-4o-mini', 9000);
+INSERT INTO "gm_chatgpt" (
+    "id","api_key","template_game","template_category","template_tags","template_footer",
+    "random_words_before_tags","random_words_after_tags","chatgpt_model","maximum_words"
+  ) VALUES (1, NULL, '', '', '', '', '', '', 'gpt-4o-mini', 0);
 
 CREATE TABLE IF NOT EXISTS "gm_links" (
     "id" integer NOT NULL GENERATED BY DEFAULT AS IDENTITY,
@@ -305,3 +319,14 @@ CREATE TABLE IF NOT EXISTS "gm_reports" (
     "created_at" timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY ("id")
 );
+
+
+SELECT setval(pg_get_serial_sequence('"gm_ads"', 'id'), GREATEST(COALESCE((SELECT MAX("id") FROM "gm_ads"), 1), 1), true);
+SELECT setval(pg_get_serial_sequence('"gm_categories"', 'id'), GREATEST(COALESCE((SELECT MAX("id") FROM "gm_categories"), 1), 1), true);
+SELECT setval(pg_get_serial_sequence('"gm_setting"', 'id'), GREATEST(COALESCE((SELECT MAX("id") FROM "gm_setting"), 1), 1), true);
+SELECT setval(pg_get_serial_sequence('"gm_theme"', 'theme_id'), GREATEST(COALESCE((SELECT MAX("theme_id") FROM "gm_theme"), 1), 1), true);
+SELECT setval(pg_get_serial_sequence('"gm_footer_description"', 'id'), GREATEST(COALESCE((SELECT MAX("id") FROM "gm_footer_description"), 1), 1), true);
+SELECT setval(pg_get_serial_sequence('"gm_chatgpt"', 'id'), GREATEST(COALESCE((SELECT MAX("id") FROM "gm_chatgpt"), 1), 1), true);
+SELECT setval(pg_get_serial_sequence('"gm_links"', 'id'), GREATEST(COALESCE((SELECT MAX("id") FROM "gm_links"), 1), 1), true);
+SELECT setval(pg_get_serial_sequence('"gm_sliders"', 'id'), GREATEST(COALESCE((SELECT MAX("id") FROM "gm_sliders"), 1), 1), true);
+SELECT setval(pg_get_serial_sequence('"gm_sidebar"', 'id'), GREATEST(COALESCE((SELECT MAX("id") FROM "gm_sidebar"), 1), 1), true);
