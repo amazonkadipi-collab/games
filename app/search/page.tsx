@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { getCatalog } from "@/lib/catalog";
 
 type Props = { searchParams: Promise<{ q?: string }> };
@@ -43,7 +44,7 @@ export default async function SearchPage({ searchParams }: Props) {
           {results.map((game) => (
             <a className="card" href={`/game/${game.slug}`} key={game.id || game.slug}>
               <div className="thumb">
-                {game.thumbnail ? <img src={game.thumbnail} alt="" loading="lazy" /> : <span>{game.title}</span>}
+                {game.thumbnail ? <Image src={game.thumbnail} alt={game.title} width={640} height={360} loading="lazy" /> : <span>{game.title}</span>}
               </div>
               <div className="cardBody">
                 <div className="cardTitle">{game.title}</div>
