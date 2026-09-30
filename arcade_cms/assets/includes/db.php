@@ -102,4 +102,9 @@ class ArcadeDatabase {
         if (!$this->pdo) return false;
         try { return $this->pdo->rollBack(); } catch (Throwable $e) { $this->error = $e->getMessage(); return false; }
     }
+
+    public function close() {
+        $this->pdo = null;
+        return true;
+    }
 }
