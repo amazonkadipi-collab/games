@@ -115,6 +115,11 @@ if (is_page('play')) {
 
 $themeData['header_favicon'] = \GameMonetize\UI::view('global/header/favicon');
 
+// Google Search Console site verification for the production homepage.
+if (($_GET['p'] ?? '') === 'home') {
+	$themeData['header_metatags'] .= '<meta name="google-site-verification" content="WkXRsZNaG77qk0yXebhvc_3VAHqFVP7NsvdVhtFSO5A">';
+}
+
 if ($_GET['p'] != 'login') {
 	if (
 		$userData['admin'] == 0 
