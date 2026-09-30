@@ -47,7 +47,9 @@ export function normalizeGames(input: unknown): Game[] {
   const list = Array.isArray(input) ? input :
     Array.isArray(root.games) ? root.games :
     Array.isArray(root.items) ? root.items :
-    Array.isArray(root.game) ? root.game : [];
+    Array.isArray(root.game) ? root.game :
+    Array.isArray(root.data) ? root.data :
+    Array.isArray(root.results) ? root.results : [];
   return list.map((item, index) => {
     const raw = (item && typeof item === "object" ? item : {}) as Record<string, unknown>;
     const title = first(raw.title, raw.name, raw.gameName) || "Untitled Game";
@@ -85,14 +87,18 @@ function normalizeRss(xml: string): Game[] {
   }).filter(game => game.title && (game.url || game.thumbnail));
 }
 export async function getCatalog(): Promise<Game[]> {
-  const feedUrl = process.env.GAME_MONETIZE_FEED_URL;
-  if (!feedUrl) return [];
-  const response = await fetch(feedUrl, { next: { revalidate: 900 } });
+  const feedUrl = process.env.GAME_MONETIZE_FEED_URL || "https://gamemonetize.com/feed.php?format=1&num=50&page=1";
+  const response = await fetch(feedUrl, {
+    headers: { accept: "application/xml, text/xml, application/json;q=0.9, */*;q=0.8" },
+    next: { revalidate: 900 }
+  });
   if (!response.ok) throw new Error("Game catalog feed returned " + response.status);
   const contentType = response.headers.get("content-type") || "";
   const body = await response.text();
-  if (contentType.includes("json") || /\.json(?:$|[?#])/i.test(feedUrl)) {
-    try { return normalizeGames(JSON.parse(body)); } catch { return []; }
-  }
-  try { return normalizeGames(JSON.parse(body)); } catch { return normalizeRss(body); }
+  try {
+    const parsed = normalizeGames(JSON.parse(body));
+    if (parsed.length) return parsed.slice(0, 50);
+  } catch {}
+  const rss = normalizeRss(body);
+  return rss.slice(0, 50);
 }
