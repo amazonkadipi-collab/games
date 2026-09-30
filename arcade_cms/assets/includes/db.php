@@ -15,7 +15,11 @@ class ArcadeDatabase {
     public $insert_id = 0;
 
     public function __construct(array $config = []) {
-        $url = getenv('DATABASE_URL');
+        $url = getenv('DATABASE_URL')
+            ?: getenv('POSTGRES_URL')
+            ?: getenv('POSTGRES_URL_NON_POOLING')
+            ?: getenv('NEON_DATABASE_URL')
+            ?: getenv('SUPABASE_DB_URL');
         try {
             if ($url) {
                 $parts = parse_url($url);
