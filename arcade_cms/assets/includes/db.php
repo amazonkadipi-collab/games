@@ -25,9 +25,9 @@ class ArcadeDatabase {
                 $parts = parse_url($url);
                 $host = $parts['host'] ?? 'localhost';
                 $port = $parts['port'] ?? 5432;
-                $name = isset($parts['path']) ? ltrim($parts['path'], '/') : '';
-                $user = $parts['user'] ?? '';
-                $pass = $parts['pass'] ?? '';
+                $name = isset($parts['path']) ? rawurldecode(ltrim($parts['path'], '/')) : '';
+                $user = isset($parts['user']) ? rawurldecode($parts['user']) : '';
+                $pass = isset($parts['pass']) ? rawurldecode($parts['pass']) : '';
             } else {
                 $host = $config['host'] ?? 'localhost';
                 $port = $config['port'] ?? 5432;
@@ -35,7 +35,7 @@ class ArcadeDatabase {
                 $user = $config['user'] ?? '';
                 $pass = $config['pass'] ?? '';
             }
-            $dsn = "pgsql:host=${host};port=${port};dbname=${name};sslmode=require";
+            $dsn = "pgsql:host=" . $host . ";port=" . $port . ";dbname=" . $name . ";sslmode=require;connect_timeout=5";
             $this->pdo = new PDO($dsn, $user, $pass, [
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
