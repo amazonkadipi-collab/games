@@ -1,0 +1,16 @@
+{
+  "services": {
+    "arcade": {
+      "root": "./",
+      "entrypoint": "Dockerfile.vercel"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": {
+        "service": "arcade"
+      }
+    }
+  ]
+}
