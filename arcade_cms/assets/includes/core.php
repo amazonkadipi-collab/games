@@ -1423,7 +1423,12 @@ function addon_path($file)
 
 function td_installing($install_step=0) 
 {
-    $hasDatabaseConfig = file_exists(ABSPATH . 'assets/includes/config.php') || (bool) getenv('DATABASE_URL');
+    $databaseUrl = getenv('DATABASE_URL')
+        ?: getenv('POSTGRES_URL')
+        ?: getenv('POSTGRES_URL_NON_POOLING')
+        ?: getenv('NEON_DATABASE_URL')
+        ?: getenv('SUPABASE_DB_URL');
+    $hasDatabaseConfig = file_exists(ABSPATH . 'assets/includes/config.php') || (bool) $databaseUrl;
     $hasInstallMarker = file_exists(ABSPATH . 'assets/includes/install-blank.php');
 
     if ($install_step == 1) {
