@@ -122,7 +122,6 @@ if (!isset($_GET['p'])) {
     $_GET['p'] = 'home';
 }
 
-
 require_once dirname( __FILE__ ) . '/gm-load.php';
 
 /*
