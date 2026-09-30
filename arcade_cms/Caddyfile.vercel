@@ -5,5 +5,11 @@
 :{$PORT:80} {
     root * /app
     encode zstd gzip
+
+    # /admin is a clean front-controller route. Without this explicit
+    # rewrite, the Vercel/FrankenPHP combination can fall back to /.
+    @adminRoot path /admin /admin/
+    rewrite @adminRoot /index.php?p=admin&section=global
+
     php_server
 }
