@@ -147,8 +147,6 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST'
             $storedPassword = (string)($candidate['password'] ?? '');
             $passwordOk = hash_equals($storedPassword, $loginKey);
 
-            // Also support installations that later migrate the password column
-            // to password_hash() without breaking the current admin account.
             if (!$passwordOk && str_starts_with($storedPassword, '$2y
 
 // Generic loader for the separately delivered PageSpeed PRO package. The
@@ -294,8 +292,6 @@ $GameMonetizeConnect->close();
     exit;
 }
 
-// Refresh the authenticated account data from the Neon account table so
-// admin authorization does not depend on a legacy bootstrap side effect.
 $userData = [];
 if (isset($_COOKIE['gm_ac_u'], $_COOKIE['gm_ac_p']) && isset($GameMonetizeConnect)) {
     $cookieUserId = (int)$_COOKIE['gm_ac_u'];
