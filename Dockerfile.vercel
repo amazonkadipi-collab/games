@@ -1,0 +1,11 @@
+FROM dunglas/frankenphp:1-php8.3-bookworm
+
+RUN install-php-extensions mysqli curl mbstring zip gd
+
+WORKDIR /app
+COPY arcade_cms/ /app/
+COPY arcade_cms/Caddyfile.vercel /etc/caddy/Caddyfile
+
+ENV SERVER_NAME=:80
+
+CMD ["frankenphp","run","--config","/etc/caddy/Caddyfile","--adapter","caddyfile"]
