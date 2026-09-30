@@ -66,14 +66,14 @@ export function normalizeGames(input: unknown): Game[] {
   }).filter(game => game.title && (game.url || game.thumbnail));
 }
 function xmlDecode(value: string) {
-  return value.replace(/<![CDATA[([\\s\\S]*?)]]>/g, "$1").replace(/&amp;/g,"&").replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&quot;/g,'"').replace(/&#39;/g,"'");
+  return value.replace(/<![CDATA[([\s\S]*?)]]>/g, "$1").replace(/&amp;/g,"&").replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&quot;/g,'"').replace(/&#39;/g,"'");
 }
 function tagValue(block: string, tag: string) {
   const match = block.match(new RegExp("<" + tag + "[^>]*>([\\s\\S]*?)</" + tag + ">", "i"));
   return match ? xmlDecode(match[1]).trim() : "";
 }
 function normalizeRss(xml: string): Game[] {
-  const items = [...xml.matchAll(/<item(?:\\s[^>]*)?>([\\s\\S]*?)<\\/item>/gi)].map(m => m[1]);
+  const items = [...xml.matchAll(/<item(?:\s[^>]*)?>([\s\S]*?)<\/item>/gi)].map(m => m[1]);
   return items.map((block, index) => {
     const title = tagValue(block,"title") || "Untitled Game";
     const id = tagValue(block,"id") || tagValue(block,"gameId") || String(index);
