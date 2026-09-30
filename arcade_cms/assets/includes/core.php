@@ -36,8 +36,11 @@ if ( td_installing() ) {
     /**
     * Check connection status
     */
-    if ($GameMonetizeConnect->connect_errno) 
-        exit($GameMonetizeConnect->connect_errno);
+    if ($GameMonetizeConnect->connect_errno) {
+        error_log('[Arcade CMS] Database connection failed: ' . ($GameMonetizeConnect->error ?: 'unknown connection error'));
+        http_response_code(503);
+        exit('Database connection failed.');
+    }
 
     require_once ABSPATH . 'assets/classes/load.php';
     require_once ABSPATH . 'gm-content/addons/load.php';
