@@ -30,8 +30,13 @@ $token = trim((string)($_GET['token']??''));
 $stored = trim((string)($pdo->query("SELECT settings_10 FROM gm_setting WHERE id=1")->fetchColumn() ?: ''));
 if ($token==='' || $stored==='' || !hash_equals($stored,$token)) out(['ok'=>false,'error'=>'unauthorized'],403);
 
-$lock = (bool)$pdo->query('SELECT pg_try_advisory_lock(91472026)')->fetchColumn();
+$lock = (bool)$pdo->query('SELECT pg_try_advisory_lock(91472027)')->fetchColumn();
 if (!$lock) out(['ok'=>false,'error'=>'import_already_running'],409);
+$lockReleased=false;
+register_shutdown_function(function() use ($pdo, &$lockReleased): void {
+    if ($lockReleased) return;
+    try { $pdo->query('SELECT pg_advisory_unlock(91472027)'); } catch (Throwable $e) {}
+});
 
 $categoryParam = trim((string)($_GET['category'] ?? 'All'));
 $popularityParam = trim((string)($_GET['popularity'] ?? 'newest'));
@@ -182,8 +187,12 @@ try {
     foreach($chunk as $r){$insert->execute($r);$inserted++;}
   }
   $pdo->commit();
+  try { $pdo->query('SELECT pg_advisory_unlock(91472027)'); } catch (Throwable $e) {}
+  $lockReleased=true;
 } catch(Throwable $e) {
   if($pdo->inTransaction())$pdo->rollBack();
+  try { $pdo->query('SELECT pg_advisory_unlock(91472027)'); } catch (Throwable $unlockError) {}
+  $lockReleased=true;
   out(['ok'=>false,'error'=>'batch_insert_failed','db_error'=>$e->getMessage(),'source_count'=>count($data),'prepared_rows'=>count($rows),'inserted_so_far'=>$inserted],500);
 }
 
