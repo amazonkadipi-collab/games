@@ -1,6 +1,8 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   "services": {
     "arcade": {
+      "runtime": "container",
       "root": "./",
       "entrypoint": "Dockerfile.vercel"
     }
