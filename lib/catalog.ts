@@ -66,7 +66,7 @@ export function normalizeGames(input: unknown): Game[] {
   }).filter(game => game.title && (game.url || game.thumbnail));
 }
 function xmlDecode(value: string) {
-  return value.replace(/<![CDATA[([\s\S]*?)]]>/g, "$1").replace(/&amp;/g,"&").replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&quot;/g,'"').replace(/&#39;/g,"'");
+  return value.replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g, "$1").replace(/&amp;/g,"&").replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&quot;/g,'"').replace(/&#39;/g,"'");
 }
 function tagValue(block: string, tag: string) {
   const match = block.match(new RegExp("<" + tag + "[^>]*>([\\s\\S]*?)</" + tag + ">", "i"));
