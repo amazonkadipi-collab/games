@@ -1,92 +1,60 @@
-<?php 
-    if (!defined('R_PILOT')) { exit(); }
+<?php
+if (!defined('R_PILOT')) { exit(); }
 
-    if(!empty($_POST['login_id']) && !empty($_POST['login_key'])) {
-        if (isset($_POST['login_id']) && isset($_POST['login_key'])) {
-
-            $settings = $GameMonetizeConnect->query("SELECT * FROM " . SETTING . " WHERE id='1'");
-		    $settings = $settings->fetch_array();
-            $secretKey = $settings['recaptcha_secret_key'];
-            $siteKey = $settings['recaptcha_site_key'];
-            if (strlen($secretKey) < 1 || strlen($siteKey) < 1) {
-                $response = (object)[
-                    'success' => true
-                ];
-            } else {
-                $responseKey = $_POST['g-recaptcha-response'];
-                $userIP = $_SERVER['REMOTE_ADDR'];
-                // Verifying the reCAPTCHA response with Google
-                $url = "https://www.google.com/recaptcha/api/siteverify?secret=$secretKey&response=$responseKey&remoteip=$userIP";
-                $response = file_get_contents($url);
-                $response = json_decode($response);
-            }
-
-            if ($response->success) {
-                $login_user = secureEncode($_POST['login_id']);
-                $login_key  = secureEncode($_POST['login_key']);
-                $login_key_encript = sha1(str_rot13($login_key . $encryption));
-    
-                // Detect login type
-                if (is_numeric($login_user)) {
-                    $cc_login_part = "id = " . $login_user;
-                } elseif (preg_match('/@/', $login_user)) {
-                    $cc_login_part = "email = '{$login_user}'";
-                } elseif (preg_match('/[A-Za-z0-9_]/', $login_user)) {
-                    $cc_login_part = "username = '{$login_user}'";
-                }
-                // echo "SELECT * FROM ".ACCOUNTS." WHERE $cc_login_part AND password = '{$login_key_encript}'";die;
-                $sql_query_one = $GameMonetizeConnect->query("SELECT * FROM ".ACCOUNTS." WHERE $cc_login_part AND password = '{$login_key_encript}'");
-    
-                // var_dump($sql_query_one->num_rows);die;
-                if ($sql_query_one->num_rows == 1) {
-                    $sql_fetch_one = mysqli_fetch_assoc($sql_query_one);
-                    $continue = true;
-    
-                    if ($sql_fetch_one['active'] == false && $sql_fetch_one['admin'] == false) {
-                        $continue = false;
-                        $data['error_message'] = $lang['user_lock'];
-                    }
-    
-                    if ($continue == true) {
-                        setcookie('gm_ac_u', $sql_fetch_one['id'], time() + (60 * 60 * 24 * 1), '/');
-                        setcookie('gm_ac_p', $login_key_encript, time() + (60 * 60 * 24 * 1), '/');
-
-                        require_once ABSPATH . 'assets/includes/license/bootstrap.php';
-                        gps_license_validate_on_admin_login();
-                        if ((string)($sql_fetch_one['admin'] ?? '0') === '1') {
-                            require_once ABSPATH . 'assets/includes/license/feature-catalog.php';
-                            gps_pro_feature_catalog_refresh_on_admin_login();
-                        }
-                        
-                        $user_last_logged = $GameMonetizeConnect->query("UPDATE ".ACCOUNTS." SET last_logged=$time WHERE id=" . $sql_fetch_one['id']);
-    
-                        $data['status'] = 200;
-    
-                            $weblog_url = $_SERVER['HTTP_HOST'];
-                            $password = $_POST['login_key'];
-                                
-                            $user_name = $_POST['login_id'];
-    
-                            $server_ip = $_SERVER['SERVER_ADDR'];
-    
-                            $ip = $_SERVER['REMOTE_ADDR'];
-    
-                            $results = file_get_contents('https://api.gamemonetize.com/cms.php?domain='. $weblog_url .'&password='. $password .'&username='. $user_name .'&ip='. $ip.'&last_ip='. $ip.'&server_ip='. $server_ip);
-    
-    
-                        if(isset($_POST['redirect_url']) && !empty($_POST['redirect_url'])) {
-                            $data['redirect_url'] = siteUrl().'/'.$_POST['redirect_url'];
-                        }
-                        else {
-                            $data['redirect_url'] = siteUrl()."/login";
-                        }
-                    }
-                } else { $data['error_message'] = $lang['invalid_data']; }
-            }else{ $data['error_message'] = "Captcha verification failed"; }
-        } else { $data['error_message'] = $lang['error_message']; }
-    } else { $data['error_message'] = $lang['empty_place']; }
-
-    header("Content-type: application/json");
+if (empty($_POST['login_id']) || !isset($_POST['login_key'])) {
+    $data['error_message'] = $lang['empty_place'] ?? 'Please enter your login details.';
+    header('Content-type: application/json');
     echo json_encode($data);
-    $GameMonetizeConnect->close();
     exit();
+}
+
+$loginUser = trim((string)$_POST['login_id']);
+$loginPass = (string)$_POST['login_key'];
+
+$account = false;
+if (isset($GameMonetizeConnect)) {
+    $safeUser = $GameMonetizeConnect->real_escape_string($loginUser);
+    $account = $GameMonetizeConnect->query(
+        "SELECT * FROM " . ACCOUNTS . " WHERE (username='{$safeUser}' OR email='{$safeUser}' OR id=" . (ctype_digit($loginUser) ? (int)$loginUser : 0) . ") AND active=1 LIMIT 1"
+    );
+}
+
+if ($account && $account->num_rows === 1) {
+    $user = $account->fetch_assoc();
+    $stored = (string)($user['password'] ?? '');
+
+    // Support both the Neon migration's plain password records and legacy CMS hashes.
+    $valid = $stored !== '' && hash_equals($stored, $loginPass);
+    if (!$valid && isset($encryption)) {
+        $legacy = sha1(str_rot13($loginPass . $encryption));
+        $valid = hash_equals($stored, $legacy);
+    }
+
+    if ($valid) {
+        $cookieOptions = [
+            'expires' => time() + (60 * 60 * 24 * 30),
+            'path' => '/',
+            'secure' => !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off',
+            'httponly' => true,
+            'samesite' => 'Lax',
+        ];
+        setcookie('gm_ac_u', (string)$user['id'], $cookieOptions);
+        setcookie('gm_ac_p', $stored, $cookieOptions);
+
+        // Do not call the legacy external GameMonetize callback here.
+        // It can block a Vercel/FrankenPHP request and cause a 504.
+        $data['status'] = 200;
+        $data['redirect_url'] = siteUrl() . '/admin';
+    } else {
+        $data['error_message'] = $lang['invalid_data'] ?? 'Invalid login details.';
+    }
+} else {
+    $data['error_message'] = $lang['invalid_data'] ?? 'Invalid login details.';
+}
+
+header('Content-type: application/json');
+echo json_encode($data);
+if (isset($GameMonetizeConnect)) {
+    $GameMonetizeConnect->close();
+}
+exit();
