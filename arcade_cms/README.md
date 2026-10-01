@@ -11,3 +11,5 @@ Installed GamePortalScript / GameMonetize Free CMS 9.1 code, kept under `arcade_
 5. Import the CMS database catalog separately if required; do not commit production database credentials or install locks.
 
 The live server configuration and installation lock were intentionally excluded from Git.
+
+<!-- production deployment trigger: keep runtime PHP fixes on main -->
