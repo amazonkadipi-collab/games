@@ -76,8 +76,7 @@ if ($cmsRequestPath === 'sitemap.xml') {
     header('Cache-Control: public, max-age=3600, s-maxage=3600');
     $xml = '<?xml version="1.0" encoding="UTF-8"?>';
     $xml .= '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
-    $static = ['/','/games','/categories','/new-games','/best-games'];
-    foreach ($static as $url) $xml .= '<sitemap><loc>' . htmlspecialchars($siteUrl . '/sitemaps/static.xml', ENT_XML1) . '</loc></sitemap>';
+    $xml .= '<sitemap><loc>' . htmlspecialchars($siteUrl . '/sitemaps/static.xml', ENT_XML1) . '</loc></sitemap>';
     $gameCount = 0;
     if (isset($GameMonetizeConnect)) {
         $countResult = $GameMonetizeConnect->query("SELECT COUNT(*) AS total FROM " . GAMES . " WHERE slug IS NOT NULL AND slug <> ''");
