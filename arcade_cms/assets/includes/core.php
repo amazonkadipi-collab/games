@@ -44,7 +44,7 @@ if ( td_installing() ) {
 
     require_once ABSPATH . 'assets/classes/load.php';
     require_once ABSPATH . 'gm-content/addons/load.php';
-    require_once ABSPATH . 'assets/includes/engine.php';
+    // The bundled legacy encrypted engine performs remote/vendor bootstrap work that can block the Vercel container for the full request timeout. The CMS compatibility layer is self-contained, so keep production requests local and deterministic.\n    // require_once ABSPATH . 'assets/includes/engine.php';
 }
 
 
