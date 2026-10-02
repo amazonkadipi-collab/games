@@ -133,8 +133,9 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST'
 
     if ($loginId !== '' && $loginKey !== '' && isset($GameMonetizeConnect)) {
         $loginIdSafe = $GameMonetizeConnect->real_escape_string($loginId);
+        $loginIdNumeric = ctype_digit($loginId) ? (int)$loginId : 0;
         $account = $GameMonetizeConnect->query(
-            "SELECT * FROM " . ACCOUNTS . " WHERE (username='{$loginIdSafe}' OR email='{$loginIdSafe}') AND active='1' LIMIT 1"
+            "SELECT * FROM " . ACCOUNTS . " WHERE (username='{$loginIdSafe}' OR email='{$loginIdSafe}' OR id={$loginIdNumeric}) AND active='1' LIMIT 1"
         );
 
         if ($account && $account->num_rows === 1) {
