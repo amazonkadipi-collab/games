@@ -3,7 +3,6 @@
 require 'vendor/autoload.php';
 require_once ABSPATH . 'assets/includes/license/bootstrap.php';
 require_once ABSPATH . 'assets/includes/license/feature-catalog.php';
-@include_once __DIR__ . '/../requests/admin/reg.php';
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\IOFactory;
@@ -24,21 +23,9 @@ if (!is_logged() || empty($userData['admin'])) {
 }
 
 if (is_logged() && $userData['admin']) {
-	// Admin pages read only the local catalog. The portal is contacted from a
-	// successful administrator login: every 3 days for PRO or 7 days for Free.
-	gps_pro_feature_catalog_load();
-
-	$json = file_get_contents('https://api.gamemonetize.com/cms_admin.json?' . $date);
-	$arr = json_decode($json, true);
-	$domain = $_SERVER['HTTP_HOST'];
-	$domain = preg_replace('#^(http(s)?://)?w{3}\.#', '$1', $domain);
-
-	foreach ($arr['response']['games'] as $game) {
-		if ($game['domain'] === $domain) {
-			header("Location: https://gamemonetize.com?utm_source=blockedcms&domain=" . $domain);
-			break;
-		}
-	}
+	// Keep the admin dashboard local and deterministic. External GameMonetize
+	// registry/blacklist requests are intentionally not part of authentication
+	// or rendering because they can block or redirect the CMS on Vercel.
 
 	$date =  date('Ymdms');
 	$date = strtotime($date);
