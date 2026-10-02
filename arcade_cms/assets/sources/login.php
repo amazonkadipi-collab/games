@@ -44,6 +44,7 @@
 			$themeData['login_recaptcha'] = \GameMonetize\UI::view('welcome/login_recaptcha');
 		}
 		$themeData['page_content'] = \GameMonetize\UI::view('welcome/login');
+		$themeData['page_content'] = str_replace('<form class="signin-form" method="post"', '<form class="signin-form" action="/login" method="post"', (string)$themeData['page_content']);
 	}
 	else {
 		if (is_admin()) {
