@@ -124,6 +124,39 @@ if (!isset($_GET['p'])) {
 
 require_once dirname( __FILE__ ) . '/gm-load.php';
 
+$cmsRequestPath = trim((string)parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH), '/');
+if ($cmsRequestPath === 'sitemap.xml') {
+    header('Content-Type: application/xml; charset=UTF-8');
+    header('Cache-Control: public, max-age=3600, s-maxage=3600');
+    $siteUrl = 'https://pokicrazygames.vercel.app';
+    $sitemap = '<?xml version="1.0" encoding="UTF-8"?>';
+    $sitemap .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
+    $staticUrls = ['/', '/games', '/categories'];
+    foreach ($staticUrls as $url) {
+        $sitemap .= '<url><loc>' . htmlspecialchars($siteUrl . $url, ENT_XML1) . '</loc></url>';
+    }
+    $categories = ['action','adventure','arcade','racing','sports','puzzle','shooting','strategy','multiplayer','2-player','io-games','skill','horror','zombie'];
+    foreach ($categories as $slug) {
+        $sitemap .= '<url><loc>' . htmlspecialchars($siteUrl . '/category/' . $slug, ENT_XML1) . '</loc></url>';
+    }
+    if (isset($GameMonetizeConnect)) {
+        $gameQuery = $GameMonetizeConnect->query("SELECT slug, publishedAt FROM " . GAMES . " WHERE slug IS NOT NULL AND slug <> '' ORDER BY id ASC LIMIT 50000");
+        if ($gameQuery) {
+            while ($game = $gameQuery->fetch_assoc()) {
+                $loc = $siteUrl . '/game/' . rawurlencode((string)$game['slug']);
+                $sitemap .= '<url><loc>' . htmlspecialchars($loc, ENT_XML1) . '</loc>';
+                if (!empty($game['publishedAt'])) {
+                    $sitemap .= '<lastmod>' . htmlspecialchars(date('c', strtotime((string)$game['publishedAt'])), ENT_XML1) . '</lastmod>';
+                }
+                $sitemap .= '</url>';
+            }
+        }
+    }
+    $sitemap .= '</urlset>';
+    echo $sitemap;
+    exit;
+}
+
 /* Neon-backed admin login bridge. */
 if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST'
     && (($_GET['p'] ?? '') === 'login' || trim((string)parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH), '/') === 'login')
