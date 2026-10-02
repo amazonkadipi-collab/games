@@ -41,6 +41,12 @@ class ArcadeDatabase {
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
                 PDO::ATTR_EMULATE_PREPARES => false,
             ]);
+
+            // Never allow a bad/blocked Neon query to consume Vercel's full
+            // 300-second container lifetime. Keep the existing CMS behavior,
+            // but fail a single database statement quickly and visibly.
+            $this->pdo->exec("SET statement_timeout = 15000");
+            $this->pdo->exec("SET lock_timeout = 5000");
         } catch (Throwable $e) {
             $this->connect_errno = 1;
             $this->error = $e->getMessage();
@@ -79,6 +85,7 @@ class ArcadeDatabase {
             return true;
         } catch (Throwable $e) {
             $this->error = $e->getMessage();
+            error_log('[Arcade CMS] Database query failed: ' . $this->error);
             return false;
         }
     }
