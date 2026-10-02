@@ -1,4 +1,12 @@
 <?php
+// Production diagnostics: keep the public response unchanged, but log fatal
+// PHP errors instead of silently returning an empty 200 response.
+register_shutdown_function(function () {
+    $error = error_get_last();
+    if (is_array($error) && in_array($error['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR], true)) {
+        error_log('[Arcade CMS] Fatal request error: ' . ($error['message'] ?? 'unknown') . ' in ' . ($error['file'] ?? 'unknown') . ':' . ($error['line'] ?? 0));
+    }
+});
 /**
 * @package GameMonetize.com CMS - Modern Arcade Script
 *
