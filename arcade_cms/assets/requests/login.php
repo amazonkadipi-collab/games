@@ -1,15 +1,15 @@
 <?php
 if (!defined('R_PILOT')) { exit(); }
 
-if (empty($_POST['login_id']) || !isset($_POST['login_key'])) {
+$loginUser = trim((string)($_POST['login_id'] ?? $_POST['username'] ?? $_POST['login'] ?? ''));
+$loginPass = (string)($_POST['login_key'] ?? $_POST['password'] ?? '');
+
+if ($loginUser === '' || $loginPass === '') {
     $data['error_message'] = $lang['empty_place'] ?? 'Please enter your login details.';
     header('Content-type: application/json');
     echo json_encode($data);
     exit();
 }
-
-$loginUser = trim((string)$_POST['login_id']);
-$loginPass = (string)$_POST['login_key'];
 
 $account = false;
 if (isset($GameMonetizeConnect)) {
