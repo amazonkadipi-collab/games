@@ -157,4 +157,114 @@ if (isset($_COOKIE['gm_ac_u'],$_COOKIE['gm_ac_p']) && isset($GameMonetizeConnect
     }
 }
 
-require_once dirname(__FILE__) . '/gm-request.php';
+
+// Generic loader for the separately delivered PageSpeed PRO package. The
+// Free CMS contains no optimization implementation and continues normally
+// when the signed feature package is not installed for this host.
+$gpsPageSpeedBootstrap = ABSPATH . 'assets/pro/pagespeed/bootstrap.php';
+if (is_file($gpsPageSpeedBootstrap)) {
+    require_once ABSPATH . 'assets/includes/license/bootstrap.php';
+    if (gps_license_installed_feature_allowed('pagespeed_optimization')) {
+        require_once $gpsPageSpeedBootstrap;
+    }
+}
+
+// Load the separately delivered Crazy Visual Presets implementation only
+// after its signed, domain-bound PRO entitlement has been verified.
+$gpsVisualPresetsBootstrap = ABSPATH . 'assets/pro/crazy_visual_presets/bootstrap.php';
+if (is_file($gpsVisualPresetsBootstrap)) {
+    require_once ABSPATH . 'assets/includes/license/bootstrap.php';
+    // Other Fixes also owns the protected browser-level Classic/PRO theme
+    // chooser. The palette controls remain harmless when no Crazy PRO theme
+    // is selected, while Free installations still never load this runtime.
+    if (gps_license_installed_feature_allowed('crazy_visual_presets')
+        || gps_license_installed_feature_allowed('other_fixes')) {
+        require_once $gpsVisualPresetsBootstrap;
+    }
+}
+
+// Load the separately delivered visitor translation feature only when its
+// signed package belongs to this exact licensed domain and installation.
+$gpsTranslateBootstrap = ABSPATH . 'assets/pro/translate/bootstrap.php';
+if (is_file($gpsTranslateBootstrap)) {
+    require_once ABSPATH . 'assets/includes/license/bootstrap.php';
+    if (gps_license_installed_feature_allowed('translate')) {
+        require_once $gpsTranslateBootstrap;
+    }
+}
+
+// Small public-site corrections remain isolated in their separately signed
+// and domain-bound PRO package. Free installations keep their legacy output.
+$gpsOtherFixesBootstrap = ABSPATH . 'assets/pro/other_fixes/bootstrap.php';
+if (is_file($gpsOtherFixesBootstrap)) {
+    require_once ABSPATH . 'assets/includes/license/bootstrap.php';
+    if (gps_license_installed_feature_allowed('other_fixes')) {
+        require_once $gpsOtherFixesBootstrap;
+    }
+}
+
+// Menu layouts are delivered as their own protected PRO feature. During the
+// transition from the earlier combined package, an existing PRO installation
+// may use the cached entitlement until the dedicated package marker is added.
+$gpsMenuDesignBootstrap = ABSPATH . 'assets/pro/menu_design/bootstrap.php';
+if (is_file($gpsMenuDesignBootstrap)) {
+    require_once ABSPATH . 'assets/includes/license/bootstrap.php';
+    $gpsMenuDesignAllowed = gps_license_installed_feature_allowed('menu_design');
+    if (!$gpsMenuDesignAllowed && gps_license_installed_feature_allowed('other_fixes')) {
+        $gpsMenuDesignClaims = function_exists('gps_license_cached_bound_claims')
+            ? gps_license_cached_bound_claims()
+            : [];
+        $gpsMenuDesignStatus = strtolower(trim((string)($gpsMenuDesignClaims['status'] ?? '')));
+        $gpsMenuDesignPlan = strtolower(trim((string)($gpsMenuDesignClaims['plan'] ?? 'free')));
+        $gpsMenuDesignExpiryRaw = trim((string)($gpsMenuDesignClaims['license_expires_at'] ?? ''));
+        $gpsMenuDesignExpiry = $gpsMenuDesignExpiryRaw === ''
+            ? false
+            : strtotime($gpsMenuDesignExpiryRaw . ' UTC');
+        $gpsMenuDesignAllowed = $gpsMenuDesignClaims !== []
+            && $gpsMenuDesignPlan !== 'free'
+            && ($gpsMenuDesignStatus === '' || $gpsMenuDesignStatus === 'active')
+            && ($gpsMenuDesignExpiry === false || $gpsMenuDesignExpiry >= time());
+    }
+    if ($gpsMenuDesignAllowed) {
+        require_once $gpsMenuDesignBootstrap;
+    }
+}
+
+// The redesigned CrazyGames dashboard and its player engagement system are
+// installed as one dedicated, domain-bound PRO package. Free installations
+// never load its UI or its database-backed runtime.
+$gpsCrazyProfessionalBootstrap = ABSPATH . 'assets/pro/crazygames_professional/bootstrap.php';
+if (is_file($gpsCrazyProfessionalBootstrap)) {
+    require_once ABSPATH . 'assets/includes/license/bootstrap.php';
+    if (gps_license_installed_feature_allowed('crazygames_professional')) {
+        require_once $gpsCrazyProfessionalBootstrap;
+    }
+}
+
+// The Poki PRO and Kizi PRO themes are delivered together as a protected
+// presentation package. Classic templates never load this implementation.
+$gpsProfessionalShowcaseBootstrap = ABSPATH . 'assets/pro/professional_showcase/bootstrap.php';
+if (is_file($gpsProfessionalShowcaseBootstrap)) {
+    require_once ABSPATH . 'assets/includes/license/bootstrap.php';
+    $gpsProfessionalShowcaseAllowed = gps_license_installed_feature_allowed('professional_showcase')
+        || gps_license_installed_feature_allowed('other_fixes');
+    if ($gpsProfessionalShowcaseAllowed) {
+        require_once $gpsProfessionalShowcaseBootstrap;
+    }
+}
+
+require_once ABSPATH . 'assets/index/header_tags.php';
+require_once ABSPATH . 'assets/index/header.php';
+require_once ABSPATH . 'assets/index/footer.php';
+require_once ABSPATH . 'assets/index/page.php';
+$gpsRenderedIndex = \GameMonetize\UI::view('index');
+if (function_exists('gmLocalizationApplyCorePage')) {
+    gmLocalizationApplyCorePage($themeData);
+    $gpsRenderedIndex = \GameMonetize\UI::view('index');
+}
+if (function_exists('gps_other_fixes_localization_render')) {
+    $gpsRenderedIndex = gps_other_fixes_localization_render($gpsRenderedIndex);
+}
+echo $gpsRenderedIndex;
+
+$GameMonetizeConnect->close();
