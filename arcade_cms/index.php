@@ -157,6 +157,13 @@ if ($cmsRequestPath === 'sitemap.xml') {
     exit;
 }
 
+if ($cmsRequestPath === 'robots.txt') {
+    header('Content-Type: text/plain; charset=UTF-8');
+    header('Cache-Control: public, max-age=3600, s-maxage=3600');
+    echo "User-agent: *\nDisallow: /admin\nDisallow: /assets/includes/\nSitemap: https://pokicrazygames.vercel.app/sitemap.xml\n";
+    exit;
+}
+
 /* Neon-backed admin login bridge. */
 if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST'
     && (($_GET['p'] ?? '') === 'login' || trim((string)parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH), '/') === 'login')
