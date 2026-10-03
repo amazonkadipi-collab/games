@@ -273,6 +273,11 @@ if (function_exists('gmLocalizationApplyCorePage')) {
 if (function_exists('gps_other_fixes_localization_render')) {
     $gpsRenderedIndex = gps_other_fixes_localization_render($gpsRenderedIndex);
 }
-echo $gpsRenderedIndex;
+$gpsRenderedIndex = (string)$gpsRenderedIndex;
+if ($gpsRenderedIndex !== '') {
+    header('Content-Type: text/html; charset=UTF-8');
+    header('Content-Length: ' . strlen($gpsRenderedIndex));
+    echo $gpsRenderedIndex;
+}
 
 $GameMonetizeConnect->close();
