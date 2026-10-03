@@ -42,7 +42,7 @@ if ( td_installing() ) {
         exit('Database connection failed.');
     }
 
-    require_once ABSPATH . 'assets/classes/load.php';
+    // Recreate the small runtime bootstrap that the legacy encrypted engine used to provide.\n    // Keep the original theme selected in gm_setting; do not replace or invent a theme.\n    global $config, $lang, $themeData, $userData;\n    $config = [];\n    $settingQuery = $GameMonetizeConnect->query("SELECT * FROM " . SETTING . " WHERE id='1' LIMIT 1");\n    if ($settingQuery && ($settingRow = $settingQuery->fetch_assoc())) {\n        $config = $settingRow;\n    }\n    $config['site_url'] = rtrim((string)($config['site_url'] ?? ''), '/');\n    if ($config['site_url'] === '') {\n        $config['site_url'] = 'https://' . preg_replace('/:\\d+$/', '', (string)($_SERVER['HTTP_HOST'] ?? ''));\n    }\n    $config['site_theme'] = trim((string)($config['site_theme'] ?? ''));\n    $config['theme_path'] = $config['site_url'] . '/templates/' . $config['site_theme'];\n    $lang = [];\n    $themeData = [];\n    $userData = [];\n\n    require_once ABSPATH . 'assets/classes/load.php';
     require_once ABSPATH . 'gm-content/addons/load.php';
     // The bundled legacy encrypted engine performs remote/vendor bootstrap work that can block the Vercel container for the full request timeout. The CMS compatibility layer is self-contained, so keep production requests local and deterministic.\n    // require_once ABSPATH . 'assets/includes/engine.php';
 }
