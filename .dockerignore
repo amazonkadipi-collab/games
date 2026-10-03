@@ -1,0 +1,9 @@
+.git
+.gitignore
+.env
+.env.*
+!.env.example
+**/config.php
+**/.gameportalscript-installed
+**/error_log
+**/cache/*

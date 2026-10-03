@@ -1,25 +1,21 @@
-# Arcade CMS database migration
+# Arcade CMS database
 
-The production site is the Arcade CMS under `arcade_cms/`. The existing theme and UI are intentionally unchanged.
+The production database is the Neon PostgreSQL project **Games** on its `production` branch. The CMS uses the PostgreSQL compatibility adapter at `assets/includes/db.php` and reads its connection from `DATABASE_URL`.
 
-## Target database
+## Verified production state
 
-Neon PostgreSQL project: `games`.
+- 17 CMS tables present
+- 37,882 games
+- 23 categories
+- 1 active administrator account
+- `gm_setting.site_url`: `https://pokicrazygames.vercel.app`
+- `gm_setting.site_theme`: `kizi`
 
-The CMS currently uses MySQLi and MySQL-specific SQL, so the migration is staged. The live application must not be switched to PostgreSQL until the SQL and data-access layer are converted and verified.
+`schema.postgres.sql` is the reproducible schema/seed reference. It must not be applied directly to production without a backup and a migration review. Existing Neon data is preserved by the application deployment.
 
-## Migration order
+## Deployment requirements
 
-1. Keep the existing MySQLi path available during the transition.
-2. Add PostgreSQL/PDO runtime support to the Vercel container.
-3. Inventory every CMS table and every MySQL-specific query.
-4. Build the PostgreSQL schema from the CMS schema source; do not guess missing columns.
-5. Add a PDO/PostgreSQL data-access layer.
-6. Convert MySQL-only SQL constructs such as AUTO_INCREMENT, SHOW COLUMNS, ALTER ... AFTER, INSERT IGNORE, ON DUPLICATE KEY, and MySQL quoting.
-7. Move persistent generated files such as sitemaps/images out of the ephemeral Vercel filesystem.
-8. Verify public and admin routes without changing the existing design.
-9. Only then switch production database configuration to Neon.
-
-## Current blocker
-
-The connected Neon tool has not resolved the user's `games` project by name yet. No production database schema or data was changed in this migration step.
+1. Add `DATABASE_URL` to Vercel Production using the Neon project `Games` production connection string.
+2. Redeploy after changing database credentials.
+3. Verify `/`, `/login`, `/admin`, `/sitemap.xml`, and a game URL.
+4. Keep generated runtime files and secrets out of Git.
