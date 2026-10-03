@@ -585,7 +585,7 @@ if ($config['site_theme'] == 'kizi' || $config['site_theme'] == 'y8-like' || $co
 	}
 }
 
-if ($config['site_theme'] == 'y8-like' || gps_theme_is('poki-like')) {
+if ($config['site_theme'] == 'kizi' || $config['site_theme'] == 'y8-like' || gps_theme_is('poki-like')) {
 	$sql_cat_query = $GameMonetizeConnect->query("SELECT * FROM " . CATEGORIES . " WHERE show_home='1'");
 	$ct_r = '';
 	while ($category = $sql_cat_query->fetch_array()) {
