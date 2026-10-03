@@ -35,7 +35,7 @@ class ArcadeDatabase {
                 $user = $config['user'] ?? '';
                 $pass = $config['pass'] ?? '';
             }
-            $dsn = "pgsql:host=" . $host . ";port=" . $port . ";dbname=" . $name . ";sslmode=require;connect_timeout=5";
+            $dsn = "pgsql:host=" . $host . ";port=" . $port . ";dbname=" . $name . ";sslmode=require;connect_timeout=3";
             $this->pdo = new PDO($dsn, $user, $pass, [
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
@@ -45,8 +45,8 @@ class ArcadeDatabase {
             // Never allow a bad/blocked Neon query to consume Vercel's full
             // 300-second container lifetime. Keep the existing CMS behavior,
             // but fail a single database statement quickly and visibly.
-            $this->pdo->exec("SET statement_timeout = 15000");
-            $this->pdo->exec("SET lock_timeout = 5000");
+            $this->pdo->exec("SET statement_timeout = 3000");
+            $this->pdo->exec("SET lock_timeout = 1500");
         } catch (Throwable $e) {
             $this->connect_errno = 1;
             $this->error = $e->getMessage();
@@ -86,6 +86,13 @@ class ArcadeDatabase {
         } catch (Throwable $e) {
             $this->error = $e->getMessage();
             error_log('[Arcade CMS] Database query failed: ' . $this->error);
+            // A failed public SELECT must not turn into a PHP fatal later when
+            // the theme calls fetch_array(). Return an empty result instead.
+            // This keeps the original theme renderable while the failed query
+            // is logged and the request remains bounded on Vercel.
+            if (preg_match('/^\\s*(SELECT|WITH|SHOW)\\b/i', ltrim((string)$sql))) {
+                return new ArcadeDatabaseResult([]);
+            }
             return false;
         }
     }
