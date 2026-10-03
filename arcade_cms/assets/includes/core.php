@@ -2,8 +2,9 @@
 /**
 * @package GameMonetize CMS 
 */
-set_time_limit(0);
-session_start();
+set_time_limit(30);
+// Public requests do not require PHP session state; admin authentication uses cookies.
+// Avoid session file locking inside Vercel's ephemeral container.
 date_default_timezone_set( 'UTC' ); // GameMonetize.com calculates offsets from UTC
 define('CORE_PILOT', true);
 
@@ -77,7 +78,7 @@ if ( td_installing() ) {
     require_once ABSPATH . 'assets/classes/load.php';
     // The public header uses GameMonetize\\UI directly; load it explicitly so the CMS does not depend on autoloader state.
     require_once ABSPATH . 'assets/classes/UI.class.php';
-    require_once ABSPATH . 'gm-content/addons/load.php';
+    // No bundled public addons are required by the original theme; avoid addon/session bootstrap latency on Vercel.
     // The bundled legacy encrypted engine performs remote/vendor bootstrap work that can block the Vercel container for the full request timeout. The CMS compatibility layer is self-contained, so keep production requests local and deterministic.\n    // require_once ABSPATH . 'assets/includes/engine.php';
 }
 
