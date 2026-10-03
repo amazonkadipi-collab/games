@@ -94,7 +94,7 @@ foreach ($games as $game) {
     $title = seo_friendly_url($game['title']);
     $lastTitle = $title;
 
-    $safeTitleCheck = mysqli_real_escape_string($GameMonetizeConnect, $title);
+    $safeTitleCheck = $GameMonetizeConnect->real_escape_string($title);
     $exists = $GameMonetizeConnect->query("SELECT game_id FROM `" . GAMES . "` WHERE `game_name` = '{$safeTitleCheck}' LIMIT 1");
 
     if ($exists && $exists->num_rows > 0) {
@@ -187,7 +187,7 @@ foreach ($games as $game) {
         $wtVideo = getRealGameMonetizeWtVideo($file);
     }
 
-    $safeWtVideo = mysqli_real_escape_string($GameMonetizeConnect, $wtVideo);
+    $safeWtVideo = $GameMonetizeConnect->real_escape_string($wtVideo);
 
     $insert = $GameMonetizeConnect->query("
         INSERT INTO " . GAMES . " (

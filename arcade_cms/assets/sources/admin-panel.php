@@ -1455,23 +1455,23 @@ $themeData['page_admin_content'] = \GameMonetize\UI::view('admin/stats');
 
 		if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-$llm_provider = isset($_POST['llm_provider']) ? mysqli_real_escape_string($GameMonetizeConnect, trim($_POST['llm_provider'])) : 'openai';
+$llm_provider = isset($_POST['llm_provider']) ? $GameMonetizeConnect->real_escape_string(trim($_POST['llm_provider'])) : 'openai';
 
-$openai_api_key = isset($_POST['openai_api_key']) ? mysqli_real_escape_string($GameMonetizeConnect, trim($_POST['openai_api_key'])) : '';
-$deepseek_api_key = isset($_POST['deepseek_api_key']) ? mysqli_real_escape_string($GameMonetizeConnect, trim($_POST['deepseek_api_key'])) : '';
-$mimo_api_key = isset($_POST['mimo_api_key']) ? mysqli_real_escape_string($GameMonetizeConnect, trim($_POST['mimo_api_key'])) : '';
-$gemini_api_key = isset($_POST['gemini_api_key']) ? mysqli_real_escape_string($GameMonetizeConnect, trim($_POST['gemini_api_key'])) : '';
+$openai_api_key = isset($_POST['openai_api_key']) ? $GameMonetizeConnect->real_escape_string(trim($_POST['openai_api_key'])) : '';
+$deepseek_api_key = isset($_POST['deepseek_api_key']) ? $GameMonetizeConnect->real_escape_string(trim($_POST['deepseek_api_key'])) : '';
+$mimo_api_key = isset($_POST['mimo_api_key']) ? $GameMonetizeConnect->real_escape_string(trim($_POST['mimo_api_key'])) : '';
+$gemini_api_key = isset($_POST['gemini_api_key']) ? $GameMonetizeConnect->real_escape_string(trim($_POST['gemini_api_key'])) : '';
 
-$template_game = isset($_POST['template_game']) ? mysqli_real_escape_string($GameMonetizeConnect, trim($_POST['template_game'])) : '';
-$template_category = isset($_POST['template_category']) ? mysqli_real_escape_string($GameMonetizeConnect, trim($_POST['template_category'])) : '';
-$template_tags = isset($_POST['template_tags']) ? mysqli_real_escape_string($GameMonetizeConnect, trim($_POST['template_tags'])) : '';
-$template_footer = isset($_POST['template_footer']) ? mysqli_real_escape_string($GameMonetizeConnect, trim($_POST['template_footer'])) : '';
-$template_blog = isset($_POST['template_blog']) ? mysqli_real_escape_string($GameMonetizeConnect, trim($_POST['template_blog'])) : '';
-$template_blog_title = isset($_POST['template_blog_title']) ? mysqli_real_escape_string($GameMonetizeConnect, trim($_POST['template_blog_title'])) : '';
-$template_blog_related_box = isset($_POST['template_blog_related_box']) ? mysqli_real_escape_string($GameMonetizeConnect, trim($_POST['template_blog_related_box'])) : '';
-$random_words_before_tags = isset($_POST['random_words_before_tags']) ? mysqli_real_escape_string($GameMonetizeConnect, trim($_POST['random_words_before_tags'])) : '';
-$random_words_after_tags = isset($_POST['random_words_after_tags']) ? mysqli_real_escape_string($GameMonetizeConnect, trim($_POST['random_words_after_tags'])) : '';
-$chatgpt_model = isset($_POST['chatgpt_model']) ? mysqli_real_escape_string($GameMonetizeConnect, trim($_POST['chatgpt_model'])) : '';
+$template_game = isset($_POST['template_game']) ? $GameMonetizeConnect->real_escape_string(trim($_POST['template_game'])) : '';
+$template_category = isset($_POST['template_category']) ? $GameMonetizeConnect->real_escape_string(trim($_POST['template_category'])) : '';
+$template_tags = isset($_POST['template_tags']) ? $GameMonetizeConnect->real_escape_string(trim($_POST['template_tags'])) : '';
+$template_footer = isset($_POST['template_footer']) ? $GameMonetizeConnect->real_escape_string(trim($_POST['template_footer'])) : '';
+$template_blog = isset($_POST['template_blog']) ? $GameMonetizeConnect->real_escape_string(trim($_POST['template_blog'])) : '';
+$template_blog_title = isset($_POST['template_blog_title']) ? $GameMonetizeConnect->real_escape_string(trim($_POST['template_blog_title'])) : '';
+$template_blog_related_box = isset($_POST['template_blog_related_box']) ? $GameMonetizeConnect->real_escape_string(trim($_POST['template_blog_related_box'])) : '';
+$random_words_before_tags = isset($_POST['random_words_before_tags']) ? $GameMonetizeConnect->real_escape_string(trim($_POST['random_words_before_tags'])) : '';
+$random_words_after_tags = isset($_POST['random_words_after_tags']) ? $GameMonetizeConnect->real_escape_string(trim($_POST['random_words_after_tags'])) : '';
+$chatgpt_model = isset($_POST['chatgpt_model']) ? $GameMonetizeConnect->real_escape_string(trim($_POST['chatgpt_model'])) : '';
 $maximum_words = isset($_POST['maximum_words']) ? (int) $_POST['maximum_words'] : 0;
 
 $sql = "UPDATE " . CHATGPT . " SET

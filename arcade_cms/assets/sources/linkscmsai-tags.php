@@ -61,7 +61,7 @@ $rewritedTags = trim($rewritedTags);
 if ($rewritedTags !== '') {
     $rewritedTags = '<p>' . $rewritedTags . '</p>';
 }
-$safeRewrite = mysqli_real_escape_string($GameMonetizeConnect, trim((string)$rewritedTags));
+$safeRewrite = $GameMonetizeConnect->real_escape_string(trim((string)$rewritedTags));
 
 $updateTags = $GameMonetizeConnect->query("
     UPDATE " . TAGS . "

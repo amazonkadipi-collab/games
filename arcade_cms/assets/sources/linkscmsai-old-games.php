@@ -63,7 +63,7 @@ $rewrittenDescription = preg_replace('#<a\b[^>]*>(.*?)</a>#is', '$1', $rewritten
 $rewrittenDescription = preg_replace('#>\s+<#', '><', $rewrittenDescription);
 $rewrittenDescription = trim($rewrittenDescription);
 
-$safeDescription = mysqli_real_escape_string($GameMonetizeConnect, $rewrittenDescription);
+$safeDescription = $GameMonetizeConnect->real_escape_string($rewrittenDescription);
 
 $updateGame = $GameMonetizeConnect->query("
     UPDATE " . GAMES . "

@@ -90,8 +90,8 @@ function cmsAiEnsureRegistered($db)
         return false;
     }
 
-    $key = mysqli_real_escape_string($db, (string)$check['key']);
-    $domainSafe = mysqli_real_escape_string($db, $domain);
+    $key = $db->real_escape_string((string)$check['key']);
+    $domainSafe = $db->real_escape_string($domain);
 
     $db->query("
         INSERT INTO gm_chatgpt (id, cms_ai_key, cms_ai_domain, cms_ai_registered)

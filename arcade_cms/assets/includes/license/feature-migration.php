@@ -4,7 +4,7 @@ declare(strict_types=1);
 function gps_feature_migration_db(): mysqli
 {
     global $GameMonetizeConnect;
-    if (!isset($GameMonetizeConnect) || !($GameMonetizeConnect instanceof mysqli) || $GameMonetizeConnect->connect_errno) {
+    if (!isset($GameMonetizeConnect) || !(is_object($GameMonetizeConnect)) || $GameMonetizeConnect->connect_errno) {
         throw new RuntimeException('The CMS database connection is unavailable.');
     }
     return $GameMonetizeConnect;
@@ -147,21 +147,21 @@ function gps_feature_migration_table_exists(mysqli $db, string $table): bool
 {
     $escaped = $db->real_escape_string($table);
     $result = $db->query("SHOW TABLES LIKE '{$escaped}'");
-    return $result instanceof mysqli_result && $result->num_rows > 0;
+    return is_object($result) && method_exists($result, 'fetch_assoc') && $result->num_rows > 0;
 }
 
 function gps_feature_migration_column_exists(mysqli $db, string $table, string $column): bool
 {
     $escaped = $db->real_escape_string($column);
     $result = $db->query("SHOW COLUMNS FROM `{$table}` LIKE '{$escaped}'");
-    return $result instanceof mysqli_result && $result->num_rows > 0;
+    return is_object($result) && method_exists($result, 'fetch_assoc') && $result->num_rows > 0;
 }
 
 function gps_feature_migration_index_exists(mysqli $db, string $table, string $index): bool
 {
     $escaped = $db->real_escape_string($index);
     $result = $db->query("SHOW INDEX FROM `{$table}` WHERE Key_name = '{$escaped}'");
-    return $result instanceof mysqli_result && $result->num_rows > 0;
+    return is_object($result) && method_exists($result, 'fetch_assoc') && $result->num_rows > 0;
 }
 
 function gps_feature_migration_query(mysqli $db, string $sql): void
@@ -187,7 +187,7 @@ function gps_feature_migration_preserved_counts(mysqli $db): array
     $counts = [];
     foreach ($tables as $table) {
         $result = $db->query('SELECT COUNT(*) AS total FROM `' . $table . '`');
-        if (!($result instanceof mysqli_result)) {
+        if (!(is_object($result) && method_exists($result, 'fetch_assoc'))) {
             throw new RuntimeException('Could not verify existing Free database content before the PRO upgrade.');
         }
         $row = $result->fetch_assoc();
@@ -205,7 +205,7 @@ function gps_feature_migration_assert_preserved_counts(mysqli $db, array $before
             throw new RuntimeException('PRO upgrade refused: an existing Free database table disappeared.');
         }
         $result = $db->query('SELECT COUNT(*) AS total FROM `' . $table . '`');
-        $row = $result instanceof mysqli_result ? $result->fetch_assoc() : null;
+        $row = is_object($result) && method_exists($result, 'fetch_assoc') ? $result->fetch_assoc() : null;
         $count = max(0, (int)($row['total'] ?? -1));
         if ($row === null || $count < (int)$minimum) {
             throw new RuntimeException('PRO upgrade refused: existing Free content would be removed from ' . $table . '.');
@@ -243,7 +243,7 @@ function gps_feature_run_database_migration(string $slug, string $version, strin
     $lockName = 'gps_feature_migration_' . substr(hash('sha256', $slug), 0, 24);
     $lockEscaped = $db->real_escape_string($lockName);
     $lockResult = $db->query("SELECT GET_LOCK('{$lockEscaped}', 15) AS acquired");
-    $lockRow = $lockResult instanceof mysqli_result ? $lockResult->fetch_assoc() : null;
+    $lockRow = is_object($lockResult) && method_exists($lockResult, 'fetch_assoc') ? $lockResult->fetch_assoc() : null;
     if ((int)($lockRow['acquired'] ?? 0) !== 1) {
         throw new RuntimeException('Another PRO database migration is currently running.');
     }

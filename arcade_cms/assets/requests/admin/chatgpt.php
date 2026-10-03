@@ -25,7 +25,7 @@ $table = CHATGPT;
 function chatgptColumnExists($db, $table, $column)
 {
     $tableSafe = str_replace('`', '', $table);
-    $columnSafe = mysqli_real_escape_string($db, $column);
+    $columnSafe = $db->real_escape_string($column);
 
     $check = $db->query("SHOW COLUMNS FROM `{$tableSafe}` LIKE '{$columnSafe}'");
 
@@ -47,7 +47,7 @@ function chatgptAddColumnIfMissing($db, $table, $column, $definition)
 function chatgptPostText($db, $key, $default = '')
 {
     return isset($_POST[$key])
-        ? mysqli_real_escape_string($db, trim((string) $_POST[$key]))
+        ? $db->real_escape_string(trim((string) $_POST[$key]))
         : $default;
 }
 
@@ -107,7 +107,7 @@ if (!in_array($llm_provider, $allowedProviders, true)) {
     $llm_provider = 'openai';
 }
 
-$llm_provider = mysqli_real_escape_string($GameMonetizeConnect, $llm_provider);
+$llm_provider = $GameMonetizeConnect->real_escape_string($llm_provider);
 
 $openai_api_key = chatgptPostText($GameMonetizeConnect, 'openai_api_key');
 $deepseek_api_key = chatgptPostText($GameMonetizeConnect, 'deepseek_api_key');
@@ -174,7 +174,7 @@ $save = $GameMonetizeConnect->query("
 
 if (!$save) {
     $data['status'] = 400;
-    $data['error_message'] = mysqli_error($GameMonetizeConnect);
+    $data['error_message'] = $GameMonetizeConnect->error;
     return;
 }
 

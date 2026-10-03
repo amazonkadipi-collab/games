@@ -2,7 +2,7 @@
 <?php if ( defined("PILOT_GLOBAL") != true ) { die(); }
 	$gpilot_id = $GM['game']['data']['game_id'];
 	$sql_query_random_game = $GameMonetizeConnect->query("SELECT * FROM `".GAMES."` WHERE `published` = '1' AND `game_id` != '{$gpilot_id}' ORDER BY rand() LIMIT 4");
-	while($row = mysqli_fetch_array($sql_query_random_game)) {
+	while($row = $sql_query_random_game->fetch_array()) {
 		$rand_game = gameData($row);	
 ?>
 	<li class="card-item">

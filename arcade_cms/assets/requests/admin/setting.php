@@ -331,7 +331,7 @@ if (!empty($_FILES['theme_logo_upload']['name'])) {
                         $result = $GameMonetizeConnect->query(
                             "UPDATE ".SETTING." SET ".implode(', ', $settingAssignments)." WHERE id='1'"
                         );
-                    } catch (mysqli_sql_exception $settingException) {
+                    } catch (Throwable $settingException) {
                         $data['error_message'] = 'Database update failed: ' . $settingException->getMessage();
                     }
                 }

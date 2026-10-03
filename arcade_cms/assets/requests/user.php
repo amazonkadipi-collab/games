@@ -38,7 +38,7 @@
                 $update_theme = secureEncode($_POST["theme_pilot"]);
                 $sql_theme_query = $GameMonetizeConnect->query("SELECT * FROM ".THEMES." WHERE theme_id = '{$update_theme}'");
                 if ($sql_theme_query->num_rows > 0) {
-                    $theme_data = mysqli_fetch_assoc($sql_theme_query);
+                    $theme_data = $sql_theme_query->fetch_assoc();
                     $GameMonetizeConnect->query("UPDATE ".ACCOUNTS." SET profile_theme='{$theme_data['theme_class']}' WHERE id='{$userData['id']}'");
                     $data['status'] = 200;
                     $data['success_message'] = $lang['theme_updated'];

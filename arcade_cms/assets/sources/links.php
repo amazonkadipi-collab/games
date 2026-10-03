@@ -220,7 +220,7 @@ if ($cmsAiCheck && $cmsAiCheck->num_rows > 0) {
                     if (count($allTagsId) > 0) {
                         $tags = "[" . implode(",", $allTagsId) . "]";
                     }
-                    $safeWtVideo = mysqli_real_escape_string($GameMonetizeConnect, getRealGameMonetizeWtVideo($game_data['file']));
+                    $safeWtVideo = $GameMonetizeConnect->real_escape_string(getRealGameMonetizeWtVideo($game_data['file']));
 
                     // Keep ChatGPT games hidden until the rewritten description is saved successfully.
                     $initialPublished = ($linksData['rewrite_method'] == 'chatgpt') ? 0 : 1;
@@ -565,7 +565,7 @@ if ($mainLinksData['rewrite_method'] == 'chatgpt') {
                             die;
                         }
 
-                        $safeRewrite = mysqli_real_escape_string($GameMonetizeConnect, $rewritedTags);
+                        $safeRewrite = $GameMonetizeConnect->real_escape_string($rewritedTags);
 
                         $updateTags = $GameMonetizeConnect->query("
                             UPDATE " . TAGS . "
@@ -614,7 +614,7 @@ if ($mainLinksData['rewrite_method'] == 'chatgpt') {
 
                         if ($rewritedFooter !== false && strlen(trim($rewritedFooter)) > 0) {
 
-                            $safeContent = mysqli_real_escape_string($GameMonetizeConnect, $rewritedFooter);
+                            $safeContent = $GameMonetizeConnect->real_escape_string($rewritedFooter);
 
                         $update = $GameMonetizeConnect->query("
                             UPDATE gm_footer_description 
@@ -671,7 +671,7 @@ if ($mainLinksData['rewrite_method'] == 'chatgpt') {
                     $rewritedCategory = hitChatGpt($rewritedCategory);
 
                     if ($rewritedCategory !== false && strlen(trim($rewritedCategory)) > 0) {
-                        $updateCategory = $GameMonetizeConnect->query("UPDATE " . CATEGORIES . " SET footer_description = \"" . mysqli_real_escape_string($GameMonetizeConnect, $rewritedCategory) . "\", is_rewrited = 1 WHERE id = {$currentId}");
+                        $updateCategory = $GameMonetizeConnect->query("UPDATE " . CATEGORIES . " SET footer_description = \"" . $GameMonetizeConnect->real_escape_string($rewritedCategory) . "\", is_rewrited = 1 WHERE id = {$currentId}");
 
                         if ($updateCategory) {
                             $updateSuccess = true;
@@ -759,7 +759,7 @@ if ($mainLinksData['rewrite_method'] == 'chatgpt') {
         $existsCheck = $GameMonetizeConnect->query("
             SELECT id
             FROM " . BLOGS . "
-            WHERE title LIKE '%" . mysqli_real_escape_string($GameMonetizeConnect, $tagTitle) . "%'
+            WHERE title LIKE '%" . $GameMonetizeConnect->real_escape_string($tagTitle) . "%'
             LIMIT 1
         ");
         if ($existsCheck && $existsCheck->num_rows > 0) {
@@ -779,12 +779,12 @@ if ($mainLinksData['rewrite_method'] == 'chatgpt') {
         $tagWords = preg_split('/\s+/', trim($tagTitle));
         $tagWords = array_values(array_filter($tagWords));
 
-        $tagTitleSafe = mysqli_real_escape_string($GameMonetizeConnect, $tagTitle);
+        $tagTitleSafe = $GameMonetizeConnect->real_escape_string($tagTitle);
         $tagTitleNoSpace = str_replace(' ', '', strtolower($tagTitle));
-        $tagTitleNoSpaceSafe = mysqli_real_escape_string($GameMonetizeConnect, $tagTitleNoSpace);
+        $tagTitleNoSpaceSafe = $GameMonetizeConnect->real_escape_string($tagTitleNoSpace);
 
-        $firstWord = !empty($tagWords[0]) ? mysqli_real_escape_string($GameMonetizeConnect, $tagWords[0]) : '';
-        $secondWord = !empty($tagWords[1]) ? mysqli_real_escape_string($GameMonetizeConnect, $tagWords[1]) : '';
+        $firstWord = !empty($tagWords[0]) ? $GameMonetizeConnect->real_escape_string($tagWords[0]) : '';
+        $secondWord = !empty($tagWords[1]) ? $GameMonetizeConnect->real_escape_string($tagWords[1]) : '';
 
         $detectCategoryQuery = $GameMonetizeConnect->query("
             SELECT category
@@ -901,7 +901,7 @@ if ($mainLinksData['rewrite_method'] == 'chatgpt') {
         foreach ($tagWords as $word) {
             $word = trim($word);
             if ($word !== '' && mb_strlen($word) >= 3) {
-                $safeWord = mysqli_real_escape_string($GameMonetizeConnect, $word);
+                $safeWord = $GameMonetizeConnect->real_escape_string($word);
                 $tagWordsForSql[] = "name LIKE '%{$safeWord}%'";
             }
         }
@@ -1056,10 +1056,10 @@ if ($mainLinksData['rewrite_method'] == 'chatgpt') {
             $blogContent = trim($blogContent);
         }
 
-        $safeTitle = mysqli_real_escape_string($GameMonetizeConnect, $generatedTitle);
+        $safeTitle = $GameMonetizeConnect->real_escape_string($generatedTitle);
         $safeUrlRaw = seo_friendly_url($generatedTitle);
-        $safeUrl = mysqli_real_escape_string($GameMonetizeConnect, $safeUrlRaw);
-        $safePost = mysqli_real_escape_string($GameMonetizeConnect, $blogContent);
+        $safeUrl = $GameMonetizeConnect->real_escape_string($safeUrlRaw);
+        $safePost = $GameMonetizeConnect->real_escape_string($blogContent);
 
         $urlExists = $GameMonetizeConnect->query("SELECT id FROM " . BLOGS . " WHERE url = '{$safeUrl}' LIMIT 1");
         if ($urlExists && $urlExists->num_rows > 0) {
@@ -1111,7 +1111,7 @@ if ($mainLinksData['rewrite_method'] == 'chatgpt') {
         echo "<strong>[/IMAGE DEBUG - TAG BLOG]</strong><br>";
         echo "<hr>";
 
-        $safeImageUrl = mysqli_real_escape_string($GameMonetizeConnect, $localImagePath);
+        $safeImageUrl = $GameMonetizeConnect->real_escape_string($localImagePath);
 
         $insertBlog = $GameMonetizeConnect->query("
             INSERT INTO " . BLOGS . " (title, url, image_url, post, date_created, is_rewrited, is_last_rewrite)
@@ -1275,8 +1275,8 @@ if ($mainLinksData['rewrite_method'] == 'chatgpt') {
                     }
 
                     $generatedUrl = seo_friendly_url($generatedTitle);
-                    $safeTitle = mysqli_real_escape_string($GameMonetizeConnect, $generatedTitle);
-                    $safeUrl = mysqli_real_escape_string($GameMonetizeConnect, $generatedUrl);
+                    $safeTitle = $GameMonetizeConnect->real_escape_string($generatedTitle);
+                    $safeUrl = $GameMonetizeConnect->real_escape_string($generatedUrl);
                     $existingBlog = $GameMonetizeConnect->query(
                         "SELECT id FROM " . BLOGS . " WHERE title = '{$safeTitle}' OR url = '{$safeUrl}' LIMIT 1"
                     );
@@ -1345,7 +1345,7 @@ if ($mainLinksData['rewrite_method'] == 'chatgpt') {
                         $blogContent = trim($blogContent);
                     }
 
-                    $safePost = mysqli_real_escape_string($GameMonetizeConnect, $blogContent);
+                    $safePost = $GameMonetizeConnect->real_escape_string($blogContent);
 
                     $originalImageUrl = !empty($game['image']) ? $game['image'] : '';
                     $localImagePath = '';
@@ -1357,7 +1357,7 @@ if ($mainLinksData['rewrite_method'] == 'chatgpt') {
                         }
                     }
 
-                    $safeImageUrl = mysqli_real_escape_string($GameMonetizeConnect, $localImagePath);
+                    $safeImageUrl = $GameMonetizeConnect->real_escape_string($localImagePath);
 
                     $insertBlog = $GameMonetizeConnect->query("
                         INSERT INTO " . BLOGS . " (title, url, image_url, post, date_created, is_rewrited, is_last_rewrite)
@@ -1425,7 +1425,7 @@ if ($mainLinksData['rewrite_method'] == 'chatgpt') {
                         $rewritedBlog = hitChatGpt($rewritedBlog);
 
                         if ($rewritedBlog !== false && strlen(trim($rewritedBlog)) > 0) {
-                            $safeContent = mysqli_real_escape_string($GameMonetizeConnect, $rewritedBlog);
+                            $safeContent = $GameMonetizeConnect->real_escape_string($rewritedBlog);
 
                             $updateBlog = $GameMonetizeConnect->query("
                                 UPDATE " . BLOGS . "
@@ -1769,18 +1769,13 @@ function ensureLinksDatabaseConnection($forceReconnect = false)
 
     if (!$forceReconnect
         && isset($GameMonetizeConnect)
-        && $GameMonetizeConnect instanceof mysqli
+        && is_object($GameMonetizeConnect)
+        && method_exists($GameMonetizeConnect, 'query')
         && empty($GameMonetizeConnect->connect_errno)) {
-        try {
-            if (@$GameMonetizeConnect->ping()) {
-                return true;
-            }
-        } catch (Throwable $error) {
-            // The connection expired while the external content request was running.
-        }
+        return true;
     }
 
-    if (isset($GameMonetizeConnect) && $GameMonetizeConnect instanceof mysqli) {
+    if (isset($GameMonetizeConnect) && is_object($GameMonetizeConnect)) {
         try {
             @$GameMonetizeConnect->close();
         } catch (Throwable $error) {
@@ -1788,16 +1783,9 @@ function ensureLinksDatabaseConnection($forceReconnect = false)
         }
     }
 
-    if (!isset($dbGM) || !is_array($dbGM)) {
-        require ABSPATH . 'assets/includes/config.php';
-    }
-
-    if (empty($dbGM['host']) || empty($dbGM['user']) || !isset($dbGM['pass']) || empty($dbGM['name'])) {
-        return false;
-    }
-
     try {
-        $GameMonetizeConnect = @new mysqli($dbGM['host'], $dbGM['user'], $dbGM['pass'], $dbGM['name']);
+        require_once ABSPATH . 'assets/includes/db.php';
+        $GameMonetizeConnect = new ArcadeDatabase(is_array($dbGM ?? null) ? $dbGM : []);
     } catch (Throwable $error) {
         return false;
     }
@@ -2764,7 +2752,7 @@ function appendRelatedBlogBoxToTagDescription($tagId, $boxHtml)
 
     $newDescription .= trim($boxHtml);
 
-    $safeDescription = mysqli_real_escape_string($GameMonetizeConnect, $newDescription);
+    $safeDescription = $GameMonetizeConnect->real_escape_string($newDescription);
 
     return $GameMonetizeConnect->query("
         UPDATE " . TAGS . "
@@ -2864,8 +2852,8 @@ function getOrCreateCategory($categoryName)
         return 0;
     }
 
-    $safeName = mysqli_real_escape_string($GameMonetizeConnect, $categoryName);
-    $safeSlug = mysqli_real_escape_string($GameMonetizeConnect, seo_friendly_url($categoryName));
+    $safeName = $GameMonetizeConnect->real_escape_string($categoryName);
+    $safeSlug = $GameMonetizeConnect->real_escape_string(seo_friendly_url($categoryName));
 
     // Try exact name
     $query = $GameMonetizeConnect->query("

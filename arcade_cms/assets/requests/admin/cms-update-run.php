@@ -671,6 +671,11 @@ function runDatabaseUpgrade() {
 		return true;
 	}
 
+	// The bundled SQL updater is MariaDB-specific. Neon production uses the
+	// reviewed PostgreSQL schema and must never receive the legacy dump.
+	addErr('Legacy MySQL database updater is disabled for Neon PostgreSQL. Use a reviewed PostgreSQL migration instead.');
+	return false;
+
 	$db = getDb();
 	if (!$db) return false;
 

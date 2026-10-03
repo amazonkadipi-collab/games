@@ -55,9 +55,9 @@ global $conn, $GameMonetizeConnect;
 
 $db = null;
 
-if (isset($conn) && $conn instanceof mysqli) {
+if (isset($conn) && is_object($conn) && method_exists($conn, 'query')) {
 	$db = $conn;
-} elseif (isset($GameMonetizeConnect) && $GameMonetizeConnect instanceof mysqli) {
+} elseif (isset($GameMonetizeConnect) && is_object($GameMonetizeConnect) && method_exists($GameMonetizeConnect, 'query')) {
 	$db = $GameMonetizeConnect;
 }
 
@@ -67,19 +67,20 @@ if (!$db) {
 }
 
 try {
-	if (!$db->multi_query($sql)) {
-		http_response_code(500);
-		exit('SQL error: ' . $db->error);
+	if (preg_match('/;\s*\S/', trim($sql))) {
+		http_response_code(400);
+		exit('Only one SQL statement is supported with PostgreSQL.');
 	}
-} catch (mysqli_sql_exception $e) {
+	$result = $db->query($sql);
+} catch (Throwable $e) {
 	http_response_code(500);
 	exit('SQL error: ' . $e->getMessage());
 }
 
 $output = '';
 
-do {
-	if ($result = $db->store_result()) {
+	try {
+	if (is_object($result) && method_exists($result, 'fetch_assoc')) {
 		$rows = array();
 
 		while ($row = $result->fetch_assoc()) {
@@ -94,21 +95,15 @@ do {
 
 		$result->free();
 	} else {
-		if ($db->affected_rows >= 0) {
-			$output .= "OK. Affected rows: " . $db->affected_rows . "\n";
-		}
+		$output .= "SQL executed.\n";
 	}
-
-	if (!$db->more_results()) {
-		break;
+	if (!empty($db->error)) {
+		http_response_code(500);
+		exit('SQL error: ' . $db->error);
 	}
-
-	$output .= "\n--- NEXT RESULT ---\n";
-} while ($db->next_result());
-
-if ($db->errno) {
+} catch (Throwable $e) {
 	http_response_code(500);
-	exit('SQL error: ' . $db->error);
+	exit('SQL error: ' . $e->getMessage());
 }
 
 echo $output !== '' ? $output : 'SQL executed.';
