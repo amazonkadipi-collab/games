@@ -586,9 +586,9 @@ if ($config['site_theme'] == 'kizi' || $config['site_theme'] == 'y8-like' || $co
 }
 
 if ($config['site_theme'] == 'kizi' || $config['site_theme'] == 'y8-like' || gps_theme_is('poki-like')) {
-	$sql_cat_query = $GameMonetizeConnect->query("SELECT * FROM " . CATEGORIES . " WHERE show_home='1'");
+	$sql_cat_query = $GameMonetizeConnect->query("SELECT * FROM " . CATEGORIES . " ORDER BY id ASC LIMIT 100");
 	$ct_r = '';
-	while ($category = $sql_cat_query->fetch_array()) {
+	if ($sql_cat_query) while ($category = $sql_cat_query->fetch_array()) {
 		$themeData['category_id'] = $category['id'];
 		$themeData['category_name'] = $category['name'];
 		$themeData['category_image'] = categoryCardImage($category['name'], $category['image'], $config['site_theme']);
@@ -622,9 +622,9 @@ if ($config['site_theme'] == 'kizi' || $config['site_theme'] == 'y8-like' || gps
 	$themeData['categories_list_home'] = $ct_r;
 	$themeData['category_content'] = \GameMonetize\UI::view('category/categories-list-home');
 
-	$sql_tag_query = $GameMonetizeConnect->query("SELECT * FROM " . TAGS . " WHERE show_home='1'");
+	$sql_tag_query = $GameMonetizeConnect->query("SELECT * FROM " . TAGS . " ORDER BY id ASC LIMIT 100");
 	$tag_r = '';
-	while ($tag = $sql_tag_query->fetch_array()) {
+	if ($sql_tag_query) while ($tag = $sql_tag_query->fetch_array()) {
 		$themeData['tag_id'] = $tag['id'];
 		$themeData['tag_name'] = $tag['name'];
 
