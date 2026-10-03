@@ -6,6 +6,8 @@ class ArcadeDatabaseResult {
     public function __construct(array $rows) { $this->rows = $rows; $this->num_rows = count($rows); }
     public function fetch_assoc() { return $this->index < $this->num_rows ? $this->rows[$this->index++] : null; }
     public function fetch_array() { return $this->fetch_assoc(); }
+    public function data_seek($offset) { $this->index = max(0, min((int)$offset, $this->num_rows)); return true; }
+    public function free() { $this->rows = []; $this->num_rows = 0; $this->index = 0; }
 }
 
 class ArcadeDatabase {

@@ -1,5 +1,5 @@
 <?php
-require 'vendor/autoload.php';
+require_once ABSPATH . 'vendor/autoload.php';
 
 use PhpOffice\PhpSpreadsheet\IOFactory;
 

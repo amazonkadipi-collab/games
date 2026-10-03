@@ -1,6 +1,6 @@
 <?php
 
-require 'vendor/autoload.php';
+require_once ABSPATH . 'vendor/autoload.php';
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;

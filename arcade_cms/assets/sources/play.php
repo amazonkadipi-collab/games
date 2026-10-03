@@ -126,7 +126,12 @@ if (!empty($_GET['id'])) {
         $gameTags = $get_game["tags_ids"];
         $tags_list = "";
 
-        if (!is_null($gameTags) && $gameTags != 'null') {
+        $gameTagIds = is_string($gameTags) ? json_decode($gameTags, true) : $gameTags;
+        $gameTagIds = is_array($gameTagIds) ? array_values(array_filter(array_map('intval', $gameTagIds), static function ($id) {
+            return $id > 0;
+        })) : [];
+
+        if (!empty($gameTagIds)) {
             if (gps_theme_is('crazygames-like')) {
                 $themeData['tags_url'] = siteUrl() . "/category/" . slugify($get_game['category_name']);
                 $themeData['tags_name'] = $get_game['category_name'];
@@ -135,9 +140,7 @@ if (!empty($_GET['id'])) {
                 $tags_list .= \GameMonetize\UI::view('game/tags/tags-list');
             }
             
-            $gameTags = str_replace("[", "(", $gameTags);
-            $gameTags = str_replace("]", ")", $gameTags);
-            $sqlGetTags = "SELECT * FROM " . TAGS . " WHERE id IN{$gameTags} ORDER BY name";
+            $sqlGetTags = "SELECT * FROM " . TAGS . " WHERE id IN(" . implode(',', $gameTagIds) . ") ORDER BY name";
             $sqlQueryTags = $GameMonetizeConnect->query($sqlGetTags);
             
             if ($sqlQueryTags->num_rows > 0) {

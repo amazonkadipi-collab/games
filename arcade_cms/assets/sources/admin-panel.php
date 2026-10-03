@@ -1,6 +1,6 @@
 <?php
 
-require 'vendor/autoload.php';
+require_once ABSPATH . 'vendor/autoload.php';
 require_once ABSPATH . 'assets/includes/license/bootstrap.php';
 require_once ABSPATH . 'assets/includes/license/feature-catalog.php';
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
