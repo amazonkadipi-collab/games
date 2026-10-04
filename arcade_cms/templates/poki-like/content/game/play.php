@@ -244,7 +244,6 @@
             SkipAdAndShowGame();
         });
     });
-    });
 
     $(function() {
         $('.ad300').eq(0).show();
