@@ -3545,3 +3545,43 @@ p.d-text {
   body.game-fullscreen #game-bottom,
   body.game-fullscreen .tags-walkthrough-container{display:none!important}
 }
+
+/* Final runtime fix: the embed is loaded by the legacy template on page ready.
+   Keep the poster from sitting on top of the actual game iframe. */
+#game-box iframe,
+#game-box embed,
+#game-box object,
+#game-box canvas {
+  position: relative !important;
+  z-index: 2 !important;
+  pointer-events: auto !important;
+}
+#gamePlay-content {
+  z-index: 1 !important;
+}
+@media (max-width: 767px) {
+  #ava-game_container {
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 16 / 9 !important;
+    max-height: none !important;
+    min-height: 0 !important;
+  }
+  #game-box {
+    width: 100% !important;
+    height: 100% !important;
+    aspect-ratio: 16 / 9 !important;
+    overflow: hidden !important;
+  }
+  #game-box iframe,
+  #game-box embed,
+  #game-box object,
+  #game-box canvas {
+    width: 100% !important;
+    height: 100% !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
+  }
+}
