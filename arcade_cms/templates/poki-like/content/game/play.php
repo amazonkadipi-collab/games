@@ -268,26 +268,37 @@
     }, 2000);
     var descriptionURL = "{{DESCRIPTION_URL}}";
     var iframe = '{{PLAY_GAME_EMBED}}';
-    $(document).ready(function() {
-        $('.gamePlay-button').click(function(e) {  
-            SkipAdAndShowGame();
-            $("#game-box").html(iframe);
-            $("#gamePlay-content").hide();
-            // $('#adsContainer').show();
-            
-            // Mobile stays in the normal responsive game layout.
-            // Fullscreen is user-triggered through the fullscreen button only.
-            if ($(document).width() < 600) {
-                $('.close-fullscreen').hide();
-                $('body').css('overflow-x', 'hidden');
-            }
-        });
-    });
 
     function SkipAdAndShowGame() {
         $("#adsContainer").hide();
+        $("#gamePlay-content").hide();
         $("#game-box").html(iframe);
+        $("#game-box iframe, #game-box embed, #game-box object, #game-box canvas").css({
+            width: "100%",
+            height: "100%",
+            display: "block",
+            border: "0"
+        });
+        if (window.innerWidth < 768) {
+            $("html, body").css({
+                width: "100%",
+                maxWidth: "100%",
+                overflowX: "hidden"
+            });
+            $(".close-fullscreen").hide();
+        }
     }
+
+    $(document).ready(function() {
+        // Load the game only after the user presses Play.
+        // This keeps the poster clean and prevents two players/layers
+        // from fighting for the same space on desktop or mobile.
+        $("#game-box").empty();
+        $(".gamePlay-button").off("click.gameStart").on("click.gameStart", function(e) {
+            e.preventDefault();
+            SkipAdAndShowGame();
+        });
+    });
 
     $(function() {
         $('.ad300').eq(0).show();
