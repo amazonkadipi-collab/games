@@ -38,8 +38,8 @@ class ArcadeDatabase {
                 $pass = $config['pass'] ?? '';
             }
 
-            // Neon requires the endpoint ID for SNI when libpq is older than
-            // the version that added automatic SNI endpoint detection.
+            // Neon SNI fallback for the libpq version bundled with the Vercel PHP runtime.
+            // Neon accepts the endpoint ID in the password field without changing the secret.
             $endpointId = '';
             if ($host !== '') {
                 $endpointId = explode('.', $host, 2)[0];
@@ -47,15 +47,15 @@ class ArcadeDatabase {
                     $endpointId = substr($endpointId, 0, -7);
                 }
             }
+            if ($endpointId !== '' && $pass !== '' && !str_starts_with($pass, 'endpoint=')) {
+                $pass = 'endpoint=' . $endpointId . ';' . $pass;
+            }
 
             $dsn = "pgsql:host=" . $host
                 . ";port=" . $port
                 . ";dbname=" . $name
                 . ";sslmode=require"
                 . ";connect_timeout=3";
-            if ($endpointId !== '') {
-                $dsn .= ";options=" . rawurlencode("endpoint=" . $endpointId);
-            }
 
             $this->pdo = new PDO($dsn, $user, $pass, [
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
