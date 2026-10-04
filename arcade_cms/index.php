@@ -132,11 +132,14 @@ if (preg_match('~^sitemaps/games-(\\d+)\\.xml$~', $cmsRequestPath, $sm)) {
     $offset = ($page - 1) * 5000;
     $xml = '<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
     if (isset($GameMonetizeConnect)) {
-        $query = $GameMonetizeConnect->query("SELECT game_id, date_added FROM " . GAMES . " WHERE published='1' AND game_id IS NOT NULL AND name IS NOT NULL AND btrim(name) <> '' ORDER BY game_id ASC LIMIT 5000 OFFSET {$offset}");
+        $query = $GameMonetizeConnect->query("SELECT game_id, name, date_added FROM " . GAMES . " WHERE published='1' AND game_id IS NOT NULL AND name IS NOT NULL AND btrim(name) <> '' ORDER BY game_id ASC LIMIT 5000 OFFSET {$offset}");
         if ($query) while ($game = $query->fetch_assoc()) {
             $gameId = (int)($game['game_id'] ?? 0);
-            if ($gameId <= 0) continue;
-            $loc = $siteUrl . '/game/' . $gameId;
+            $gameName = trim((string)($game['name'] ?? ''));
+            if ($gameId <= 0 || $gameName === '') continue;
+            $gameSlug = slugify($gameName);
+            if ($gameSlug === '') continue;
+            $loc = $siteUrl . '/game/' . rawurlencode($gameSlug);
             $xml .= '<url><loc>' . htmlspecialchars($loc, ENT_XML1) . '</loc>';
             if (!empty($game['date_added']) && is_numeric($game['date_added'])) {
                 $xml .= '<lastmod>' . htmlspecialchars(gmdate('c', (int)$game['date_added']), ENT_XML1) . '</lastmod>';
