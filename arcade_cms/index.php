@@ -153,9 +153,60 @@ if ($cmsRequestPath === 'robots.txt') {
     header('Content-Type: text/plain; charset=UTF-8');
     header('Cache-Control: public, max-age=3600, s-maxage=3600');
     echo "User-agent: *
+Allow: /
 Disallow: /admin
 Disallow: /assets/includes/
+
+User-agent: Googlebot
+Allow: /
+Disallow: /admin
+Disallow: /assets/includes/
+
+User-agent: Bingbot
+Allow: /
+Disallow: /admin
+Disallow: /assets/includes/
+
+User-agent: Yandex
+Allow: /
+Disallow: /admin
+Disallow: /assets/includes/
+
+User-agent: DuckDuckBot
+Allow: /
+Disallow: /admin
+Disallow: /assets/includes/
+
 Sitemap: {$siteUrl}/sitemap.xml
+";
+    exit;
+}
+
+if ($cmsRequestPath === 'llms.txt') {
+    header('Content-Type: text/plain; charset=UTF-8');
+    header('Cache-Control: public, max-age=3600, s-maxage=3600');
+    echo "# Poki Crazy Games
+
+> Free browser games portal powered by the Arcade CMS catalog.
+
+## Website
+- Home: {$siteUrl}/
+- Sitemap: {$siteUrl}/sitemap.xml
+- Game archive: {$siteUrl}/games
+- New games: {$siteUrl}/new-games
+- Best games: {$siteUrl}/best-games
+- Categories: {$siteUrl}/categories
+
+## Content
+- The site publishes a large catalog of browser games.
+- Individual game pages use stable /game/{slug} URLs.
+- The XML sitemap index lists all published game URLs in sharded sitemap files.
+- Public pages are intended to be crawlable by search engines and AI crawlers.
+
+## Crawling
+- Follow the canonical URL on each page.
+- Prefer the XML sitemap for complete URL discovery.
+- Do not crawl private administration or internal asset/include paths.
 ";
     exit;
 }
