@@ -280,4 +280,5 @@ if (function_exists('gps_other_fixes_localization_render')) {
 }
 echo $gpsRenderedIndex;
 
-\r\n$GameMonetizeConnect->close();
+
+$GameMonetizeConnect->close();
