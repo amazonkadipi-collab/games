@@ -558,7 +558,7 @@ $themeData['page_admin_content'] = \GameMonetize\UI::view('admin/stats');
 			? gps_menu_design_logo_admin_field()
 			: '';
 
-		$THEME_dir = opendir('templates/');
+		$THEME_dir = opendir(ABSPATH . 'templates/');
 		$THEME_dr_array = array();
 		while (false !== ($file = readdir($THEME_dir))) {
 			$THEME_dr_array[] = $file;
