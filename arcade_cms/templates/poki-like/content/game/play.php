@@ -14,7 +14,7 @@
             <div id="ava-game_container" class="game-box" data-norate="1">
 
                 <div id="gamePlay-content" oncontextmenu="return false" style="position: relative;">
-                    <img class="gamePlay-bg" src="{{PLAY_GAME_IMAGE}}" alt="image {{PLAY_GAME_NAME}}">
+                    <img class="gamePlay-bg" src="{{PLAY_GAME_IMAGE}}" alt="{{PLAY_GAME_NAME}}" fetchpriority="high" decoding="async">
                     <div class="gamePlay-icon-btn">
                         <div class="gamePlay-icon" style="background-image: url({{PLAY_GAME_IMAGE}});background-size: 160px;background-position-x: 50%;background-position-y: 50%;"></div>
                         <div class="gamePlay-title">{{PLAY_GAME_NAME}}</div>
