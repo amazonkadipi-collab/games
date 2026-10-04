@@ -1,3 +1,18 @@
 {
-  "$schema": "https://openapi.vercel.sh/vercel.json"
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "functions": {
+    "arcade_cms/**/*.php": {
+      "runtime": "vercel-php@0.9.0"
+    }
+  },
+  "routes": [
+    {
+      "src": "/(assets|templates|uploads|robots.txt)(.*)",
+      "dest": "/arcade_cms/$1$2"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/arcade_cms/index.php"
+    }
+  ]
 }
