@@ -275,51 +275,12 @@
             $("#gamePlay-content").hide();
             // $('#adsContainer').show();
             
-            if ($( document ).width() < 600) {
-                $("#header").hide();
-                $("#topad").hide();
-                $("#game-bottom").hide();
-                $(".play-game-bottom").hide();
-                $(".tags-walkthrough-container").hide();
-                $(".h-head").hide();
-                $(".game-zoom").hide();
-                // $("#adsContainer").hide();
-                $("#game-col").css("margin", "0px");
-                $("#game-col").css("height", "100svh");
-                $("#gameDiv").css("height", "100svh");
-                $("#gameDiv").css("width", "100vw");
-                $("#gameDiv").css("position", "fixed");
-                $("#gameDiv").css("top", "0");
-                $("#gameDiv").css("left", "0");
-                $("#gameDiv").css("z-index", "9999");
-                $("#ava-game_container").css("height", "100svh");
-                $('body').css('overflow', 'hidden');
-                $('.close-fullscreen').css('display', 'flex');
-                // GameFullscreen()
-                // $("#game-preloading").show();
-                // setTimeout(
-                // function() 
-                // {
-                //     $("#game-preloading").hide();
-                //     PreRollAd.start();
-                // }, 550);
-                // Tambahkan fungsi fullscreen
-                function ReqGameFullscreen() {
-                    let gameElement = document.getElementById('gameDiv');
-                    if (gameElement.requestFullscreen) {
-                        gameElement.requestFullscreen();
-                    } else if (gameElement.mozRequestFullScreen) { // Mozilla
-                        gameElement.mozRequestFullScreen();
-                    } else if (gameElement.webkitRequestFullscreen) { // Webkit
-                        gameElement.webkitRequestFullscreen();
-                    } else if (gameElement.msRequestFullscreen) { // IE/Edge
-                        gameElement.msRequestFullscreen();
-                    }
-                }
-
-                // Panggil fungsi fullscreen
-                ReqGameFullscreen();
-                }
+            // Mobile stays in the normal responsive game layout.
+            // Fullscreen is user-triggered through the fullscreen button only.
+            if ($(document).width() < 600) {
+                $('.close-fullscreen').hide();
+                $('body').css('overflow-x', 'hidden');
+            }
         });
     });
 
