@@ -190,12 +190,12 @@
     <script>
         $('.sidebar').mouseenter(function() {
             $('.logo-icon').css('width', '120px');
-            $('.logo-icon').attr('src', '../../../static/logo/kizi/logo.png');
+            $('.logo-icon').attr('src', '/static/logo/y8/logo-y8.webp');
         });
 
         $('.sidebar').mouseleave(function() {
             $('.logo-icon').css('width', '35px');
-            $('.logo-icon').attr('src', '../../../static/logo/kizi/logo-35.png');
+            $('.logo-icon').attr('src', '/static/logo/y8/logo-y8.webp');
         });
     </script>
 </body>
