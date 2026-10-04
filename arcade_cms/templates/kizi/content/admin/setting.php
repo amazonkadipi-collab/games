@@ -2,7 +2,7 @@
 	<i class="fa fa-cog"></i>
 </div>
 <div class="general-box _yt10 _yb10 _0e4">
-	<form id="adminsetting-form" enctype="multipart/form-data" method="POST" autocomplete="off">
+	<form id="adminsetting-form" action="/index.php?p=admin&section=setting" enctype="multipart/form-data" method="POST" autocomplete="off">
 		<div class="g-d5" style="display:inherit;width:100%;">
 			<div class="r05-t _b-r _5e4">
 				<span class="_tr5 _yt5 color-grey">@site_name@</span>
