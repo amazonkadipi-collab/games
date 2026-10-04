@@ -141,7 +141,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST'
     $loginKey = (string)$_POST['login_key'];
     if ($loginId !== '' && $loginKey !== '' && isset($GameMonetizeConnect)) {
         $loginIdSafe = $GameMonetizeConnect->real_escape_string($loginId);
-        $account = $GameMonetizeConnect->query("SELECT id, username, email, password, admin, active FROM " . ACCOUNTS . " WHERE (username='{$loginIdSafe}' OR email='{$loginIdSafe}') AND active=1 LIMIT 1");
+        $account = $GameMonetizeConnect->query("SELECT id, username, email, password, admin, active FROM " . ACCOUNTS . " WHERE (username='{$loginIdSafe}' OR email='{$loginIdSafe}') AND active='1' LIMIT 1");
         if ($account && $account->num_rows === 1) {
             $candidate = $account->fetch_assoc(); $storedPassword = (string)($candidate['password'] ?? '');
             $valid = $storedPassword !== '' && hash_equals($storedPassword, $loginKey);
