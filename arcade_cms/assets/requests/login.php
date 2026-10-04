@@ -15,7 +15,7 @@ $account = false;
 if (isset($GameMonetizeConnect)) {
     $safeUser = $GameMonetizeConnect->real_escape_string($loginUser);
     $account = $GameMonetizeConnect->query(
-        "SELECT * FROM " . ACCOUNTS . " WHERE (username='{$safeUser}' OR email='{$safeUser}' OR id=" . (ctype_digit($loginUser) ? (int)$loginUser : 0) . ") AND active=1 LIMIT 1"
+        "SELECT * FROM " . ACCOUNTS . " WHERE (username='{$safeUser}' OR email='{$safeUser}' OR id=" . (ctype_digit($loginUser) ? (int)$loginUser : 0) . ") AND active='1' LIMIT 1"
     );
 }
 
