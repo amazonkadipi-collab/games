@@ -3318,3 +3318,35 @@ p.big-t {
         grid-column: span 3;
     }
 }
+
+
+/* Poki visual reconstruction layer — public theme only */
+:root{--poki-gap:12px;--poki-radius:16px;--poki-max:1860px}
+html,body{min-width:320px}
+body{font-family:"Proxima Nova","Open Sans",Arial,sans-serif;background:#83FFE7 url(../image/bg-diamond.svg) fixed}
+body,button,input,select,textarea{font-family:"Proxima Nova","Open Sans",Arial,sans-serif}
+h1,h2,h3,h4,h5,h6{font-family:"Proxima Nova","Open Sans",Arial,sans-serif;font-weight:800}
+.sidebar{display:none!important}.sidebar+.wrapper{margin-left:0!important}
+.gamemonetize-container{width:100%;max-width:var(--poki-max);margin:0 auto;padding:92px 20px 36px;min-height:80svh}
+#header{height:72px;background:rgba(255,255,255,.97);backdrop-filter:blur(12px);box-shadow:0 2px 12px rgba(0,43,80,.10);border-bottom:1px solid rgba(0,43,80,.06)}
+.head-inner{max-width:var(--poki-max);height:72px;padding:0 20px}
+.logo a{width:150px;height:72px;background-size:108px;background-position:left center}
+.menu-btn{height:44px;border-radius:999px;background:#f0f5fc;padding:0 18px;color:#002b50;font-weight:800;transition:transform .18s ease,box-shadow .18s ease,background .18s ease}
+.menu-btn:hover{color:#0074e0;background:#fff;box-shadow:var(--shadow-mid);transform:translateY(-1px)}
+.content,.main-content,.game-list,.games-list{max-width:100%!important}
+/* dense square game wall */
+.play-game-post,.game-post,.post-item,.game-item{border-radius:var(--poki-radius)!important;overflow:hidden!important;box-shadow:var(--shadow-close)!important;background:#fff;transition:transform .18s var(--bezier),box-shadow .18s var(--bezier)}
+.play-game-post:hover,.game-post:hover,.post-item:hover,.game-item:hover{transform:translateY(-3px) scale(1.018);box-shadow:var(--shadow-hover)!important;z-index:3}
+.play-game-post img,.game-post img,.post-item img,.game-item img{width:100%;height:100%;aspect-ratio:1/1;object-fit:cover;display:block}
+/* remove legacy borders/padding around thumbnail tiles */
+.play-game-post a,.game-post a,.post-item a,.game-item a{display:block;overflow:hidden;border:0!important}
+/* responsive Poki-like grid */
+.play-game-list-grid-container{display:grid!important;grid-template-columns:repeat(auto-fill,minmax(132px,1fr))!important;grid-auto-rows:auto!important;grid-auto-flow:row!important;grid-template-areas:none!important;gap:var(--poki-gap)!important;max-width:100%!important;margin:0 auto!important}
+.play-game-list-grid-container>.game-container{grid-area:auto!important;display:block!important;min-width:0}
+.play-game-list-grid-container>div.play-game-post,.play-game-list-grid-container>.play-game-post{grid-area:auto!important;min-width:0}
+.play-game-list-grid-container>div:nth-child(1),.play-game-list-grid-container>div:nth-child(2),.play-game-list-grid-container>div:nth-child(3),.play-game-list-grid-container>div:nth-child(8),.play-game-list-grid-container>div:nth-child(9){grid-area:auto!important}
+.play-tag-item{height:auto!important;min-height:94px;border-radius:16px!important;box-shadow:var(--shadow-close)!important}
+@media (min-width:1500px){.play-game-list-grid-container{grid-template-columns:repeat(12,minmax(0,1fr))!important;gap:16px!important}}
+@media (min-width:1100px) and (max-width:1499px){.play-game-list-grid-container{grid-template-columns:repeat(9,minmax(0,1fr))!important}}
+@media (min-width:700px) and (max-width:1099px){.play-game-list-grid-container{grid-template-columns:repeat(6,minmax(0,1fr))!important}}
+@media (max-width:699px){.gamemonetize-container{padding:82px 10px 24px}.head-inner{padding:0 12px}.logo a{width:110px;background-size:92px}.play-game-list-grid-container{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:8px!important}.play-game-post,.game-post,.post-item,.game-item{border-radius:12px!important}}
