@@ -87,11 +87,13 @@ if ($cmsRequestPath === 'sitemap.xml') {
     $xml .= '<sitemap><loc>' . htmlspecialchars($siteUrl . '/sitemaps/static.xml', ENT_XML1) . '</loc></sitemap>';
     $gameCount = 0;
     if (isset($GameMonetizeConnect)) {
-        $countResult = $GameMonetizeConnect->query("SELECT COUNT(*) AS total FROM " . GAMES . " WHERE game_id IS NOT NULL");
+        $countResult = $GameMonetizeConnect->query("SELECT COUNT(*) AS total FROM " . GAMES . " WHERE published='1' AND game_id IS NOT NULL AND name IS NOT NULL AND btrim(name) <> ''");
         if ($countResult) { $row = $countResult->fetch_assoc(); $gameCount = (int)($row['total'] ?? 0); }
     }
     $pages = max(1, (int)ceil($gameCount / 5000));
-    for ($i=1; $i <= $pages; $i++) $xml .= '<sitemap><loc>' . htmlspecialchars($siteUrl . '/sitemaps/games-' . $i . '.xml', ENT_XML1) . '</loc></sitemap>';
+    for ($i=1; $i <= $pages; $i++) {
+        $xml .= '<sitemap><loc>' . htmlspecialchars($siteUrl . '/sitemaps/games-' . $i . '.xml', ENT_XML1) . '</loc></sitemap>';
+    }
     $xml .= '</sitemapindex>';
     echo $xml;
     exit;
@@ -101,29 +103,49 @@ if ($cmsRequestPath === 'sitemaps/static.xml') {
     header('Content-Type: application/xml; charset=UTF-8');
     header('Cache-Control: public, max-age=3600, s-maxage=3600');
     $xml = '<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
-    $urls = ['/', '/games', '/categories', '/new-games', '/best-games', '/random', '/about', '/privacy', '/terms'];
-    $cats = ['action','adventure','arcade','racing','sports','puzzle','shooting','strategy','multiplayer','2-player','io-games','skill','horror','zombie'];
-    foreach ($cats as $slug) $urls[] = '/category/' . $slug;
-    foreach ($urls as $url) $xml .= '<url><loc>' . htmlspecialchars($siteUrl . $url, ENT_XML1) . '</loc></url>';
-    echo $xml . '</urlset>'; exit;
+    $urls = ['/', '/categories', '/new-games', '/best-games', '/random', '/featured-games', '/about', '/privacy', '/terms', '/tags'];
+    if (isset($GameMonetizeConnect)) {
+        $catResult = $GameMonetizeConnect->query("SELECT name FROM " . CATEGORIES . " ORDER BY id ASC");
+        if ($catResult) while ($cat = $catResult->fetch_assoc()) {
+            $slug = slugify((string)($cat['name'] ?? ''));
+            if ($slug !== '') $urls[] = '/category/' . $slug;
+        }
+        $tagResult = $GameMonetizeConnect->query("SELECT name, url FROM " . TAGS . " ORDER BY id ASC");
+        if ($tagResult) while ($tag = $tagResult->fetch_assoc()) {
+            $slug = trim((string)($tag['url'] ?? ''));
+            if ($slug === '') $slug = slugify((string)($tag['name'] ?? ''));
+            if ($slug !== '') $urls[] = '/tag/' . $slug;
+        }
+    }
+    $urls = array_values(array_unique($urls));
+    foreach ($urls as $url) {
+        $xml .= '<url><loc>' . htmlspecialchars($siteUrl . $url, ENT_XML1) . '</loc></url>';
+    }
+    echo $xml . '</urlset>';
+    exit;
 }
 
-if (preg_match('~^sitemaps/games-(\d+)\.xml$~', $cmsRequestPath, $sm)) {
+if (preg_match('~^sitemaps/games-(\\d+)\\.xml$~', $cmsRequestPath, $sm)) {
     header('Content-Type: application/xml; charset=UTF-8');
     header('Cache-Control: public, max-age=3600, s-maxage=3600');
     $page = max(1, (int)$sm[1]);
     $offset = ($page - 1) * 5000;
     $xml = '<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
     if (isset($GameMonetizeConnect)) {
-        $query = $GameMonetizeConnect->query("SELECT game_id, name, date_added FROM " . GAMES . " WHERE game_id IS NOT NULL ORDER BY game_id ASC LIMIT 5000 OFFSET {$offset}");
+        $query = $GameMonetizeConnect->query("SELECT game_id, date_added FROM " . GAMES . " WHERE published='1' AND game_id IS NOT NULL AND name IS NOT NULL AND btrim(name) <> '' ORDER BY game_id ASC LIMIT 5000 OFFSET {$offset}");
         if ($query) while ($game = $query->fetch_assoc()) {
-            $loc = $siteUrl . '/game/' . rawurlencode(slugify((string)($game['name'] ?? '')));
+            $gameId = (int)($game['game_id'] ?? 0);
+            if ($gameId <= 0) continue;
+            $loc = $siteUrl . '/game/' . $gameId;
             $xml .= '<url><loc>' . htmlspecialchars($loc, ENT_XML1) . '</loc>';
-            if (!empty($game['date_added'])) $xml .= '<lastmod>' . htmlspecialchars(date('c', is_numeric($game['date_added']) ? (int)$game['date_added'] : strtotime((string)$game['date_added'])), ENT_XML1) . '</lastmod>';
+            if (!empty($game['date_added']) && is_numeric($game['date_added'])) {
+                $xml .= '<lastmod>' . htmlspecialchars(gmdate('c', (int)$game['date_added']), ENT_XML1) . '</lastmod>';
+            }
             $xml .= '</url>';
         }
     }
-    echo $xml . '</urlset>'; exit;
+    echo $xml . '</urlset>';
+    exit;
 }
 
 if ($cmsRequestPath === 'robots.txt') {
