@@ -37,21 +37,38 @@ class ArcadeDatabase {
                 $user = $config['user'] ?? '';
                 $pass = $config['pass'] ?? '';
             }
-            $dsn = "pgsql:host=" . $host . ";port=" . $port . ";dbname=" . $name . ";sslmode=require;connect_timeout=3";
+
+            // Neon requires the endpoint ID for SNI when libpq is older than
+            // the version that added automatic SNI endpoint detection.
+            $endpointId = '';
+            if ($host !== '') {
+                $endpointId = explode('.', $host, 2)[0];
+                if (str_ends_with($endpointId, '-pooler')) {
+                    $endpointId = substr($endpointId, 0, -7);
+                }
+            }
+
+            $dsn = "pgsql:host=" . $host
+                . ";port=" . $port
+                . ";dbname=" . $name
+                . ";sslmode=require"
+                . ";connect_timeout=3";
+            if ($endpointId !== '') {
+                $dsn .= ";options=" . rawurlencode("endpoint=" . $endpointId);
+            }
+
             $this->pdo = new PDO($dsn, $user, $pass, [
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
                 PDO::ATTR_EMULATE_PREPARES => false,
             ]);
 
-            // Never allow a bad/blocked Neon query to consume Vercel's full
-            // 300-second container lifetime. Keep the existing CMS behavior,
-            // but fail a single database statement quickly and visibly.
             $this->pdo->exec("SET statement_timeout = 3000");
             $this->pdo->exec("SET lock_timeout = 1500");
         } catch (Throwable $e) {
             $this->connect_errno = 1;
             $this->error = $e->getMessage();
+            error_log('[Arcade CMS] Database connection failed: ' . $this->error);
         }
     }
 
@@ -59,8 +76,7 @@ class ArcadeDatabase {
         $sql = preg_replace('/'.chr(96).'([^'.chr(96).']*)'.chr(96).'/', '"$1"', $sql);
         $sql = preg_replace('/\bRAND\(\)/i', 'RANDOM()', $sql);
         $sql = preg_replace('/\s+AFTER\s+"[^"]+"/i', '', $sql);
-
-        $sql = preg_replace('/\\bAS\\s+UNSIGNED\\b/i', 'AS INTEGER', $sql);
+        $sql = preg_replace('/\bAS\s+UNSIGNED\b/i', 'AS INTEGER', $sql);
 
         if (preg_match('/^\s*SHOW\s+COLUMNS\s+FROM\s+"([^"]+)"\s+LIKE\s+\'([^\']+)\'/i', $sql, $m)) {
             $table = $m[1];
@@ -88,11 +104,7 @@ class ArcadeDatabase {
         } catch (Throwable $e) {
             $this->error = $e->getMessage();
             error_log('[Arcade CMS] Database query failed: ' . $this->error);
-            // A failed public SELECT must not turn into a PHP fatal later when
-            // the theme calls fetch_array(). Return an empty result instead.
-            // This keeps the original theme renderable while the failed query
-            // is logged and the request remains bounded on Vercel.
-            if (preg_match('/^\\s*(SELECT|WITH|SHOW)\\b/i', ltrim((string)$sql))) {
+            if (preg_match('/^\s*(SELECT|WITH|SHOW)\b/i', ltrim((string)$sql))) {
                 return new ArcadeDatabaseResult([]);
             }
             return false;
@@ -105,24 +117,8 @@ class ArcadeDatabase {
     }
 
     public function set_charset($charset) { return true; }
-
-    public function begin_transaction() {
-        if (!$this->pdo) return false;
-        try { return $this->pdo->beginTransaction(); } catch (Throwable $e) { $this->error = $e->getMessage(); return false; }
-    }
-
-    public function commit() {
-        if (!$this->pdo) return false;
-        try { return $this->pdo->commit(); } catch (Throwable $e) { $this->error = $e->getMessage(); return false; }
-    }
-
-    public function rollback() {
-        if (!$this->pdo) return false;
-        try { return $this->pdo->rollBack(); } catch (Throwable $e) { $this->error = $e->getMessage(); return false; }
-    }
-
-    public function close() {
-        $this->pdo = null;
-        return true;
-    }
+    public function begin_transaction() { if (!$this->pdo) return false; try { return $this->pdo->beginTransaction(); } catch (Throwable $e) { $this->error = $e->getMessage(); return false; } }
+    public function commit() { if (!$this->pdo) return false; try { return $this->pdo->commit(); } catch (Throwable $e) { $this->error = $e->getMessage(); return false; } }
+    public function rollback() { if (!$this->pdo) return false; try { return $this->pdo->rollBack(); } catch (Throwable $e) { $this->error = $e->getMessage(); return false; } }
+    public function close() { $this->pdo = null; return true; }
 }
