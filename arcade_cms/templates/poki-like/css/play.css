@@ -3408,3 +3408,119 @@ p.d-text {
     max-height: 100vh !important;
 }
 
+
+
+/* === Final game page: simple player-first layout on every screen size === */
+.play-game-list-grid-container{
+  display:block!important;
+  width:100%!important;
+  max-width:var(--site-max,1440px)!important;
+  margin:0 auto!important;
+  padding:0 18px 40px!important;
+  box-sizing:border-box!important;
+}
+.play-game-list-grid-container>div:nth-child(1),
+.play-game-list-grid-container>div:nth-child(2),
+.play-game-list-grid-container>div:nth-child(3),
+.play-game-list-grid-container>div:nth-child(6),
+.play-game-list-grid-container>div:nth-child(7),
+.play-game-list-grid-container>div:nth-child(8),
+.play-game-list-grid-container>div:nth-child(9),
+.play-game-list-grid-container>.home-search-container,
+.play-game-list-grid-container>#search-left{
+  display:none!important;
+}
+.play-game-list-grid-container>.game-container.game-col{
+  display:block!important;
+  width:100%!important;
+  max-width:1180px!important;
+  margin:0 auto!important;
+  padding:0!important;
+}
+.game-container .game-info{
+  width:100%!important;
+  max-width:100%!important;
+  margin:0!important;
+}
+#loader_container,#gameDiv{width:100%!important;min-height:0!important;height:auto!important;margin:0!important}
+#ava-game_container{
+  width:100%!important;
+  height:auto!important;
+  aspect-ratio:16/9!important;
+  max-height:none!important;
+  border-radius:16px!important;
+  overflow:hidden!important;
+  background:#081522!important;
+  box-shadow:0 8px 30px rgba(16,36,62,.16)!important;
+}
+#gamePlay-content,#game-box{width:100%!important;height:100%!important;min-height:0!important;max-height:none!important}
+#game-box{aspect-ratio:16/9!important}
+#game-box iframe,#game-box embed,#game-box object,#game-box canvas{width:100%!important;height:100%!important;max-width:100%!important;border:0!important;display:block!important}
+.game-zoom{
+  width:100%!important;
+  max-width:100%!important;
+  margin:12px 0 0!important;
+  padding:0!important;
+}
+.game-zoom-info{
+  display:flex!important;
+  align-items:center!important;
+  gap:12px!important;
+  width:100%!important;
+  min-width:0!important;
+  padding:12px 14px!important;
+  background:#fff!important;
+  border-radius:14px 14px 0 0!important;
+  box-sizing:border-box!important;
+  border:1px solid rgba(16,36,62,.07)!important;
+}
+.game-zoom-info .game-image{width:52px!important;height:52px!important;flex:0 0 52px!important;border-radius:10px!important;background-size:cover!important;background-position:center!important}
+.game-zoom-info p{font-size:18px!important;font-weight:800!important;line-height:1.25!important;margin:0!important;min-width:0!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important}
+.game-zoom>.flex.items-center.w-full.bg-white.p-3.rounded-b-xl{
+  width:100%!important;
+  margin:0!important;
+  padding:9px 12px!important;
+  box-sizing:border-box!important;
+  border-radius:0 0 14px 14px!important;
+  border:1px solid rgba(16,36,62,.07)!important;
+  border-top:0!important;
+  gap:8px!important;
+}
+.game-zoom>.flex.items-center.w-full.bg-white.p-3.rounded-b-xl>.flex.items-center.gap-3.ml-auto{
+  width:100%!important;
+  margin-left:0!important;
+  justify-content:flex-end!important;
+  flex-wrap:wrap!important;
+  gap:7px!important;
+}
+#game-bottom,.tags-walkthrough-container{
+  width:100%!important;
+  max-width:100%!important;
+  margin:14px 0 0!important;
+  box-sizing:border-box!important;
+}
+#game-bottom.bgs,.game-walkthrough.bgs{
+  background:#fff!important;
+  border:1px solid rgba(16,36,62,.07)!important;
+  border-radius:14px!important;
+  box-shadow:0 3px 14px rgba(16,36,62,.07)!important;
+  padding:20px!important;
+}
+#game-bottom .game-title{font-size:24px!important;line-height:1.25!important;font-weight:800!important;margin:0 0 10px!important}
+#play-game-desc{font-size:15px!important;line-height:1.7!important;overflow-wrap:anywhere!important}
+.game-tags{margin-top:16px!important;padding-top:12px!important;border-top:1px solid rgba(16,36,62,.08)!important}
+.game-tags ul{display:flex!important;flex-wrap:wrap!important;gap:7px!important}
+.game-tags ul li a{display:inline-flex!important;padding:6px 10px!important;border-radius:999px!important;background:#f0f5fc!important;font-size:12px!important}
+.tags-walkthrough-container .game-walkthrough{font-size:15px!important;line-height:1.7!important}
+#gameFull{min-width:42px!important;min-height:42px!important}
+@media(max-width:767px){
+  .play-game-list-grid-container{padding:0 10px 24px!important}
+  .play-game-list-grid-container>.game-container.game-col{max-width:100%!important}
+  #ava-game_container{border-radius:12px!important}
+  .game-zoom-info{padding:10px 12px!important}
+  .game-zoom-info .game-image{width:46px!important;height:46px!important;flex-basis:46px!important}
+  .game-zoom-info p{font-size:16px!important;white-space:normal!important;display:-webkit-box!important;-webkit-line-clamp:2!important;-webkit-box-orient:vertical!important}
+  #game-bottom.bgs,.game-walkthrough.bgs{padding:15px!important}
+  #game-bottom .game-title{font-size:20px!important}
+  #play-game-desc,.tags-walkthrough-container .game-walkthrough{font-size:14px!important;line-height:1.6!important}
+}
