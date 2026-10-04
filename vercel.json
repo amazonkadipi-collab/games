@@ -3,6 +3,7 @@
   "version": 2,
   "builds": [
     { "src": "api/index.php", "use": "vercel-php@0.9.0" },
+    { "src": "arcade_cms/ads.txt", "use": "@vercel/static" },
     { "src": "arcade_cms/templates/**", "use": "@vercel/static" },
     { "src": "arcade_cms/static/**", "use": "@vercel/static" },
     { "src": "arcade_cms/assets/**", "use": "@vercel/static" },
@@ -11,6 +12,7 @@
     { "src": "arcade_cms/games-thumb-video/**", "use": "@vercel/static" }
   ],
   "routes": [
+    { "src": "/ads.txt", "dest": "/arcade_cms/ads.txt" },
     { "src": "/(templates|static|assets|uploads|games-image|games-thumb-video)(.*)", "dest": "/arcade_cms/$1$2" },
     { "src": "/(.*)", "dest": "/api/index.php" }
   ]
