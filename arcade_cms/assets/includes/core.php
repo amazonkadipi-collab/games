@@ -121,7 +121,7 @@ function is_logged()
         $userPass = secureEncode($_COOKIE["gm_ac_p"]);
 
         global $GameMonetizeConnect;
-        $query = $GameMonetizeConnect->query("SELECT id FROM ".ACCOUNTS." WHERE id=$userId AND password='$userPass' AND active=1");
+        $query = $GameMonetizeConnect->query("SELECT id FROM ".ACCOUNTS." WHERE id=$userId AND password='$userPass' AND active='1'");
         $fetch = $query->num_rows;
         
         return $fetch;
