@@ -3638,3 +3638,44 @@ p.d-text {
     max-height: 100% !important;
   }
 }
+
+
+/* Performance + stable Poki-style runtime overrides */
+.gamePlay-bg,
+.mobi-gamePlay-bg {
+  filter: none !important;
+  -webkit-filter: none !important;
+  -ms-filter: none !important;
+  object-fit: cover !important;
+  transform: none !important;
+}
+#gamePlay-content {
+  background: #101820 !important;
+}
+#gamePlay-content::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,.16);
+  pointer-events: none;
+}
+.gamePlay-icon-btn { z-index: 2 !important; }
+#game-bottom,
+.tags-walkthrough-container {
+  content-visibility: auto;
+  contain-intrinsic-size: 600px;
+}
+@media (max-width: 767px) {
+  #ava-game_container,
+  #gameDiv,
+  #game-box {
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 16 / 9 !important;
+    max-height: none !important;
+    min-height: 0 !important;
+  }
+  #game-box {
+    overflow: hidden !important;
+  }
+}
