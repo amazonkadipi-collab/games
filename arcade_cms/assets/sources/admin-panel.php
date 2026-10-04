@@ -547,6 +547,47 @@ $themeData['page_admin_content'] = \GameMonetize\UI::view('admin/stats');
 			. '<script>(function(){function requestInstall(feature,button,status){button.disabled=true;button.textContent="Installing...";if(status){status.textContent="Checking license and downloading the protected package...";status.style.color="#9fb0ca";}var body=new URLSearchParams();body.set("feature",feature);return fetch("/assets/requests/admin/pro-feature-install.php",{method:"POST",credentials:"same-origin",headers:{"Content-Type":"application/x-www-form-urlencoded;charset=UTF-8"},body:body.toString()}).then(function(response){return response.json().then(function(data){return {ok:response.ok,data:data};});}).then(function(result){if(!result.ok||!result.data.ok){throw new Error(result.data.message||"Installation failed.");}button.textContent="Installed";if(status){status.textContent=result.data.message;}return result.data;}).catch(function(error){button.disabled=false;button.textContent="Try installation again";if(status){status.textContent=error.message;status.style.color="#ff9b9b";}throw error;});}function statusFor(button){return document.getElementById(button.dataset.statusId||"")||document.querySelector("[data-feature-status=\""+button.dataset.feature+"\"]");}function bindInstaller(){var card=document.getElementById("gps-google-login-installer"),label=document.getElementById("gps-pro-page-license-label"),active=label&&label.textContent.trim()==="PRO Active",allControl=document.getElementById("gps-install-all-control");if(allControl){allControl.style.display=active?"flex":"none";}if(card&&active&&!document.getElementById("gps-install-google-login")){card.innerHTML="<div style=\"display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;flex-wrap:wrap;\"><span style=\"color:#fff;font-weight:700;\">Login with Google<small id=\"gps-google-install-status\" data-feature-status=\"google_login\" style=\"display:block;color:#9fb0ca;font-weight:400;\">Ready to install with this PRO license</small></span><button type=\"button\" id=\"gps-install-google-login\" class=\"gps-install-pro-feature\" data-feature=\"google_login\" data-status-id=\"gps-google-install-status\" style=\"padding:9px 14px;background:#2f9e55;border:1px solid #51cf66;border-radius:6px;color:#fff;font-weight:700;cursor:pointer;\">Install feature</button></div>";}document.querySelectorAll(".gps-install-pro-feature").forEach(function(button){if(active&&button.disabled){button.disabled=false;button.style.display="inline-block";var status=statusFor(button);if(status){status.textContent="Ready to install with this PRO license";}}if(button.dataset.bound==="1"){return;}button.dataset.bound="1";button.addEventListener("click",function(){requestInstall(button.dataset.feature,button,statusFor(button)).then(function(){window.setTimeout(function(){window.location.reload();},700);}).catch(function(){});});});var allButton=document.getElementById("gps-install-all-pro-features");if(allButton&&allButton.dataset.bound!=="1"){allButton.dataset.bound="1";allButton.addEventListener("click",function(){var buttons=Array.prototype.slice.call(document.querySelectorAll(".gps-install-pro-feature:not(:disabled)")),allStatus=document.getElementById("gps-install-all-status"),completed=0;if(!buttons.length){allStatus.textContent="Every available feature is already installed.";return;}allButton.disabled=true;allButton.textContent="Installing 0 / "+buttons.length;var chain=Promise.resolve();buttons.forEach(function(featureButton){chain=chain.then(function(){var feature=featureButton.dataset.feature;allStatus.textContent="Installing "+feature.replace(/_/g," ")+"...";return requestInstall(feature,featureButton,statusFor(featureButton)).then(function(){completed++;allButton.textContent="Installing "+completed+" / "+buttons.length;});});});chain.then(function(){allButton.textContent="All features installed";allStatus.textContent="Installation completed. Reloading...";window.setTimeout(function(){window.location.reload();},700);}).catch(function(error){allButton.disabled=false;allButton.textContent="Continue installation";allStatus.textContent="Stopped: "+error.message;allStatus.style.color="#ff9b9b";});});}}var licenseLabel=document.getElementById("gps-pro-page-license-label");if(licenseLabel&&window.MutationObserver){new MutationObserver(bindInstaller).observe(licenseLabel,{childList:true,subtree:true,characterData:true});}bindInstaller();})();</script>'
 			. '<script>(function(){var button=document.getElementById("gps-pro-check-updates"),status=document.getElementById("gps-pro-update-check-status"),timer=0;if(!button){return;}function wait(seconds){window.clearInterval(timer);seconds=Math.max(1,parseInt(seconds||0,10));button.disabled=true;function draw(){var h=Math.floor(seconds/3600),m=Math.ceil((seconds%3600)/60);button.textContent="Try in "+(h?h+"h ":"")+m+"m";if(--seconds<0){window.clearInterval(timer);button.disabled=false;button.textContent="Check updates";}}draw();timer=window.setInterval(draw,60000);}button.addEventListener("click",function(){button.disabled=true;button.textContent="Checking...";status.style.display="block";status.style.color="#b9c7dd";status.textContent="Verifying this exact domain with GamePortalScript...";fetch("/assets/requests/admin/pro-update-check.php",{method:"POST",credentials:"same-origin"}).then(function(response){return response.json().then(function(data){return {ok:response.ok,data:data};});}).then(function(result){status.textContent=result.data.message||"Update check finished.";status.style.color=result.ok?"#8ff0bd":"#ffb7c0";if(result.ok){button.textContent="Checked";window.setTimeout(function(){window.location.reload();},900);return;}if(result.data.retry_after){wait(result.data.retry_after);return;}button.disabled=false;button.textContent="Check updates";}).catch(function(){status.textContent="The license server could not be reached. No installed feature was changed.";status.style.color="#ffb7c0";button.disabled=false;button.textContent="Check updates";});});})();</script>';
 	} elseif (isset($_GET['section']) && $_GET['section'] == "setting") {
+		// Native Vercel/Neon settings save. The legacy encrypted engine used to handle
+		// this POST, but it is intentionally not loaded in production.
+		if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' && is_admin()) {
+			$allowedThemes = ['crazygames-like', 'y8-like', 'kizi', 'poki-like'];
+			$selectedTheme = trim((string)($_POST['ss_sitetheme'] ?? ''));
+			if (in_array($selectedTheme, $allowedThemes, true)) {
+				$siteName = $GameMonetizeConnect->real_escape_string(trim((string)($_POST['ss_sitename'] ?? '')));
+				$siteDescription = $GameMonetizeConnect->real_escape_string(trim((string)($_POST['ss_sitedescription'] ?? '')));
+				$siteKeywords = $GameMonetizeConnect->real_escape_string(trim((string)($_POST['ss_sitekeywords'] ?? '')));
+				$siteUrl = rtrim(trim((string)($_POST['ss_siteurl'] ?? '')), '/');
+				$siteUrl = $GameMonetizeConnect->real_escape_string($siteUrl);
+				$recaptchaSite = $GameMonetizeConnect->real_escape_string(trim((string)($_POST['ss_sitekey'] ?? '')));
+				$recaptchaSecret = $GameMonetizeConnect->real_escape_string(trim((string)($_POST['ss_secretkey'] ?? '')));
+				$remoteImages = isset($_POST['ss_remote_game_images']) ? 'remote_images' : '';
+				$customCssTheme = preg_replace('/[^a-zA-Z0-9_-]/', '', (string)($_POST['theme_custom_css_theme'] ?? $selectedTheme));
+				if ($customCssTheme === '') $customCssTheme = $selectedTheme;
+				$customCss = (string)($_POST['theme_custom_css'] ?? '');
+				$customCssPath = ABSPATH . 'templates/' . $customCssTheme . '/css/custom-theme.css';
+				if (is_dir(dirname($customCssPath)) && is_writable(dirname($customCssPath))) {
+					file_put_contents($customCssPath, $customCss, LOCK_EX);
+				}
+				$updateSql = "UPDATE " . SETTING . " SET site_name='{$siteName}', site_description='{$siteDescription}', site_keywords='{$siteKeywords}', site_url='{$siteUrl}', site_theme='{$selectedTheme}', recaptcha_site_key='{$recaptchaSite}', recaptcha_secret_key='{$recaptchaSecret}', settings_10='{$remoteImages}' WHERE id='1'";
+				if ($GameMonetizeConnect->query($updateSql)) {
+					$config['site_name'] = trim((string)($_POST['ss_sitename'] ?? ''));
+					$config['site_description'] = trim((string)($_POST['ss_sitedescription'] ?? ''));
+					$config['site_keywords'] = trim((string)($_POST['ss_sitekeywords'] ?? ''));
+					$config['site_url'] = rtrim(trim((string)($_POST['ss_siteurl'] ?? '')), '/');
+					$config['site_theme'] = $selectedTheme;
+					$config['theme_path'] = $config['site_url'] . '/templates/' . $selectedTheme;
+					$config['recaptcha_site_key'] = trim((string)($_POST['ss_sitekey'] ?? ''));
+					$config['recaptcha_secret_key'] = trim((string)($_POST['ss_secretkey'] ?? ''));
+					$config['settings_10'] = $remoteImages;
+					$themeData['config_site_name'] = $config['site_name'];
+					$themeData['config_site_description'] = $config['site_description'];
+					$themeData['config_site_keywords'] = $config['site_keywords'];
+					$themeData['config_site_url'] = $config['site_url'];
+					$themeData['config_site_theme'] = $selectedTheme;
+					$themeData['config_theme_path'] = $config['theme_path'];
+				}
+			}
+		}
 		$settings = $GameMonetizeConnect->query("SELECT * FROM " . SETTING . " WHERE id='1'");
 		$settings = $settings->fetch_assoc();
 		$themeData['config_recaptcha_site_key'] = $settings['recaptcha_site_key'];
