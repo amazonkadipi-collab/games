@@ -3524,3 +3524,24 @@ p.d-text {
   #game-bottom .game-title{font-size:20px!important}
   #play-game-desc,.tags-walkthrough-container .game-walkthrough{font-size:14px!important;line-height:1.6!important}
 }
+
+
+/* === Mobile game runtime: never force the page into fullscreen === */
+@media (max-width:767px){
+  html,body{width:100%;max-width:100%;overflow-x:hidden!important}
+  #content{width:100%!important;max-width:100%!important;margin:0!important}
+  .play-game-list-grid-container{padding:0 10px 24px!important}
+  .play-game-list-grid-container>.game-container.game-col{width:100%!important;max-width:100%!important}
+  #gameDiv{position:relative!important;left:auto!important;top:auto!important;width:100%!important;height:auto!important;max-width:100%!important}
+  #ava-game_container{position:relative!important;width:100%!important;height:auto!important;aspect-ratio:16/9!important;max-height:none!important;border-radius:12px!important}
+  #game-box{position:relative!important;width:100%!important;height:100%!important;aspect-ratio:16/9!important}
+  #game-box iframe,#game-box embed,#game-box object,#game-box canvas{width:100%!important;height:100%!important;max-width:100%!important;max-height:none!important}
+  #gamePlay-content{position:absolute!important;inset:0!important}
+  .gamePlay-bg{width:100%!important;height:100%!important;object-fit:cover!important}
+  .gamePlay-icon-btn{position:absolute!important;inset:0!important}
+  .close-fullscreen{display:none!important}
+  body.game-fullscreen #header,
+  body.game-fullscreen .game-zoom,
+  body.game-fullscreen #game-bottom,
+  body.game-fullscreen .tags-walkthrough-container{display:none!important}
+}
