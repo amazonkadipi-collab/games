@@ -3,6 +3,7 @@
   "version": 2,
   "builds": [
     { "src": "api/index.php", "use": "vercel-php@0.9.0" },
+    { "src": "api/seo.php", "use": "vercel-php@0.9.0" },
     { "src": "arcade_cms/ads.txt", "use": "@vercel/static" },
     { "src": "arcade_cms/7f4c2e9a1d6b8f03c5e7a9b2d4f6c801.txt", "use": "@vercel/static" },
     { "src": "arcade_cms/templates/**", "use": "@vercel/static" },
@@ -15,6 +16,10 @@
   "routes": [
     { "src": "/ads.txt", "dest": "/arcade_cms/ads.txt" },
     { "src": "/7f4c2e9a1d6b8f03c5e7a9b2d4f6c801.txt", "dest": "/arcade_cms/7f4c2e9a1d6b8f03c5e7a9b2d4f6c801.txt" },
+    { "src": "/robots.txt", "dest": "/api/seo.php" },
+    { "src": "/llms.txt", "dest": "/api/seo.php" },
+    { "src": "/sitemap.xml", "dest": "/api/seo.php" },
+    { "src": "/sitemaps/(.*)", "dest": "/api/seo.php" },
     { "src": "/(templates|static|assets|uploads|games-image|games-thumb-video)(.*)", "dest": "/arcade_cms/$1$2" },
     { "src": "/(.*)", "dest": "/api/index.php" }
   ]
