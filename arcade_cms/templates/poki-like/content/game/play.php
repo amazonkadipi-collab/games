@@ -5,59 +5,6 @@
 
 <div id="content" class="fn-clear">
     <div class="play-game-list-grid-container">
-    <div>{{ADS_SIDEBAR}}</div>
-    <div>{{ADS_HEADER}}</div>
-    <div>{{ADS_300}}</div>
-    <div class="home-search-container">
-        <a href="/" class="logo-home hide-text" aria-label="home">
-            Home
-        </a>
-        <div class="home-search">
-            <a href="/" class="home-icon">
-                <i class="fa fa-home" aria-hidden="true"></i>
-            </a>
-            <div id="search" class="home-icon">
-                <i class="fa fa-search" aria-hidden="true"></i>
-            </div>
-        </div>
-    </div>
-    <div id="search-left">
-        <div class="search-container">
-            <div id="search-left-close">
-                <i class="fa fa-chevron-left" aria-hidden="true"></i>
-            </div>
-            <div class="search-form">
-                <form id="search-data-form" onsubmit="return false;">
-                    <img src="/templates/poki-like/image/poki-circle-logo.png" class="poki-circle-logo" alt="poki-circle-logo">
-                    <div class="divider"></div>
-                    <input type="text" class="txt fn-left search-input" id="Search-InArea" name="search_parameter" type="text" placeholder="What are you playing today?">
-                    <input type="submit" class="btn" value="" id="search" aria-label="search-button">
-                    <div id="clear-search">
-                        <i class="fa fa-close" aria-hidden="true"></i>
-                    </div>
-                </form>
-            </div>
-            <div id="search-results" class="search-results games-list">
-                <!-- Hasil pencarian akan muncul di sini -->
-            </div>
-            <div id="tag-and-games-contaner">
-                <div class="tag-container">
-                    <div class="tag-list">
-                        {{TAGS_LIST_HOME}}
-                    </div>
-                </div>
-                <p class="title">Popular Games</p>
-                <div class="games-list">
-                    {{POPULAR_GAME_LIST}}
-                </div>
-                <p class="title">Last Played</p>
-                <div class="games-list played-games">
-                    {{GAMES_PLAYED_LEFT}}
-                </div>
-            </div>
-        </div>
-    </div>
-    <div></div>
     <div class="game-container game-col">
         <div class="game-info">
         <div id="loader_container">
@@ -290,14 +237,13 @@
     }
 
     $(document).ready(function() {
-        // Load the game only after the user presses Play.
-        // This keeps the poster clean and prevents two players/layers
-        // from fighting for the same space on desktop or mobile.
+        // Poki-style player-first flow: keep the poster visible until Play.
         $("#game-box").empty();
         $(".gamePlay-button").off("click.gameStart").on("click.gameStart", function(e) {
             e.preventDefault();
             SkipAdAndShowGame();
         });
+    });
     });
 
     $(function() {
@@ -323,13 +269,6 @@
 </script>
 
 {{IMA_SDK}}
-
-<script>
-    $(document).ready(function() {
-        $("#adsContainer").hide();
-        $("#game-box").html(iframe);
-    });
-</script>
 
 <!-- <div id="BackTop"></div> -->
 </div>
