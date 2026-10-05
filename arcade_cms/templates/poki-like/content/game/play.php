@@ -214,19 +214,10 @@
 
 <!-- <div id="BackTop"></div> -->
 </div>
-
-<script src="{{CONFIG_THEME_PATH}}/js/libs/jquery.show-more.js" defer></script>
 <script>
-	if (window.innerWidth <= 768) {
-		$('#play-game-desc').showMore({
-			minheight: 145,
-			maxWidth: "100%",
-		});
-	}
 var cat = "{{CATEGORYID}}";
 </script>
-
- <style>
+<style>
 /* FIX: keep title left, buttons right */
 .flex.items-center.w-full.bg-white.p-3.rounded-b-xl {
     display: flex;
