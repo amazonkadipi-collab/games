@@ -1,6 +1,7 @@
 <?php
 $themeData['title_tag'] = title_tag();
 $descriptionPixelChar = 135;
+$cmsRequestedPath = trim((string)parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH), '/');
 $themeData['config_site_description'] = substr($themeData['config_site_description'], 0, $descriptionPixelChar);
 $themeData['date_all_css'] = date("Y-m-d\TH-i", filemtime($_SERVER["DOCUMENT_ROOT"] . '/templates/' . $config['site_theme'] . '/css/' . 'all.css'));
 $themeData['date_play_css'] = date("Y-m-d\TH-i", filemtime($_SERVER["DOCUMENT_ROOT"] . '/templates/' . $config['site_theme'] . '/css/' . 'play.css'));
@@ -79,11 +80,16 @@ if (is_page('play')) {
 				? substr($footerMetaText, 0, 155)
 				: $favoriteDefaultDescription;
 		} else {
-			$themeData['category_tags_meta_title'] = td_title();
-			$themeData['category_tags_meta_description'] = substr($footerMetaText, 0, $descriptionPixelChar);
+			$themeData['category_tags_meta_title'] = ($cmsRequestedPath === 'popular')
+				? 'Popular Games - ' . $config['site_name']
+				: td_title();
+			$themeData['category_tags_meta_description'] = ($cmsRequestedPath === 'popular')
+				? 'Check out the most popular free online games trending right now.'
+				: substr($footerMetaText, 0, $descriptionPixelChar);
 		}
 		$themeData['header_metatags'] .= \GameMonetize\UI::view('global/header/category_tags_metatags');
-		$canonicalUrl = rtrim(siteUrl(), '/') . '/' . $_GET['p'];
+		$canonicalSlug = ($cmsRequestedPath === 'popular') ? 'popular' : (string)$_GET['p'];
+		$canonicalUrl = rtrim(siteUrl(), '/') . '/' . ltrim($canonicalSlug, '/');
 		$themeData['header_metatags'] .= '<link rel="canonical" href="' . htmlspecialchars($canonicalUrl, ENT_QUOTES, 'UTF-8') . '">';
 		if ($isFavoritePage) {
 			$logoFolders = ['crazygames-like' => 'crazygames-like', 'crazygames-pro' => 'crazygames-like', 'poki-like' => 'poki', 'poki-pro' => 'poki', 'kizi' => 'kizi', 'kizi-pro' => 'kizi', 'y8-like' => 'y8', 'y8-pro' => 'y8'];
@@ -108,6 +114,10 @@ if (is_page('play')) {
 }
 
 $themeData['header_favicon'] = \GameMonetize\UI::view('global/header/favicon');
+
+if ($cmsRequestedPath === 'popular') {
+	$themeData['title_tag'] = 'Popular Games - ' . $config['site_name'];
+}
 
 if ($_GET['p'] != 'login') {
 	if (
