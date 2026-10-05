@@ -471,8 +471,8 @@ $gpsCurrentPath = trim((string)parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL
 $gpsCanonical = rtrim(siteUrl(), '/') . ($gpsCurrentPath === '' ? '/' : '/' . $gpsCurrentPath);
 if (($gpsCurrentPath === '' || $gpsCurrentPath === 'home') && ($_GET['p'] ?? '') === 'home') {
 	gps_playgrid_append_jsonld($themeData, ['@context'=>'https://schema.org','@graph'=>[
-		['@type'=>'WebSite','@id'=>rtrim(siteUrl(),'/').'//#website','url'=>rtrim(siteUrl(),'/').'/','name'=>(string)$config['site_name'],'description'=>(string)$config['site_description'],'potentialAction'=>['@type'=>'SearchAction','target'=>rtrim(siteUrl(),'/').'/search?q={search_term_string}','query-input'=>'required name=search_term_string']],
-		['@type'=>'Organization','@id'=>rtrim(siteUrl(),'/').'//#organization','name'=>(string)$config['site_name'],'url'=>rtrim(siteUrl(),'/').'/']
+		['@type'=>'WebSite','@id'=>rtrim(siteUrl(),'/').'/#website','url'=>rtrim(siteUrl(),'/').'/','name'=>(string)$config['site_name'],'description'=>(string)$config['site_description'],'potentialAction'=>['@type'=>'SearchAction','target'=>rtrim(siteUrl(),'/').'/search?q={search_term_string}','query-input'=>'required name=search_term_string']],
+		['@type'=>'Organization','@id'=>rtrim(siteUrl(),'/').'/#organization','name'=>(string)$config['site_name'],'url'=>rtrim(siteUrl(),'/').'/']
 	]]);
 } elseif (($gpsCurrentPath !== '') && ($_GET['p'] ?? '') === 'play' && !empty($get_game_data)) {
 	$gpsGameName = trim((string)($get_game_data['name'] ?? ''));
@@ -482,8 +482,10 @@ if (($gpsCurrentPath === '' || $gpsCurrentPath === 'home') && ($_GET['p'] ?? '')
 	$gpsPlays = isset($get_game['plays']) ? (int)$get_game['plays'] : (int)($get_game_data['plays'] ?? 0);
 	$gpsCategory = trim((string)($get_game['category_name'] ?? ''));
 	$gpsGameSchema = ['@context'=>'https://schema.org','@type'=>'VideoGame','name'=>$gpsGameName,'url'=>$gpsCanonical,'description'=>$gpsGameDescription !== '' ? $gpsGameDescription : 'Play '.$gpsGameName.' online in your browser.','applicationCategory'=>'Game','gamePlatform'=>['Web Browser'],'genre'=>$gpsCategory !== '' ? $gpsCategory : null,'image'=>$gpsGameImage !== '' ? $gpsGameImage : null];
-	if ($gpsRating > 0) $gpsGameSchema['aggregateRating']=['@type'=>'AggregateRating','ratingValue'=>$gpsRating,'bestRating'=>5,'worstRating'=>0,'ratingCount'=>max(1,(int)($get_game['vote_count'] ?? $get_game['votes'] ?? 1))];
-	if ($gpsPlays > 0) $gpsGameSchema['interactionStatistic']=['@type'=>'InteractionCounter','interactionType'=>['@type'=>'WatchAction'],'userInteractionCount'=>$gpsPlays];
+	$gpsVoteCount=(int)($get_game['vote_count'] ?? $get_game['votes'] ?? 0);
+if ($gpsVoteCount <= 0) $gpsVoteCount=(int)($get_game['like_count'] ?? 0)+(int)($get_game['dislike_count'] ?? 0);
+if ($gpsRating > 0 && $gpsVoteCount > 0) $gpsGameSchema['aggregateRating']=['@type'=>'AggregateRating','ratingValue'=>$gpsRating,'bestRating'=>5,'worstRating'=>0,'ratingCount'=>$gpsVoteCount];
+	if ($gpsPlays > 0) $gpsGameSchema['interactionStatistic']=['@type'=>'InteractionCounter','interactionType'=>['@type'=>'PlayAction'],'userInteractionCount'=>$gpsPlays];
 	$gpsGameSchema=array_filter($gpsGameSchema,static function($v){return $v!==null && $v!=='';});
 	gps_playgrid_append_jsonld($themeData,$gpsGameSchema);
 	gps_playgrid_append_jsonld($themeData,['@context'=>'https://schema.org','@type'=>'BreadcrumbList','itemListElement'=>[
