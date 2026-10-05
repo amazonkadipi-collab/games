@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="{{CONFIG_SITE_URL}}/templates/poki-like/css/game-redesign.css?ver=20261005" media="all">
 <script language="javascript">
     var PageType = "";
     var ids = "";
