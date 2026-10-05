@@ -397,6 +397,69 @@ $themeData['page_description'] = $pageData['description'];
 $themeData['config_site_name'] = $config['site_name'];
 $themeData['config_site_description'] = $config['site_description'];
 $themeData['config_site_keywords'] = $config['site_keywords'];
+$gpsPublicPath = trim((string)parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH), '/');
+$gpsPublicMetaEnabled = ($_GET['p'] ?? '') !== 'play'
+    && !in_array((string)($_GET['p'] ?? ''), ['login','admin','setting','error'], true);
+
+if ($gpsPublicMetaEnabled) {
+    $gpsPublicTitle = trim(strip_tags((string)($themeData['page_title'] ?? '')));
+    if ($gpsPublicTitle === '') $gpsPublicTitle = trim(strip_tags((string)($themeData['category_tags_meta_title'] ?? '')));
+    if ($gpsPublicTitle === '') $gpsPublicTitle = 'Free Online Games';
+    $gpsPublicKnownTitle = [
+        '' => 'Free Online Games - ' . $config['site_name'],
+        'home' => 'Free Online Games - ' . $config['site_name'],
+        'popular' => 'Popular Games - ' . $config['site_name'],
+        'all-games' => 'All Games - ' . $config['site_name'],
+        'new-games' => 'New Games - ' . $config['site_name'],
+        'featured-games' => 'Featured Games - ' . $config['site_name'],
+        'search' => 'Search - ' . $config['site_name'],
+        'categories' => 'Categories - ' . $config['site_name'],
+        'tags' => 'Game Tags - ' . $config['site_name']
+    ];
+    if (isset($gpsPublicKnownTitle[$gpsPublicPath])) $themeData['title_tag'] = $gpsPublicKnownTitle[$gpsPublicPath];
+    elseif (!empty($themeData['category_tags_meta_title'])) $themeData['title_tag'] = $themeData['category_tags_meta_title'];
+
+    $gpsPublicDescription = trim(strip_tags((string)($themeData['page_description'] ?? '')));
+    $gpsDescriptionFallbacks = [
+        '' => 'Play free online browser games instantly. Discover new, popular, multiplayer, puzzle, racing, action and casual games.',
+        'home' => 'Play free online browser games instantly. Discover new, popular, multiplayer, puzzle, racing, action and casual games.',
+        'popular' => 'Discover popular free online browser games ranked by player activity.',
+        'all-games' => 'Browse the complete collection of free online browser games.',
+        'new-games' => 'Discover the latest free online browser games added to the catalog.',
+        'featured-games' => 'Explore featured free online browser games selected from the catalog.',
+        'search' => 'Find free online browser games by title, genre, theme or gameplay style.',
+        'categories' => 'Browse free online games by category, including action, racing, puzzle, sports and more.',
+        'tags' => 'Browse free online games by topic and gameplay tag.'
+    ];
+    if ($gpsPublicDescription === '') $gpsPublicDescription = $gpsDescriptionFallbacks[$gpsPublicPath] ?? (string)$config['site_description'];
+
+    $gpsPublicCanonical = rtrim(siteUrl(), '/') . ($gpsPublicPath === '' ? '/' : '/' . ltrim($gpsPublicPath, '/'));
+    $gpsPublicRobots = (strpos($gpsPublicPath, 'search') === 0)
+        ? 'noindex,follow,max-image-preview:large'
+        : 'index,follow,max-image-preview:large';
+
+    $gpsMeta = (string)($themeData['header_metatags'] ?? '');
+    $gpsEscDesc = htmlspecialchars(substr($gpsPublicDescription, 0, 160), ENT_QUOTES, 'UTF-8');
+    $gpsEscTitle = htmlspecialchars((string)($themeData['title_tag'] ?? $gpsPublicTitle), ENT_QUOTES, 'UTF-8');
+    $gpsEscCanon = htmlspecialchars($gpsPublicCanonical, ENT_QUOTES, 'UTF-8');
+    $gpsEscSite = htmlspecialchars((string)$config['site_name'], ENT_QUOTES, 'UTF-8');
+
+    if (preg_match('/<meta\s+name=["\']description["\'][^>]*>/i', $gpsMeta)) {
+        $gpsMeta = preg_replace('/<meta\s+name=["\']description["\'][^>]*>/i', '<meta name="description" content="' . $gpsEscDesc . '">', $gpsMeta, 1);
+    } else {
+        $gpsMeta .= '<meta name="description" content="' . $gpsEscDesc . '">';
+    }
+    if (stripos($gpsMeta, 'rel="canonical"') === false) $gpsMeta .= '<link rel="canonical" href="' . $gpsEscCanon . '">';
+    if (stripos($gpsMeta, 'name="robots"') === false) $gpsMeta .= '<meta name="robots" content="' . $gpsPublicRobots . '">';
+    if (stripos($gpsMeta, 'property="og:title"') === false) {
+        $gpsMeta .= '<meta property="og:type" content="website"><meta property="og:title" content="' . $gpsEscTitle . '"><meta property="og:description" content="' . $gpsEscDesc . '"><meta property="og:url" content="' . $gpsEscCanon . '"><meta property="og:site_name" content="' . $gpsEscSite . '">';
+    }
+    if (stripos($gpsMeta, 'name="twitter:card"') === false) {
+        $gpsMeta .= '<meta name="twitter:card" content="summary"><meta name="twitter:title" content="' . $gpsEscTitle . '"><meta name="twitter:description" content="' . $gpsEscDesc . '"><meta name="twitter:url" content="' . $gpsEscCanon . '">';
+    }
+    $themeData['header_metatags'] = $gpsMeta;
+}
+
 
 if ($isPokiPublicTheme) {
 	$bestGames_query = $GameMonetizeConnect->query("SELECT * FROM " . GAMES . " WHERE published='1' ORDER BY plays DESC LIMIT 6");
