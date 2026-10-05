@@ -41,7 +41,11 @@ if (is_file($gpsPageSpeedEarlyCache)) {
 if (!isset($_GET['p'])) {
     $cmsRoutePath = trim((string)parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH), '/');
     if ($cmsRoutePath === 'best-games') {
-        header('Location: /popular', true, 301);
+        $popularTarget = '/popular';
+        if (isset($_GET['page']) && ctype_digit((string)$_GET['page']) && (int)$_GET['page'] > 1) {
+            $popularTarget .= '?page=' . (int)$_GET['page'];
+        }
+        header('Location: ' . $popularTarget, true, 301);
         exit;
     }
     $cmsStaticRoutes = [
