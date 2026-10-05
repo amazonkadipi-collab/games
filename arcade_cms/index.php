@@ -53,7 +53,7 @@ if (!isset($_GET['p'])) {
         'random' => 'random', 'about' => 'about', 'tags' => 'tags', 'privacy' => 'privacy',
         'terms' => 'terms', 'contact' => 'contact', 'featured-games' => 'featured-games', 'all-games' => 'all-games',
         'played-games' => 'played-games', 'favorite-games' => 'favorite-games', 'categories' => 'categories', 'search' => 'search',
-        'blogs' => 'blogs', 'popular' => 'best-games', 'all-games' => 'all-games', 'login' => 'login', 'setting' => 'setting', 'error' => 'error', 'admin' => 'admin',
+        'blogs' => 'blogs', 'popular' => 'best-games', 'login' => 'login', 'setting' => 'setting', 'error' => 'error', 'admin' => 'admin',
     ];
     if (isset($cmsStaticRoutes[$cmsRoutePath])) {
         $_GET['p'] = $cmsStaticRoutes[$cmsRoutePath];
