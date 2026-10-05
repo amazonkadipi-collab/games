@@ -15,6 +15,9 @@ $specialPage = ['best-games', 'new-games', 'featured-games', 'played-games', 'fa
 if ($cmsRequestedPath === 'popular') {
 	$themeData['title_tag'] = 'Popular Games - ' . $config['site_name'];
 }
+if ($cmsRequestedPath === 'all-games') {
+	$themeData['title_tag'] = 'All Games - ' . $config['site_name'];
+}
 if (is_page('play')) {
 	$game_data = getGame2($_GET['id']);
 	$game_info = gameData($game_data);
