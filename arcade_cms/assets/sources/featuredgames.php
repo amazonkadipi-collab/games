@@ -50,23 +50,23 @@ while ($newGames = $newGames_query->fetch_array()) {
 	}
 }
 
+$page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
+$perPage = 60;
+$offset = ($page - 1) * $perPage;
+$countResult = $GameMonetizeConnect->query("SELECT COUNT(*) AS total FROM " . GAMES . " WHERE published='1' AND featured='1'");
+$total = 0;
+if ($countResult && ($countRow = $countResult->fetch_assoc())) $total = max(0, (int)($countRow['total'] ?? 0));
+$totalPages = max(1, (int)ceil($total / $perPage));
+if ($page > $totalPages) { $page = $totalPages; $offset = ($page - 1) * $perPage; }
 $themeData['discovery_pagination'] = '';
-$themeData['discovery_pagination_label'] = '';
-
-$pageLabel = 'Page ' . $page . ' of ' . $totalPages . ($total > 0 ? ' · ' . number_format($total) . ' games' : '');
-$pageLabelLinks = '';
-if ($page > 1) $pageLabelLinks .= '<a href="' . siteUrl() . '/featured-games?page=' . ($page - 1) . '" rel="prev">Previous</a>';
-$pageLabelStart = max(1, $page - 2);
-$pageLabelEnd = min($totalPages, $page + 2);
-for ($i = $pageLabelStart; $i <= $pageLabelEnd; $i++) {
-    $pageLabelLinks .= ($i === $page)
-        ? '<span class="active" aria-current="page">' . $i . '</span>'
-        : '<a href="' . siteUrl() . '/featured-games?page=' . $i . '">' . $i . '</a>';
-}
-if ($page < $totalPages) $pageLabelLinks .= '<a href="' . siteUrl() . '/featured-games?page=' . ($page + 1) . '" rel="next">Next</a>';
-$themeData['discovery_pagination_label'] = $pageLabel;
-$themeData['discovery_pagination'] = '<nav class="poki-pagination" aria-label="Game pages">' . $pageLabelLinks . '</nav>';
-
+$themeData['discovery_pagination_label'] = 'Page ' . $page . ' of ' . $totalPages . ($total > 0 ? ' · ' . number_format($total) . ' games' : '');
+$startPage = max(1, $page - 2);
+$endPage = min($totalPages, $page + 2);
+$links = '';
+if ($page > 1) $links .= '<a href="' . siteUrl() . '/featured-games?page=' . ($page - 1) . '" rel="prev">Previous</a>';
+for ($i = $startPage; $i <= $endPage; $i++) $links .= ($i === $page) ? '<span class="active" aria-current="page">' . $i . '</span>' : '<a href="' . siteUrl() . '/featured-games?page=' . $i . '">' . $i . '</a>';
+if ($page < $totalPages) $links .= '<a href="' . siteUrl() . '/featured-games?page=' . ($page + 1) . '" rel="next">Next</a>';
+$themeData['discovery_pagination'] = '<nav class="poki-pagination" aria-label="Featured games pages">' . $links . '</nav>';
 
 if (gps_theme_is('y8-like') || gps_theme_is('poki-like')) {
 	$sql_cat_query = $GameMonetizeConnect->query("SELECT * FROM " . CATEGORIES . " WHERE show_home='1'");
