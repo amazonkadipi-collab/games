@@ -43,7 +43,7 @@ if (!isset($_GET['p'])) {
     $cmsStaticRoutes = [
         '' => 'home', 'home' => 'home', 'new-games' => 'new-games', 'best-games' => 'best-games',
         'random' => 'random', 'about' => 'about', 'tags' => 'tags', 'privacy' => 'privacy',
-        'terms' => 'terms', 'contact' => 'contact', 'featured-games' => 'featured-games',
+        'terms' => 'terms', 'contact' => 'contact', 'featured-games' => 'featured-games', 'all-games' => 'all-games',
         'played-games' => 'played-games', 'favorite-games' => 'favorite-games', 'categories' => 'categories', 'search' => 'search',
         'blogs' => 'blogs', 'popular' => 'best-games', 'login' => 'login', 'setting' => 'setting', 'error' => 'error', 'admin' => 'admin',
     ];
