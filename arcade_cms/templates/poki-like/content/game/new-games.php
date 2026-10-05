@@ -4,8 +4,8 @@
 <div id="content" class="poki-public-page poki-home">
     <section class="poki-section">
         <div class="section-title">
-            <h2>Popular this week</h2>
-            <a href="{{CONFIG_SITE_URL}}/best-games">See all</a>
+            <h2>Popular games</h2>
+            <a href="{{CONFIG_SITE_URL}}/popular">See all</a>
         </div>
         <div class="poki-game-grid">
             {{POPULAR_GAME_LIST}}
