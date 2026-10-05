@@ -225,55 +225,7 @@
 <script>
 var cat = "{{CATEGORYID}}";
 </script>
-<style>
-/* FIX: keep title left, buttons right */
-.flex.items-center.w-full.bg-white.p-3.rounded-b-xl {
-    display: flex;
-    align-items: center;
-}
 
-/* THIS is the important part */
-.flex.items-center.gap-3.ml-auto {
-    margin-left: auto !important; /* pushes buttons to far right */
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-/* make sure no parent is centering */
-.game-zoom-info {
-    margin-right: auto;
-}
-
-/* optional spacing */
-.play-info-blue {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    color: #4da3ff;
-    font-weight: 700;
-    font-size: 12px;
-}
-
-.vote-btn {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: #fff;
-    border: 1px solid #f0f2f5;
-    border-radius: 14px;
-    padding: 8px 14px;
-    color: #4da3ff;
-    cursor: pointer;
-    font-weight: 700;
-}
-.vote-btn i {
-    font-size: 18px;
-}
-.vote-btn[data-type="favorite"] {
-    padding: 10px 15px;
-}
-</style>
 
 
 <script>

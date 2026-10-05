@@ -1,11 +1,16 @@
-<script language="javascript">var PageType ="{{NEW_GAME_PAGE}}"; var ids ="{{NEW_GAME_IDS}}";</script>
 <div class="content poki-home-content">
     <section class="poki-home-hero" aria-labelledby="home-title">
-        <h1 id="home-title">{{PAGE_TITLE}}</h1>
-        <p>Play free browser games instantly. Explore popular, new, multiplayer, puzzle, racing, action and casual games without downloads.</p>
+        <div class="poki-home-hero-copy">
+            <p class="poki-eyebrow">FREE BROWSER GAMES</p>
+            <h1 id="home-title">What are you playing today?</h1>
+            <p>Play instantly on desktop, tablet or mobile. Discover popular, new and multiplayer browser games — no download required.</p>
+        </div>
+        <form class="poki-hero-search" method="GET" action="{{CONFIG_SITE_URL}}/search" role="search">
+            <input type="search" name="q" placeholder="Search games, genres or themes" aria-label="Search games, genres or themes" autocomplete="off">
+            <button type="submit">Search</button>
+        </form>
     </section>
-	<!-- {{IS_SIDEBAR_ENABLED}} -->
-	{{NEW_GAMES}}
+    {{NEW_GAMES}}
     {{DISCOVERY_PAGINATION}}
 </div>
 
