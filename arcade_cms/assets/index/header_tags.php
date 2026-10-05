@@ -126,6 +126,24 @@ if (is_page('play')) {
 	}
 }
 
+// Keep public static titles independent from legacy CMS/default title data.
+$gpsStaticTitleMap = [
+    'popular' => 'Popular Games - ' . $config['site_name'],
+    'all-games' => 'All Games - ' . $config['site_name'],
+    'new-games' => 'New Games - ' . $config['site_name'],
+    'featured-games' => 'Featured Games - ' . $config['site_name'],
+    'categories' => 'Categories - ' . $config['site_name'],
+    'tags' => 'Game Tags - ' . $config['site_name'],
+    'search' => 'Search - ' . $config['site_name'],
+    'about' => 'About PlayGrid Games - ' . $config['site_name'],
+    'contact' => 'Contact PlayGrid Games - ' . $config['site_name'],
+    'privacy' => 'Privacy - ' . $config['site_name'],
+    'terms' => 'Terms of Use - ' . $config['site_name']
+];
+if (isset($gpsStaticTitleMap[$cmsRequestedPath])) {
+    $themeData['title_tag'] = $gpsStaticTitleMap[$cmsRequestedPath];
+}
+
 $themeData['header_favicon'] = \GameMonetize\UI::view('global/header/favicon');
 
 // Google Search Console site verification for the production homepage.
