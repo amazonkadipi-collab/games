@@ -195,6 +195,7 @@ if ($cmsRequestPath === 'llms.txt') {
 - Game archive: {$siteUrl}/games
 - New games: {$siteUrl}/new-games
 - Best games: {$siteUrl}/best-games
+- Popular games: {$siteUrl}/popular
 - Categories: {$siteUrl}/categories
 
 ## Content
