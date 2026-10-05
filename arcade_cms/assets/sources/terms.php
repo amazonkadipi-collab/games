@@ -13,4 +13,4 @@
 	$themeData['footer_description_content_value'] = isset($footer_description->content_value) ? htmlspecialchars_decode($footer_description->content_value): "";
 	$themeData['new_games'] = \GameMonetize\UI::view('game/terms');
 
-	$themeData['page_content'] = \GameMonetize\UI::view('home/content');
+	$themeData['page_content'] = \GameMonetize\UI::view('game/terms');
