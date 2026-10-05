@@ -98,6 +98,29 @@ function gps_discovery_split_description(string $html): array
     ];
 }
 
+function gps_discovery_category_image(string $categoryName, string $storedImage = ''): string
+{
+    $theme = preg_replace('/[^a-z0-9-]/i', '', (string)($GLOBALS['config']['site_theme'] ?? 'poki-like'));
+    $slug = slugify($categoryName);
+    $baseSlug = preg_replace('/-games$/', '', $slug);
+    $names = array_values(array_unique(array_filter([$slug, $baseSlug, $baseSlug . '-games'])));
+    foreach ($names as $name) {
+        foreach (['webp', 'jpg', 'jpeg', 'png'] as $ext) {
+            $relative = 'templates/' . $theme . '/image/' . $name . '.' . $ext;
+            if (is_file(ABSPATH . $relative)) return siteUrl() . '/' . $relative;
+        }
+    }
+    $storedImage = trim($storedImage);
+    if ($storedImage !== '') {
+        if (preg_match('#^https?://#i', $storedImage)) return $storedImage;
+        $storedPath = ltrim($storedImage, '/\\');
+        if (is_file(ABSPATH . $storedPath)) return siteUrl() . '/' . str_replace('\\', '/', $storedPath);
+    }
+    $fallback = 'templates/poki-like/image/tag.png';
+    if (is_file(ABSPATH . $fallback)) return siteUrl() . '/' . $fallback;
+    return siteUrl() . '/static/logo/playgrid.svg';
+}
+
 function gps_discovery_assign_page_description(array &$themeData, string $pageName): void
 {
     $footerDescription = getFooterDescription($pageName);
