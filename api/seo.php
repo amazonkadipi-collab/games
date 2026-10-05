@@ -28,7 +28,7 @@ if ($path === 'robots.txt') {
 
 if ($path === 'llms.txt') {
     header('Content-Type: text/plain; charset=UTF-8');
-    echo "# Poki Crazy Games\n\n> Free browser games portal with a large catalog of playable HTML5 games.\n\n## Key URLs\n- Home: {$siteUrl}/\n- Sitemap: {$siteUrl}/sitemap.xml\n- Categories: {$siteUrl}/categories\n- New games: {$siteUrl}/new-games\n- Best games: {$siteUrl}/best-games\n\n## Crawling\n- Public game pages use stable /game/{slug} URLs.\n- Use the XML sitemap for complete game URL discovery.\n- Do not crawl /admin or internal include paths.\n";
+    echo "# Poki Crazy Games\n\n> Free browser games portal with a large catalog of playable HTML5 games.\n\n## Key URLs\n- Home: {$siteUrl}/\n- Sitemap: {$siteUrl}/sitemap.xml\n- Categories: {$siteUrl}/categories\n- New games: {$siteUrl}/new-games\n- Best games: {$siteUrl}/best-games\n- Popular games: {$siteUrl}/popular\n\n## Crawling\n- Public game pages use stable /game/{slug} URLs.\n- Use the XML sitemap for complete game URL discovery.\n- Do not crawl /admin or internal include paths.\n";
     exit;
 }
 
