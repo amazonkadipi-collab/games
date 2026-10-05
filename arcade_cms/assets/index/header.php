@@ -358,12 +358,24 @@ function getPageTitleAndDescription()
 	$pageTitle = explode(" - ", td_title())[0];
 	$pageDescription = "";
 
-	if ($page == "new-games") {
+	if ($page == "" || $page == "home") {
+        $pageTitle = "Free Online Games";
+        $pageDescription = "Play free online browser games instantly. Discover new, popular, multiplayer, puzzle, racing, action and casual games.";
+    } elseif ($page == "popular") {
+        $pageTitle = "Popular Games";
+        $pageDescription = "Discover popular free online browser games ranked by player activity.";
+    } elseif ($page == "all-games") {
+        $pageTitle = "All Games";
+        $pageDescription = "Browse the complete collection of free online browser games.";
+    } elseif ($page == "search") {
+        $pageTitle = "Search";
+        $pageDescription = "Find free online browser games by title, genre, theme or gameplay style.";
+    } elseif ($page == "new-games") {
 		$pageTitle = "New Games";
 		$pageDescription = "Discover the latest free online games!";
 	} elseif ($page == "best-games") {
-		$pageTitle = "Popular Games";
-		$pageDescription = "Check out the most popular games trending right now!";
+        $pageTitle = "Popular Games";
+        $pageDescription = "Discover popular free online browser games ranked by player activity.";
 	} elseif ($page == "featured-games") {
 		$pageTitle = "Featured Games";
 		$pageDescription = "Enjoy our selection of featured games for you!";
@@ -382,6 +394,9 @@ $pageData = getPageTitleAndDescription();
 
 $themeData['page_title'] = $pageData['title'];
 $themeData['page_description'] = $pageData['description'];
+$themeData['config_site_name'] = $config['site_name'];
+$themeData['config_site_description'] = $config['site_description'];
+$themeData['config_site_keywords'] = $config['site_keywords'];
 
 if ($isPokiPublicTheme) {
 	$bestGames_query = $GameMonetizeConnect->query("SELECT * FROM " . GAMES . " WHERE published='1' ORDER BY plays DESC LIMIT 6");
