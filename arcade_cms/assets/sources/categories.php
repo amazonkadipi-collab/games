@@ -8,12 +8,6 @@
 		if ($sql_cat_query->num_rows > 0) {
 			$get_category = $sql_cat_query->fetch_assoc();
 
-			$sql_c_games_query = $GameMonetizeConnect->query("SELECT * FROM ".GAMES." WHERE category = '{$get_category['id']}' AND published = '1' ORDER BY featured DESC limit 50");
-			
-			if (gps_theme_is('poki-like')) {
-				$sql_c_games_query = $GameMonetizeConnect->query("SELECT * FROM ".GAMES." WHERE category = '{$get_category['id']}' AND published = '1' ORDER BY featured DESC limit 71");
-			}
-			
 			$categoryPage = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
             $categoryPerPage = 60;
             $categoryOffset = ($categoryPage - 1) * $categoryPerPage;
