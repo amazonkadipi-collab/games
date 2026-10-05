@@ -88,6 +88,9 @@ $siteUrl = 'https://pokicrazygames.vercel.app';
 $config['site_name'] = 'PlayGrid Games';
 $config['site_description'] = 'Free online games you can play instantly in your browser. Discover new, popular, multiplayer, puzzle, racing, action and casual games.';
 $config['site_keywords'] = 'free online games, browser games, html5 games, arcade games, multiplayer games, puzzle games, racing games, action games';
+$themeData['config_site_name'] = 'PlayGrid Games';
+$themeData['config_site_description'] = 'Free online games you can play instantly in your browser. Discover new, popular, multiplayer, puzzle, racing, action and casual games.';
+$themeData['config_site_keywords'] = $config['site_keywords'];
 
 if ($cmsRequestPath === 'sitemap.xml') {
     header('Content-Type: application/xml; charset=UTF-8');
