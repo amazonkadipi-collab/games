@@ -74,39 +74,7 @@ if ($_GET['p'] != 'login') {
 		|| is_page('home')
 	) {
 
-        // The GameMonetize CMS check is optional for rendering the site.
-        // Never allow an upstream outage to hold the request until Vercel times out.
-        $json = false;
-        $ch = curl_init('https://api.gamemonetize.com/cms.json');
-        if ($ch !== false) {
-            curl_setopt_array($ch, [
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_CONNECTTIMEOUT => 2,
-                CURLOPT_TIMEOUT => 4,
-                CURLOPT_FOLLOWLOCATION => true,
-                CURLOPT_MAXREDIRS => 2,
-                CURLOPT_SSL_VERIFYPEER => true,
-                CURLOPT_SSL_VERIFYHOST => 2,
-                CURLOPT_USERAGENT => 'ArcadeCMS/1.0',
-            ]);
-            $json = curl_exec($ch);
-            curl_close($ch);
-        }
-        $arr = is_string($json) ? json_decode($json, true) : null;
-		$domain = $_SERVER['HTTP_HOST'];
-		$domain = preg_replace('#^(http(s)?://)?w{3}\.#', '$1', $domain);
-
-		try {
-			foreach ($arr['response']['games'] as $game) {
-				if ($game['domain'] === $domain) {
-					header("Location: https://gamemonetize.com?utm_source=blockedcms&domain=" . $domain);
-					break;
-				}
-			}
-		} catch (Exception $e) {
-		}
-
-		if (gps_theme_is('poki-like') || gps_theme_is('y8-like')) {
+        		if (gps_theme_is('poki-like') || gps_theme_is('y8-like')) {
 			$sql_cat_query = $GameMonetizeConnect->query("SELECT * FROM " . CATEGORIES);
 			$ct_r = '';
 			while ($category = $sql_cat_query->fetch_array()) {
@@ -114,10 +82,6 @@ if ($_GET['p'] != 'login') {
 				$themeData['category_name'] = $category['name'];
 				$themeData['category_image'] = $category['image'];
 
-				$numbergames = $GameMonetizeConnect->query("SELECT COUNT(*) FROM " . GAMES . " where category=" . $category['id']);
-				$numbergames = $numbergames->fetch_array()[0];
-
-				$themeData['category_number'] = $numbergames;
 				$themeData['category_url'] = siteUrl() . '/category/'	. slugify($category['name']);
 				$ct_r .= \GameMonetize\UI::view('category/categories-list-2');
 			}
@@ -286,7 +250,7 @@ if ($_GET['p'] != 'login') {
 		$settingData = $settingData->fetch_array();
 
 		$keepY8MenuHeader = $config['site_theme'] === 'y8-pro' && $themeData['pro_menu_design'] !== '';
-		if ($settingData['is_sidebar_enabled'] && !gps_theme_is('crazygames-like') && !$keepY8MenuHeader) {
+		if ($settingData['is_sidebar_enabled'] && !gps_theme_is('crazygames-like') && !gps_theme_is('poki-like') && !$keepY8MenuHeader) {
 			$themeData['header'] = "";
 
 			// Get sidebar data
