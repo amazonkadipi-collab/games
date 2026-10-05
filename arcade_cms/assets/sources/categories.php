@@ -65,7 +65,23 @@
 			$themeData['footer_description_modified'] = $descriptionParts['footer'];
 
 			$themeData['new_game_ids'] .= rtrim($ids, ',');
-			$themeData['category_content'] = \GameMonetize\UI::view('category/category-games');
+            $categoryPagination = '';
+            if ($categoryTotalPages > 1) {
+                $startPage = max(1, $categoryPage - 2);
+                $endPage = min($categoryTotalPages, $categoryPage + 2);
+                if ($categoryPage > 1) $categoryPagination .= '<a href="' . siteUrl() . '/category/' . $get_category['category_pilot'] . '?page=' . ($categoryPage - 1) . '" rel="prev">Previous</a>';
+                for ($p = $startPage; $p <= $endPage; $p++) {
+                    $categoryPagination .= ($p === $categoryPage)
+                        ? '<span class="active" aria-current="page">' . $p . '</span>'
+                        : '<a href="' . siteUrl() . '/category/' . $get_category['category_pilot'] . '?page=' . $p . '">' . $p . '</a>';
+                }
+                if ($categoryPage < $categoryTotalPages) $categoryPagination .= '<a href="' . siteUrl() . '/category/' . $get_category['category_pilot'] . '?page=' . ($categoryPage + 1) . '" rel="next">Next</a>';
+            }
+            $themeData['category_pagination'] = $categoryPagination !== ''
+                ? '<nav class="poki-pagination" aria-label="Category pages">' . $categoryPagination . '</nav>'
+                : '';
+            $themeData['category_page_label'] = 'Page ' . $categoryPage . ' of ' . $categoryTotalPages . ($categoryTotal > 0 ? ' · ' . number_format($categoryTotal) . ' games' : '');
+            $themeData['category_content'] = \GameMonetize\UI::view('category/category-games');
 		} else {
 			$themeData['category_content'] = \GameMonetize\UI::view('category/category-notfound');
 		}
