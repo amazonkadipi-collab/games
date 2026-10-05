@@ -46,6 +46,13 @@ if (!empty($_GET['tag'])) {
             );
         }
 
+        $tagGamesRows = [];
+        if ($sql_c_games_query) {
+            while ($tagGameRow = $sql_c_games_query->fetch_array()) {
+                $tagGamesRows[] = $tagGameRow;
+            }
+        }
+
 		$themeData['tags_name'] = ucwords($get_tags['name']);
 		$themeData['tags_games_title'] = preg_match('/\bgames$/i', $themeData['tags_name'])
 			? $themeData['tags_name']
