@@ -12,11 +12,15 @@ $themeData['cms'] = "<script src='https://api.gamemonetize.com/cms.js?" . $date 
 # >>
 
 
-if (gps_theme_is('poki-like')) {
-	$newGames_query = $GameMonetizeConnect->query("SELECT * FROM " . GAMES . " WHERE published='1' AND featured='1' ORDER BY date_added DESC LIMIT 60");
-} else {
-	$newGames_query = $GameMonetizeConnect->query("SELECT * FROM " . GAMES . " WHERE published='1' AND featured='1' ORDER BY date_added DESC");
-}
+$page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
+$perPage = 60;
+$offset = ($page - 1) * $perPage;
+$countResult = $GameMonetizeConnect->query("SELECT COUNT(*) AS total FROM " . GAMES . " WHERE published='1' AND featured='1'");
+$total = 0;
+if ($countResult && ($countRow = $countResult->fetch_assoc())) $total = max(0, (int)($countRow['total'] ?? 0));
+$totalPages = max(1, (int)ceil($total / $perPage));
+if ($page > $totalPages) { $page = $totalPages; $offset = ($page - 1) * $perPage; }
+$newGames_query = $GameMonetizeConnect->query("SELECT * FROM " . GAMES . " WHERE published='1' AND featured='1' ORDER BY date_added DESC, game_id ASC LIMIT {$perPage} OFFSET {$offset}");
 
 $ngm_r = '';
 while ($newGames = $newGames_query->fetch_array()) {
@@ -50,14 +54,6 @@ while ($newGames = $newGames_query->fetch_array()) {
 	}
 }
 
-$page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
-$perPage = 60;
-$offset = ($page - 1) * $perPage;
-$countResult = $GameMonetizeConnect->query("SELECT COUNT(*) AS total FROM " . GAMES . " WHERE published='1' AND featured='1'");
-$total = 0;
-if ($countResult && ($countRow = $countResult->fetch_assoc())) $total = max(0, (int)($countRow['total'] ?? 0));
-$totalPages = max(1, (int)ceil($total / $perPage));
-if ($page > $totalPages) { $page = $totalPages; $offset = ($page - 1) * $perPage; }
 $themeData['discovery_pagination'] = '';
 $themeData['discovery_pagination_label'] = 'Page ' . $page . ' of ' . $totalPages . ($total > 0 ? ' · ' . number_format($total) . ' games' : '');
 $startPage = max(1, $page - 2);
