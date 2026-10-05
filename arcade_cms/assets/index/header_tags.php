@@ -35,7 +35,7 @@ if (is_page('play')) {
 		if ($cat <> "") {
 			$cat = str_replace('-', '.', $cat);
 			$cat = ucfirst($cat);
-			$themeData['game_meta_description2'] = "Play " . $cat . " Free Online at GameFree.Games! We have chosen top " . $cat . " games which you can play online for free. enjoy! ";
+			$themeData['game_meta_description2'] = "Play " . $cat . " Free Online at PlayGrid Games! We have chosen top " . $cat . " games which you can play online for free. enjoy! ";
 			$themeData['header_title'] = \GameMonetize\UI::view('global/header/title');
 			$themeData['header_metatags'] = \GameMonetize\UI::view('global/header/metatags2');
 		} else {
@@ -213,4 +213,44 @@ function cleanText($text)
 {
 	$text = str_replace('"', ";", $text);
 	return $text;
+}
+
+
+/* Consistent public SEO controls: one canonical, strong social metadata, and noindex for search URLs. */
+$gpsSeoPublicPaths = !in_array((string)($_GET['p'] ?? ''), ['login', 'admin', 'setting', 'error'], true) && !is_page('play');
+if ($gpsSeoPublicPaths) {
+    $gpsSeoPath = trim((string)$cmsRequestedPath, '/');
+    $gpsSeoTitle = trim(strip_tags(htmlspecialchars_decode((string)($themeData['page_title'] ?? ''))));
+    if ($gpsSeoTitle === '') $gpsSeoTitle = trim(strip_tags(htmlspecialchars_decode((string)($themeData['category_tags_meta_title'] ?? ''))));
+    if ($gpsSeoTitle === '') $gpsSeoTitle = trim(strip_tags(htmlspecialchars_decode((string)($themeData['title_tag'] ?? ''))));
+    if ($gpsSeoTitle === '') $gpsSeoTitle = (string)($config['site_name'] ?? 'PlayGrid Games');
+
+    $gpsSeoDescription = trim(strip_tags(htmlspecialchars_decode((string)($themeData['page_description'] ?? ''))));
+    if ($gpsSeoDescription === '') $gpsSeoDescription = trim(strip_tags(htmlspecialchars_decode((string)($themeData['category_tags_meta_description'] ?? ''))));
+    if ($gpsSeoDescription === '') $gpsSeoDescription = trim(strip_tags(htmlspecialchars_decode((string)($config['site_description'] ?? ''))));
+    if ($gpsSeoDescription === '') $gpsSeoDescription = 'Play free online browser games instantly on ' . (string)($config['site_name'] ?? 'PlayGrid Games') . '.';
+
+    $gpsSeoCanonical = rtrim(siteUrl(), '/') . ($gpsSeoPath === '' ? '/' : '/' . ltrim($gpsSeoPath, '/'));
+    $gpsSeoRobots = (strpos($gpsSeoPath, 'search') === 0)
+        ? 'noindex,follow,max-image-preview:large'
+        : 'index,follow,max-image-preview:large';
+
+    $gpsSeoMeta = $themeData['header_metatags'] ?? '';
+    if (stripos($gpsSeoMeta, 'rel="canonical"') === false) {
+        $gpsSeoMeta .= '<link rel="canonical" href="' . htmlspecialchars($gpsSeoCanonical, ENT_QUOTES, 'UTF-8') . '">';
+    }
+    if (stripos($gpsSeoMeta, 'name="robots"') === false) {
+        $gpsSeoMeta .= '<meta name="robots" content="' . htmlspecialchars($gpsSeoRobots, ENT_QUOTES, 'UTF-8') . '">';
+    }
+    if (stripos($gpsSeoMeta, 'property="og:title"') === false) {
+        $gpsSeoMeta .= '<meta property="og:type" content="website"><meta property="og:title" content="' . htmlspecialchars($gpsSeoTitle, ENT_QUOTES, 'UTF-8') . '">';
+        $gpsSeoMeta .= '<meta property="og:description" content="' . htmlspecialchars(substr($gpsSeoDescription, 0, 200), ENT_QUOTES, 'UTF-8') . '">';
+        $gpsSeoMeta .= '<meta property="og:url" content="' . htmlspecialchars($gpsSeoCanonical, ENT_QUOTES, 'UTF-8') . '">';
+        $gpsSeoMeta .= '<meta property="og:site_name" content="' . htmlspecialchars((string)$config['site_name'], ENT_QUOTES, 'UTF-8') . '">';
+    }
+    if (stripos($gpsSeoMeta, 'name="twitter:card"') === false) {
+        $gpsSeoMeta .= '<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="' . htmlspecialchars($gpsSeoTitle, ENT_QUOTES, 'UTF-8') . '">';
+        $gpsSeoMeta .= '<meta name="twitter:description" content="' . htmlspecialchars(substr($gpsSeoDescription, 0, 200), ENT_QUOTES, 'UTF-8') . '"><meta name="twitter:url" content="' . htmlspecialchars($gpsSeoCanonical, ENT_QUOTES, 'UTF-8') . '">';
+    }
+    $themeData['header_metatags'] = $gpsSeoMeta;
 }
