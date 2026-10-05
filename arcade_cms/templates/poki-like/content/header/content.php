@@ -112,6 +112,16 @@ body{background:var(--ui-bg)!important;background-image:none!important;color:var
  .poki-game-page .vote-btn{padding:7px 8px!important}.poki-game-page .play-info-blue{font-size:11px!important}
  .poki-game-page #game-bottom{padding:15px!important}.poki-game-page #game-bottom .game-title{font-size:20px!important}
 }
+
+.poki-game-page .play-game-list-grid-container{display:grid!important;grid-template-columns:repeat(6,minmax(0,1fr))!important;grid-auto-rows:auto!important;gap:16px!important;max-width:1100px!important;margin:0 auto!important;align-items:start!important}
+.poki-game-page .play-game-list-grid-container>.game-container.game-col{grid-column:1/-1!important;width:100%!important;max-width:1100px!important;margin:0!important}
+.poki-game-page .play-game-list-grid-container>.play-game-post{grid-column:auto!important;width:100%!important;min-width:0!important;margin:0!important;padding:0!important;background:transparent!important;box-shadow:none!important;border:0!important}
+.poki-game-page .play-game-post .game-item{display:flex!important;flex-direction:column!important;width:100%!important;background:#fff!important;border:0!important;border-radius:12px!important;overflow:hidden!important;text-decoration:none!important;box-shadow:none!important}
+.poki-game-page .play-game-post img{display:block!important;width:100%!important;height:auto!important;aspect-ratio:4/3!important;object-fit:cover!important;border-radius:12px!important}
+.poki-game-page .play-game-post .post-name{position:static!important;display:block!important;width:100%!important;height:36px!important;padding:7px 4px 0!important;margin:0!important;box-sizing:border-box!important;background:#fff!important;color:#263247!important;font-size:12px!important;font-weight:650!important;line-height:1.25!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important}
+@media (min-width:900px) and (max-width:1199px){.poki-game-page .play-game-list-grid-container{grid-template-columns:repeat(5,minmax(0,1fr))!important}}
+@media (min-width:600px) and (max-width:899px){.poki-game-page .play-game-list-grid-container{grid-template-columns:repeat(4,minmax(0,1fr))!important}}
+@media (max-width:599px){.poki-game-page .play-game-list-grid-container{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:8px!important}.poki-game-page .play-game-post .game-item{border-radius:9px!important}.poki-game-page .play-game-post img{border-radius:9px!important}.poki-game-page .play-game-post .post-name{height:32px;font-size:10px;padding:6px 3px 0!important}}
 </style>
 
 <div id="header" class="fix-top">
