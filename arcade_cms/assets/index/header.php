@@ -461,6 +461,40 @@ if ($gpsPublicMetaEnabled) {
 }
 
 
+/* PlayGrid JSON-LD: only describe content that is actually rendered. */
+if (!function_exists('gps_playgrid_append_jsonld')) {
+	function gps_playgrid_append_jsonld(&$themeData, $payload) {
+		$themeData['header_metatags'] = (string)($themeData['header_metatags'] ?? '') . '<script type="application/ld+json">' . json_encode($payload, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . '</script>';
+	}
+}
+$gpsCurrentPath = trim((string)parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH), '/');
+$gpsCanonical = rtrim(siteUrl(), '/') . ($gpsCurrentPath === '' ? '/' : '/' . $gpsCurrentPath);
+if (($gpsCurrentPath === '' || $gpsCurrentPath === 'home') && ($_GET['p'] ?? '') === 'home') {
+	gps_playgrid_append_jsonld($themeData, ['@context'=>'https://schema.org','@graph'=>[
+		['@type'=>'WebSite','@id'=>rtrim(siteUrl(),'/').'//#website','url'=>rtrim(siteUrl(),'/').'/','name'=>(string)$config['site_name'],'description'=>(string)$config['site_description'],'potentialAction'=>['@type'=>'SearchAction','target'=>rtrim(siteUrl(),'/').'/search?q={search_term_string}','query-input'=>'required name=search_term_string']],
+		['@type'=>'Organization','@id'=>rtrim(siteUrl(),'/').'//#organization','name'=>(string)$config['site_name'],'url'=>rtrim(siteUrl(),'/').'/']
+	]]);
+} elseif (($gpsCurrentPath !== '') && ($_GET['p'] ?? '') === 'play' && !empty($get_game_data)) {
+	$gpsGameName = trim((string)($get_game_data['name'] ?? ''));
+	$gpsGameDescription = trim(strip_tags(html_entity_decode((string)($get_game_data['description'] ?? ''), ENT_QUOTES, 'UTF-8')));
+	$gpsGameImage = trim((string)($themeData['play_game_image'] ?? ''));
+	$gpsRating = isset($get_game['rating']) ? (float)$get_game['rating'] : 0;
+	$gpsPlays = isset($get_game['plays']) ? (int)$get_game['plays'] : (int)($get_game_data['plays'] ?? 0);
+	$gpsCategory = trim((string)($get_game['category_name'] ?? ''));
+	$gpsGameSchema = ['@context'=>'https://schema.org','@type'=>'VideoGame','name'=>$gpsGameName,'url'=>$gpsCanonical,'description'=>$gpsGameDescription !== '' ? $gpsGameDescription : 'Play '.$gpsGameName.' online in your browser.','applicationCategory'=>'Game','gamePlatform'=>['Web Browser'],'genre'=>$gpsCategory !== '' ? $gpsCategory : null,'image'=>$gpsGameImage !== '' ? $gpsGameImage : null];
+	if ($gpsRating > 0) $gpsGameSchema['aggregateRating']=['@type'=>'AggregateRating','ratingValue'=>$gpsRating,'bestRating'=>5,'worstRating'=>0,'ratingCount'=>max(1,(int)($get_game['vote_count'] ?? $get_game['votes'] ?? 1))];
+	if ($gpsPlays > 0) $gpsGameSchema['interactionStatistic']=['@type'=>'InteractionCounter','interactionType'=>['@type'=>'WatchAction'],'userInteractionCount'=>$gpsPlays];
+	$gpsGameSchema=array_filter($gpsGameSchema,static function($v){return $v!==null && $v!=='';});
+	gps_playgrid_append_jsonld($themeData,$gpsGameSchema);
+	gps_playgrid_append_jsonld($themeData,['@context'=>'https://schema.org','@type'=>'BreadcrumbList','itemListElement'=>[
+		['@type'=>'ListItem','position'=>1,'name'=>'Home','item'=>rtrim(siteUrl(),'/').'/'],
+		['@type'=>'ListItem','position'=>2,'name'=>$gpsCategory !== '' ? $gpsCategory : 'Games','item'=>rtrim(siteUrl(),'/').'/category/'.slugify($gpsCategory !== '' ? $gpsCategory : 'games')],
+		['@type'=>'ListItem','position'=>3,'name'=>$gpsGameName,'item'=>$gpsCanonical]
+	]]);
+}
+if (stripos((string)($themeData['header_metatags'] ?? ''), 'rel="canonical"') === false) $themeData['header_metatags']=(string)($themeData['header_metatags'] ?? '').'<link rel="canonical" href="'.htmlspecialchars($gpsCanonical,ENT_QUOTES,'UTF-8').'">';
+
+
 if ($isPokiPublicTheme) {
 	$bestGames_query = $GameMonetizeConnect->query("SELECT * FROM " . GAMES . " WHERE published='1' ORDER BY plays DESC LIMIT 6");
 	$bgm_r = '';
@@ -481,10 +515,7 @@ if ($isPokiPublicTheme) {
 	$themeData['popular_game_list'] = $bgm_r;
 
 	if (!isset($_COOKIE['playedgames'])) {
-		$themeData['games_played_left'] = "<div class='category-section-top' style='text-align:center;font-size:20px;margin-bottom:10px;margin-top:20px;'>
-			<i class='fa fa-chevron-right'></i></span><strong style='color:#fc0'>
-	You didn't play any game recently. Games you played will appear here.</strong>
-	</div>";
+		$themeData['games_played_left'] = '';
 	} else {
 		$fav = explode(',,', $_COOKIE['playedgames']);
 		$pgm_r = '';
