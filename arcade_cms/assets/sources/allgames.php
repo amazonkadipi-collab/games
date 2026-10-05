@@ -55,4 +55,17 @@ if ($page < $totalPages) {
 
 $themeData['all_games_pagination'] = '<nav class="poki-pagination" aria-label="All games pages">' . $pages . '</nav>';
 $themeData['all_games_page_label'] = 'Page ' . $page . ' of ' . $totalPages . ($total > 0 ? ' · ' . number_format($total) . ' games' : '');
-$themeData['page_content'] = GameMonetizeUI::view('all-games/content');
+$themeData['page_content'] = '<div id="content" class="poki-public-page poki-all-games-page">
+    <div class="poki-page-heading">
+        <h1>All Games</h1>
+        <p class="poki-page-intro">Browse the complete collection of free online browser games. Use the pages below to explore the catalog.</p>
+    </div>
+    <section class="poki-section">
+        <div class="section-title">
+            <h2>All games</h2>
+            <span>' . $themeData['all_games_page_label'] . '</span>
+        </div>
+        <div class="game-list-grid-container poki-game-list">' . $themeData['all_games_list'] . '</div>
+        ' . $themeData['all_games_pagination'] . '
+    </section>
+</div>';
