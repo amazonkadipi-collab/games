@@ -44,7 +44,7 @@ if (!isset($_GET['p'])) {
         '' => 'home', 'home' => 'home', 'new-games' => 'new-games', 'best-games' => 'best-games',
         'random' => 'random', 'about' => 'about', 'tags' => 'tags', 'privacy' => 'privacy',
         'terms' => 'terms', 'contact' => 'contact', 'featured-games' => 'featured-games',
-        'played-games' => 'played-games', 'favorite-games' => 'favorite-games', 'categories' => 'categories',
+        'played-games' => 'played-games', 'favorite-games' => 'favorite-games', 'categories' => 'categories', 'search' => 'search',
         'blogs' => 'blogs', 'login' => 'login', 'setting' => 'setting', 'error' => 'error', 'admin' => 'admin',
     ];
     if (isset($cmsStaticRoutes[$cmsRoutePath])) {
