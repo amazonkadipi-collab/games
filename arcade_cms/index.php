@@ -45,7 +45,7 @@ if (!isset($_GET['p'])) {
         'random' => 'random', 'about' => 'about', 'tags' => 'tags', 'privacy' => 'privacy',
         'terms' => 'terms', 'contact' => 'contact', 'featured-games' => 'featured-games',
         'played-games' => 'played-games', 'favorite-games' => 'favorite-games', 'categories' => 'categories', 'search' => 'search',
-        'blogs' => 'blogs', 'login' => 'login', 'setting' => 'setting', 'error' => 'error', 'admin' => 'admin',
+        'blogs' => 'blogs', 'popular' => 'best-games', 'login' => 'login', 'setting' => 'setting', 'error' => 'error', 'admin' => 'admin',
     ];
     if (isset($cmsStaticRoutes[$cmsRoutePath])) {
         $_GET['p'] = $cmsStaticRoutes[$cmsRoutePath];
@@ -101,7 +101,7 @@ if ($cmsRequestPath === 'sitemaps/static.xml') {
     header('Content-Type: application/xml; charset=UTF-8');
     header('Cache-Control: public, max-age=3600, s-maxage=3600');
     $xml = '<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
-    $urls = ['/', '/categories', '/new-games', '/best-games', '/random', '/featured-games', '/about', '/privacy', '/terms', '/tags'];
+    $urls = ['/', '/categories', '/new-games', '/best-games', '/popular', '/random', '/featured-games', '/about', '/privacy', '/terms', '/tags'];
     if (isset($GameMonetizeConnect)) {
         $catResult = $GameMonetizeConnect->query("SELECT name FROM " . CATEGORIES . " ORDER BY id ASC");
         if ($catResult) while ($cat = $catResult->fetch_assoc()) {
