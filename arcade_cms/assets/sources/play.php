@@ -63,8 +63,8 @@ if (!empty($_GET['id'])) {
 			$themeData['play_game_image'] = $get_game_data['image_url'];
 		}
         $themeData['play_game_url'] = $get_game_data['game_url'];
-        $themeData['play_game_date'] = $get_game_data['date_added'];
-        $themeData['play_game_plays'] = $get_game_data['plays'];
+        $themeData['play_game_date'] = is_numeric($get_game_data['date_added'] ?? null) ? date('F j, Y', (int)$get_game_data['date_added']) : (string)($get_game_data['date_added'] ?? '');
+        $themeData['play_game_plays'] = numberFormat((int)($get_game_data['plays'] ?? 0));
             $themeData['play_game_likes'] = isset($get_game['like_count']) ? (int)$get_game['like_count'] : 0;
             $themeData['play_game_dislikes'] = isset($get_game['dislike_count']) ? (int)$get_game['dislike_count'] : 0;
             $themeData['play_game_favorites'] = isset($get_game['favorite_count']) ? (int)$get_game['favorite_count'] : 0;
