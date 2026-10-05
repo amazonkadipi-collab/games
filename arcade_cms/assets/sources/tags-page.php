@@ -117,7 +117,7 @@ if (!empty($_GET['tag'])) {
 			}
 		}
 		
-		$numbergames = $GameMonetizeConnect->query("SELECT COUNT(*) FROM " . GAMES . " where tags_ids LIKE '%\"{$get_tags['id']}\"%'");
+		$numbergames = $GameMonetizeConnect->query("SELECT COUNT(*) FROM " . GAMES . " where tags_ids LIKE '%\"{$tags['id']}\"%'");
 		$numbergames = $numbergames->fetch_array()[0];
 
 		$themeData['tags_number'] = $numbergames;
