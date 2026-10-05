@@ -19,13 +19,12 @@
                         <div class="gamePlay-icon" style="background-image: url({{PLAY_GAME_IMAGE}});background-size: 160px;background-position-x: 50%;background-position-y: 50%;"></div>
                         <div class="gamePlay-title">{{PLAY_GAME_NAME}}</div>
                         <button type="button" class="gamePlay-button">Play Now!</button>
-                        <div class="gamePlay-button gamePlay-button-mobile">
-                            <div class="play-icon">
-                                <i class="fa fa-play" aria-hidden="true"></i>
-                            </div>
-                            <div class="play-text">Play Now!</div>
-                        </div>
+                        <button type="button" class="gamePlay-button gamePlay-button-mobile">
+                            <span class="play-icon" aria-hidden="true"><i class="fa fa-play"></i></span>
+                            <span class="play-text">Play Now!</span>
+                        </button>
                     </div>
+                </div>
                 </div>
                 <div id="pre-count">
                     <font lib="game-loading">Game loading..</font>
@@ -42,8 +41,8 @@
                 </div>
 
                 <div class="close-fullscreen" onclick="location.reload();return false;">
-                    <i class="fa-solid fa-chevron-left"></i>
-                    <img src="/templates/poki-like/image/poki-circle-logo.png" class="poki-circle-logo" alt="poki-circle-logo">
+                    <i class="fa-solid fa-chevron-left" aria-hidden="true"></i>
+                    <span class="pg-fullscreen-back">Back</span>
                 </div>
             </div>
         </div>
@@ -77,9 +76,12 @@
             <span>{{PLAY_GAME_DISLIKES}}</span>
         </button>
 
-        <button class="vote-btn" data-type="favorite" data-id="{{PLAY_GAME_ID}}">
-            <i class="fa-regular fa-heart"></i>
+        <button class="vote-btn" data-type="favorite" data-id="{{PLAY_GAME_ID}}" aria-label="Add to favorites" title="Add to favorites">
+            <i class="fa-regular fa-heart" aria-hidden="true"></i>
         </button>
+        <a class="vote-btn game-report-link" href="{{CONFIG_SITE_URL}}/contact?game={{PLAY_GAME_ID}}" title="Report a problem with this game" aria-label="Report a problem with this game">
+            <i class="fa-regular fa-flag" aria-hidden="true"></i><span>Report</span>
+        </a>
 
          
     </div>
