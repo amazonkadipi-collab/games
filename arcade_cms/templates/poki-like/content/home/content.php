@@ -1,3 +1,4 @@
+<script language="javascript">var PageType ="{{NEW_GAME_PAGE}}"; var ids ="{{NEW_GAME_IDS}}";</script>
 <div class="content poki-home-content">
     <section class="poki-home-hero" aria-labelledby="home-title">
         <div class="poki-home-hero-copy">
