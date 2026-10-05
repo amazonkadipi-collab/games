@@ -56,6 +56,14 @@ if (function_exists('gps_license_cached_bound_claims')) {
 }
 
 
+// Public pages never expose vendor PRO promotion links.
+$themeData['public_pro_badge'] = '';
+$themeData['public_pro_icon'] = '';
+$themeData['public_pro_menu_label'] = '';
+$themeData['public_pro_cta'] = '';
+$themeData['public_pro_footer_cta'] = '';
+$themeData['public_pro_sidebar_cta'] = '';
+
 if ($_GET['p'] != 'login') {
 	if (
 		$userData['admin'] == 0
