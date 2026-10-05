@@ -200,16 +200,16 @@ Sitemap: {$siteUrl}/sitemap.xml
 if ($cmsRequestPath === 'llms.txt') {
     header('Content-Type: text/plain; charset=UTF-8');
     header('Cache-Control: public, max-age=3600, s-maxage=3600');
-    echo "# Poki Crazy Games
+    echo "# PlayGrid Games
 
 > Free browser games portal powered by the Arcade CMS catalog.
 
 ## Website
 - Home: {$siteUrl}/
 - Sitemap: {$siteUrl}/sitemap.xml
-- Game archive: {$siteUrl}/games
+- Game archive: {$siteUrl}/all-games
 - New games: {$siteUrl}/new-games
-- Best games: {$siteUrl}/best-games
+- Popular games: {$siteUrl}/popular
 - Popular games: {$siteUrl}/popular
 - Categories: {$siteUrl}/categories
 
