@@ -63,6 +63,10 @@ switch ($_GET['p']) {
         include(ABSPATH . 'assets/sources/logout.php');
         break;
 
+    case 'all-games':
+        include(ABSPATH . 'assets/sources/allgames.php');
+        break;
+
     case 'new-games':
         include(ABSPATH . 'assets/sources/newgames.php');
         break;
