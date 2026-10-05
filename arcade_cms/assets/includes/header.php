@@ -40,21 +40,6 @@ if ($_GET['p'] != 'login') {
 		|| is_page('home')
 	) {
 
-		$json = file_get_contents('https://api.gamemonetize.com/cms.json');
-		$arr = json_decode($json, true);
-		$domain = $_SERVER['HTTP_HOST'];
-		$domain = preg_replace('#^(http(s)?://)?w{3}\.#', '$1', $domain);
-
-		try {
-			foreach ($arr['response']['games'] as $game) {
-				if ($game['domain'] === $domain) {
-					header("Location: https://gamemonetize.com?utm_source=blockedcms&domain=" . $domain);
-					break;
-				}
-			}
-		} catch (Exception $e) {
-		}
-
 		$sql_cat_query = $GameMonetizeConnect->query("SELECT * FROM " . CATEGORIES);
 		$ct_r = '';
 		while ($category = $sql_cat_query->fetch_array()) {
@@ -115,7 +100,7 @@ if ($_GET['p'] != 'login') {
 		$settingData = $settingData->fetch_array();
 
 		$keepY8MenuHeader = $config['site_theme'] === 'y8-pro' && $themeData['pro_menu_design'] !== '';
-		if ($settingData['is_sidebar_enabled'] && !$keepY8MenuHeader) {
+		if ($settingData['is_sidebar_enabled'] && ($config['site_theme'] ?? '') !== 'poki-like' && !$keepY8MenuHeader) {
 			$themeData['header'] = "";
 
 			// Get sidebar data
