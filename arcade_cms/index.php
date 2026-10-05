@@ -76,6 +76,10 @@ require_once dirname(__FILE__) . '/gm-load.php';
 
 $cmsRequestPath = trim((string)parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH), '/');
 $siteUrl = 'https://pokicrazygames.vercel.app';
+// Public brand overrides keep the platform independent from bundled CMS/theme branding.
+$config['site_name'] = 'PlayGrid Games';
+$config['site_description'] = 'Free online games you can play instantly in your browser. Discover new, popular, multiplayer, puzzle, racing, action and casual games.';
+$config['site_keywords'] = 'free online games, browser games, html5 games, arcade games, multiplayer games, puzzle games, racing games, action games';
 
 if ($cmsRequestPath === 'sitemap.xml') {
     header('Content-Type: application/xml; charset=UTF-8');
