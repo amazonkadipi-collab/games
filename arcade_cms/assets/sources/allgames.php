@@ -32,7 +32,7 @@ if ($query) {
         $themeData['new_game_video_url'] = $data['video_url'] ?? '';
         $themeData['new_game_wt_video'] = $data['wt_video'] ?? ($game['wt_video'] ?? '');
         $themeData['new_game_featured'] = $data['featured'] ?? '';
-        $themeData['all_games_list'] .= GameMonetizeUI::view('game/list-each/new-games-list');
+        $themeData['all_games_list'] .= \GameMonetize\UI::view('game/list-each/new-games-list');
     }
 }
 
