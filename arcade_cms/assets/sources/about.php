@@ -10,4 +10,4 @@ $themeData['footer_description_content_value'] = isset($footer_description->cont
 
 $themeData['new_games'] = \GameMonetize\UI::view('game/about');
 
-$themeData['page_content'] = \GameMonetize\UI::view('home/content');
+$themeData['page_content'] = \GameMonetize\UI::view('game/about');
