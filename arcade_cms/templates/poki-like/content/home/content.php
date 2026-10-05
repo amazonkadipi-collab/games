@@ -6,6 +6,7 @@
     </section>
 	<!-- {{IS_SIDEBAR_ENABLED}} -->
 	{{NEW_GAMES}}
+    {{DISCOVERY_PAGINATION}}
 </div>
 
 {{FOOTER_CONTENT}}
