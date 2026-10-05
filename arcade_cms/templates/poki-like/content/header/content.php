@@ -123,6 +123,10 @@ body{background:var(--ui-bg)!important;background-image:none!important;color:var
 @media (min-width:600px) and (max-width:899px){.poki-game-page .play-game-list-grid-container{grid-template-columns:repeat(4,minmax(0,1fr))!important}}
 @media (max-width:599px){.poki-game-page .play-game-list-grid-container{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:8px!important}.poki-game-page .play-game-post .game-item{border-radius:9px!important}.poki-game-page .play-game-post img{border-radius:9px!important}.poki-game-page .play-game-post .post-name{height:32px;font-size:10px;padding:6px 3px 0!important}}
 </style>
+<style>
+.pg-brand{display:flex!important;align-items:center!important;gap:9px!important;width:auto!important;min-width:150px!important;height:64px!important;text-decoration:none!important;color:#111827!important;font-weight:800!important;letter-spacing:-.3px!important}.pg-brand-name{font-size:18px!important;white-space:nowrap!important}.pg-brand-mark{display:grid!important;grid-template-columns:repeat(2,11px)!important;gap:3px!important;width:25px!important;height:25px!important}.pg-brand-mark i{display:block!important;width:11px!important;height:11px!important;border-radius:3px!important;background:#22c55e!important}.pg-fullscreen-back{font-size:12px;font-weight:700;color:#fff}
+@media (max-width:599px){.pg-brand{min-width:110px!important;height:58px!important;gap:7px!important}.pg-brand-name{font-size:15px!important}.pg-brand-mark{grid-template-columns:repeat(2,9px)!important;width:21px!important;height:21px!important}.pg-brand-mark i{width:9px!important;height:9px!important;border-radius:2px!important}}
+</style>
 
 <div id="header" class="fix-top">
     <div class="head-inner">
@@ -130,9 +134,10 @@ body{background:var(--ui-bg)!important;background-image:none!important;color:var
             <i class="material-icons-outlined material-symbols-outlined">menu</i>
             <i class="material-icons-outlined material-symbols-outlined fn-hide">close</i>
         </div>
-        <div class="logo">
-            <a href="{{CONFIG_SITE_URL}}/" class="hide-text">Play Best Free Online Games</a>
-        </div>
+        <a href="{{CONFIG_SITE_URL}}/" class="pg-brand" aria-label="{{CONFIG_SITE_NAME}}">
+            <span class="pg-brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+            <span class="pg-brand-name">{{CONFIG_SITE_NAME}}</span>
+        </a>
         <div class="search-form">
             <form id="search-data-form" method="GET" action="{{CONFIG_SITE_URL}}/search" autocomplete="off">
                 <input type="text" class="txt fn-left search-input" id="Search-InArea" name="q" placeholder="@search_games@" aria-label="@search_games@">
