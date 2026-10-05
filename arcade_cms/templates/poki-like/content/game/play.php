@@ -18,7 +18,7 @@
                     <div class="gamePlay-icon-btn">
                         <div class="gamePlay-icon" style="background-image: url({{PLAY_GAME_IMAGE}});background-size: 160px;background-position-x: 50%;background-position-y: 50%;"></div>
                         <div class="gamePlay-title">{{PLAY_GAME_NAME}}</div>
-                        <div class="gamePlay-button">Play Now!</div>
+                        <button type="button" class="gamePlay-button">Play Now!</button>
                         <div class="gamePlay-button gamePlay-button-mobile">
                             <div class="play-icon">
                                 <i class="fa fa-play" aria-hidden="true"></i>
