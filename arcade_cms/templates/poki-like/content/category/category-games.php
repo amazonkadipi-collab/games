@@ -1,7 +1,7 @@
 <div id="content" class="poki-public-page poki-category-page">
     <div class="poki-page-heading">
-        <h1>Category {{CATEGORY_NAME}}</h1>
-        <p class="poki-page-intro">{{HEADER_DESC}}</p>
+        <h1>{{CATEGORY_NAME}} Games</h1>
+        <p class="poki-page-intro">Play {{CATEGORY_NAME}} games online for free. Browse the latest and most played titles in this category.</p>
     </div>
 
     <section class="poki-section">
