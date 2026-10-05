@@ -3,8 +3,8 @@
     var ids = "";
 </script>
 
-<div id="content" class="fn-clear">
-    <div class="play-game-list-grid-container">
+<div id="content" class="fn-clear poki-public-page poki-game-page">
+    <div class="play-game-list-grid-container poki-game-player-section">
     <div class="game-container game-col">
         <div class="game-info">
         <div id="loader_container">
@@ -48,7 +48,7 @@
             </div>
         </div>
     </div>
-    <div class="game-zoom">
+    <div class="game-zoom poki-game-meta">
         <!-- <a href="/" class="game-zoom-logo hide-text">Play Best Online Games</a> -->
         <div class="game-zoom-info">
             <div class="game-image" style="background-image: url({{PLAY_GAME_IMAGE}});"></div>
@@ -102,7 +102,7 @@
     {{PLAY_GAME_NAME}}
 </div>
 {{TAGS_LIST_GRID}}
-<div id="game-bottom" class="bgs">
+<div id="game-bottom" class="bgs poki-game-content">
         <h1 class="pl game-title" style="font-size: 25px !important;">{{PLAY_GAME_NAME}}</h1>
         <div id="play-game-desc" class="d-text" style="margin-top:15px;font-size:14px;position:relative;">
             {{PLAY_GAME_DESC}}
