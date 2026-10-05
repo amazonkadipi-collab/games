@@ -3679,3 +3679,27 @@ p.d-text {
     overflow: hidden !important;
   }
 }
+
+
+/* FINAL MOBILE PERFORMANCE OVERRIDE: normal in-page player; fullscreen remains user-triggered. */
+@media (max-width: 767px) {
+  html, body { width:100%; max-width:100%; overflow-x:hidden !important; }
+  #gameDiv, #ava-game_container, #game-box {
+    width:100% !important;
+    max-width:100% !important;
+    height:auto !important;
+    min-height:0 !important;
+    max-height:none !important;
+    aspect-ratio:16 / 9 !important;
+  }
+  #game-box { overflow:hidden !important; }
+  #game-box iframe, #game-box embed, #game-box object, #game-box canvas {
+    width:100% !important;
+    height:100% !important;
+    min-width:0 !important;
+    min-height:0 !important;
+    max-width:100% !important;
+    max-height:100% !important;
+  }
+  .close-fullscreen { display:none !important; }
+}
