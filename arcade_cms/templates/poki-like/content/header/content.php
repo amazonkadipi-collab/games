@@ -45,7 +45,7 @@ body{background:var(--ui-bg)!important;background-image:none!important;color:var
 .poki-category-grid .taglink{display:flex!important;align-items:center!important;gap:10px!important;min-width:0!important;padding:9px!important;background:#fff!important;border:1px solid #edf0f3!important;border-radius:11px!important;color:#2a3447!important;text-decoration:none!important;box-shadow:none!important}
 .poki-category-grid .taglink img{width:42px!important;height:42px!important;aspect-ratio:1/1!important;object-fit:cover!important;border-radius:9px!important;flex:0 0 auto!important}
 .poki-category-grid .taginfo{min-width:0!important;padding:0!important}
-.poki-category-grid .taginfo .name{margin:0!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:13px;font-weight:650}
+.poki-category-grid .taginfo .name{margin:0!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:13px;font-weight:650}.poki-category-grid .taginfo .name-count{display:block;margin-top:2px;color:#8a94a6;font-size:11px;font-weight:600}
 .poki-search-title{font-size:24px;font-weight:750;margin:0 0 16px;color:#152033}
 .poki-page-intro{max-width:900px;margin:0 0 18px;color:#687386;font-size:14px;line-height:1.6}
 .poki-seo-copy{margin:28px 0 0;padding:20px;background:#fff;border:1px solid #edf0f3;border-radius:14px;color:#5f6b7d;line-height:1.65;font-size:14px}
