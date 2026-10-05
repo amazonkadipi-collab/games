@@ -1,4 +1,4 @@
-<div class="post">
+<div class="post game-card game-card--compact">
     <a href="{{NEW_GAME_URL}}" class="game-item" aria-label="{{NEW_GAME_NAME}}" data-wt-video="{{NEW_GAME_WT_VIDEO}}">
         <img src="{{NEW_GAME_IMAGE}}" alt="{{NEW_GAME_NAME}}" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='{{CONFIG_SITE_URL}}/static/logo/playgrid.svg';">
         <p class="post-name" data-url="{{NEW_GAME_VIDEO_URL}}" data-scale="1.2" data-translate="-23px,-25px">{{NEW_GAME_NAME}}</p>
