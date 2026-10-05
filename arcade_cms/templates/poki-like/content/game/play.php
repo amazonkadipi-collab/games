@@ -78,6 +78,7 @@
 
         <button class="vote-btn" data-type="favorite" data-id="{{PLAY_GAME_ID}}" aria-label="Add to favorites" title="Add to favorites">
             <i class="fa-regular fa-heart" aria-hidden="true"></i>
+            <span>{{PLAY_GAME_FAVORITES}}</span>
         </button>
         <a class="vote-btn game-report-link" href="{{CONFIG_SITE_URL}}/contact?game={{PLAY_GAME_ID}}" title="Report a problem with this game" aria-label="Report a problem with this game">
             <i class="fa-regular fa-flag" aria-hidden="true"></i><span>Report</span>
@@ -111,6 +112,11 @@
         </div>
         <div class="game-tags">
             {{PLAY_GAME_TAGS}}
+        </div>
+        <div class="pg-game-details" aria-label="Game details">
+            <a href="{{CONFIG_SITE_URL}}/category/{{PLAY_GAME_CATEGORY_URL}}"><strong>Category:</strong> {{PLAY_GAME_CATEGORY_NAME}}</a>
+            <span><strong>Rating:</strong> {{PLAY_GAME_RATING}}</span>
+            <span><strong>Added:</strong> {{PLAY_GAME_DATE}}</span>
         </div>
     </div>
     
