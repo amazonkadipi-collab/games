@@ -14,7 +14,22 @@
 				$sql_c_games_query = $GameMonetizeConnect->query("SELECT * FROM ".GAMES." WHERE category = '{$get_category['id']}' AND published = '1' ORDER BY featured DESC limit 71");
 			}
 			
-			$themeData['category_name'] = $get_category['name'];
+			$categoryPage = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
+            $categoryPerPage = 60;
+            $categoryOffset = ($categoryPage - 1) * $categoryPerPage;
+            $categoryCountQuery = $GameMonetizeConnect->query("SELECT COUNT(*) AS total FROM ".GAMES." WHERE category = '{$get_category['id']}' AND published = '1'");
+            $categoryTotal = 0;
+            if ($categoryCountQuery && ($categoryCountRow = $categoryCountQuery->fetch_assoc())) {
+                $categoryTotal = max(0, (int)($categoryCountRow['total'] ?? 0));
+            }
+            $categoryTotalPages = max(1, (int)ceil($categoryTotal / $categoryPerPage));
+            if ($categoryPage > $categoryTotalPages) {
+                $categoryPage = $categoryTotalPages;
+                $categoryOffset = ($categoryPage - 1) * $categoryPerPage;
+            }
+            $sql_c_games_query = $GameMonetizeConnect->query("SELECT * FROM ".GAMES." WHERE category = '{$get_category['id']}' AND published = '1' ORDER BY featured DESC, plays DESC, game_id ASC LIMIT {$categoryPerPage} OFFSET {$categoryOffset}");
+
+            $themeData['category_name'] = $get_category['name'];
 			if ($sql_c_games_query->num_rows > 0) {
 				$ctgm_r = '';
 				$ids = '';
