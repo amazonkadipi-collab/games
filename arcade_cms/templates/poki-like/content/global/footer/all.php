@@ -27,4 +27,3 @@
 <script src="{{CONFIG_SITE_URL}}/static/libs/js/root.js"></script>
 <script src="{{CONFIG_THEME_PATH}}/js/general.js"></script>
 <script src="{{CONFIG_THEME_PATH}}/js/index.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@3.6.12/dist/js/splide.min.js"></script>
