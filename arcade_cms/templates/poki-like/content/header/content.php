@@ -153,7 +153,7 @@ body{background:var(--ui-bg)!important;background-image:none!important;color:var
                 <i class="arrow-down"></i>
                 <div class="new-games-pop-up fn-hide">
                     <a href="{{CONFIG_SITE_URL}}/new-games"><i class="material-icons-outlined material-symbols-outlined">new_releases</i>New Games</a>
-                    <a href="{{CONFIG_SITE_URL}}/best-games"><i class="material-icons-outlined material-symbols-outlined">star</i>Best Games</a>
+                    <a href="{{CONFIG_SITE_URL}}/popular"><i class="material-icons-outlined material-symbols-outlined">star</i>Popular Games</a>
                     <a href="{{CONFIG_SITE_URL}}/featured-games"><i class="material-icons-outlined material-symbols-outlined">auto_graph</i>Featured Games</a>
                     <a href="{{CONFIG_SITE_URL}}/played-games"><i class="material-icons-outlined material-symbols-outlined">play_circle</i>Played Games</a>
                 </div>
