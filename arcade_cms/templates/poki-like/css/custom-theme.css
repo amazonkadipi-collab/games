@@ -44,8 +44,10 @@ body{background:var(--ui-bg)!important;background-image:none!important;color:var
 .poki-game-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:16px}
 .poki-game-grid .post{margin:0}
 .poki-category-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px}
-.poki-category-grid .taglink{display:flex!important;align-items:center!important;gap:10px!important;min-width:0!important;padding:9px!important;background:#fff!important;border:1px solid #edf0f3!important;border-radius:11px!important;color:#2a3447!important;text-decoration:none!important;box-shadow:none!important}
-.poki-category-grid .taglink img{width:42px!important;height:42px!important;aspect-ratio:1/1!important;object-fit:cover!important;border-radius:9px!important;flex:0 0 auto!important}
+.poki-category-grid .taglink,.poki-category-grid .category-card-link{display:flex!important;align-items:center!important;gap:10px!important;min-width:0!important;padding:9px!important;background:#fff!important;border:1px solid #edf0f3!important;border-radius:11px!important;color:#2a3447!important;text-decoration:none!important;box-shadow:none!important;box-sizing:border-box!important;transition:transform .15s ease,box-shadow .15s ease,border-color .15s ease}
+.poki-category-grid .taglink:hover,.poki-category-grid .category-card-link:hover{transform:translateY(-1px);border-color:#d8e6ef!important;box-shadow:0 5px 16px rgba(23,32,51,.07)!important}
+.poki-category-grid .taglink img,.poki-category-grid .category-card-link img{width:42px!important;height:42px!important;aspect-ratio:1/1!important;object-fit:cover!important;border-radius:9px!important;flex:0 0 auto!important;display:block!important}
+.poki-category-grid .category-card-link span{min-width:0!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;font-size:13px!important;font-weight:650!important;line-height:1.2!important}
 .poki-category-grid .taginfo{min-width:0!important;padding:0!important}
 .poki-category-grid .taginfo .name{margin:0!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:13px;font-weight:650}.poki-category-grid .taginfo .name-count{display:block;margin-top:2px;color:#8a94a6;font-size:11px;font-weight:600}
 .poki-search-title{font-size:24px;font-weight:750;margin:0 0 16px;color:#152033}
