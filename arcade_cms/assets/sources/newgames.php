@@ -85,63 +85,9 @@ if ($page < $totalPages) $links .= '<a href="' . siteUrl() . '/new-games?page=' 
 $themeData['discovery_pagination'] = '<nav class="poki-pagination" aria-label="New games pages">' . $links . '</nav>';
 $themeData['discovery_pagination_label'] = 'Page ' . $page . ' of ' . $totalPages . ($total > 0 ? ' · ' . number_format($total) . ' games' : '');
 
-if (gps_theme_is('y8-like') || gps_theme_is('poki-like')) {
-	$sql_cat_query = $GameMonetizeConnect->query("SELECT * FROM " . CATEGORIES . " WHERE show_home='1'");
-	$ct_r = '';
-	while ($category = $sql_cat_query->fetch_array()) {
-		$themeData['category_id'] = $category['id'];
-		$themeData['category_name'] = $category['name'];
-		$themeData['category_image'] = gps_discovery_category_image((string)$category['name'], (string)($category['image'] ?? ''));
-
-		$numbergames = $GameMonetizeConnect->query("SELECT COUNT(*) FROM " . GAMES . " WHERE category=" . (int)$category['id'] . " AND published='1');
-		$numbergames = $numbergames->fetch_array()[0];
-
-		$themeData['category_number'] = $numbergames;
-		$themeData['category_url'] = siteUrl() . '/category/'	. slugify($category['name']);
-		$ct_r .= \GameMonetize\UI::view('category/categories-list-home');
-	}
-
-	$themeData['categories_list_home'] = $ct_r;
-	$themeData['category_content'] = \GameMonetize\UI::view('category/categories-list-home');
-
-	$sql_tag_query = $GameMonetizeConnect->query("SELECT * FROM " . TAGS . " WHERE total_games > 0 ORDER BY total_games DESC, name ASC LIMIT 16");
-	$tag_r = '';
-	while ($tag = $sql_tag_query->fetch_array()) {
-		$themeData['tag_id'] = $tag['id'];
-		$themeData['tag_name'] = $tag['name'];
-
-		$baseTagImagePath = 'tag-img/' . slugify($tag['name']);
-		$formats = ['.png', '.webp'];
-		$defaultTagImagePath = 'templates/poki-like/image/tag.png';
-
-		$themeData['tag_image'] = $defaultTagImagePath; // Default value
-
-		foreach ($formats as $format) {
-			if (file_exists($baseTagImagePath . $format)) {
-				$themeData['tag_image'] = $baseTagImagePath . $format;
-				break;
-			}
-		}
-
-		$themeData['tag_url'] = siteUrl() . '/tag/'	. slugify($tag['name']);
-		$tag_r .= \GameMonetize\UI::view('tags/tags-list-home');
-	}
-
-	$themeData['tags_list_home'] = $tag_r;
-
-
-	// Get setting data
-	$settingDataQuery = "SELECT * FROM " . SETTING . " LIMIT 1";
-	$settingData = $GameMonetizeConnect->query($settingDataQuery);
-	$settingData = $settingData->fetch_array();
-
-	if ($settingData["is_sidebar_enabled"]) {
-		$themeData['categories_tags_home'] = "";
-	} else {
-		$themeData['categories_tags_home'] = \GameMonetize\UI::view('home/categories-tags-home');
-	}
-}
-
+$themeData['categories_list_home'] = '';
+$themeData['tags_list_home'] = '';
+$themeData['category_content'] = '';
 gps_discovery_assign_page_description($themeData, 'new-games');
 
 $themeData['new_games_list'] = $ngm_r;
