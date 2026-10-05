@@ -7,39 +7,45 @@ if (!empty($_GET['tag'])) {
 	$sql_tag_query = $GameMonetizeConnect->query("SELECT * FROM " . TAGS . " WHERE url='" . $get_tags_id . "'");
 	if ($sql_tag_query->num_rows > 0) {
 		$get_tags = $sql_tag_query->fetch_array();
-		$tagGamesLimit = gps_theme_is('poki-like') ? 89 : 50;
-		$sql_c_games_query = $GameMonetizeConnect->query("SELECT * FROM " . GAMES . " WHERE tags_ids LIKE '%\"{$get_tags['id']}\"%' AND published = '1' ORDER BY featured DESC limit " . $tagGamesLimit);
-		$tagGamesRows = [];
-		while ($tagGameRow = $sql_c_games_query->fetch_array()) {
-			$tagGamesRows[] = $tagGameRow;
-		}
 
-		// Some older Poki tag records point at an unrelated imported tag ID.
-		// When none of those cards contains the actual tag phrase, use the same
-		// name relevance that powers Search instead of showing unrelated games.
-		if (gps_theme_is('poki-like')) {
-			$tagSearchPhrase = trim((string)preg_replace('/\s+games?$/i', '', (string)$get_tags['name']));
-			$relatedNameMatches = 0;
-			if (mb_strlen($tagSearchPhrase, 'UTF-8') >= 3) {
-				foreach ($tagGamesRows as $tagGameRow) {
-					if (stripos(html_entity_decode((string)$tagGameRow['name']), $tagSearchPhrase) !== false) {
-						$relatedNameMatches++;
-					}
-				}
-				if ($relatedNameMatches === 0) {
-					$escapedTagPhrase = $GameMonetizeConnect->real_escape_string($tagSearchPhrase);
-					$fallbackTagQuery = $GameMonetizeConnect->query("SELECT * FROM " . GAMES . " WHERE name LIKE '%{$escapedTagPhrase}%' AND published = '1' ORDER BY featured DESC, plays DESC LIMIT " . $tagGamesLimit);
-					$fallbackTagRows = [];
-					while ($fallbackTagRow = $fallbackTagQuery->fetch_array()) {
-						$fallbackTagRows[] = $fallbackTagRow;
-					}
-					if (count($fallbackTagRows) >= 3) {
-						$tagGamesRows = $fallbackTagRows;
-					}
-				}
-			}
-		}
-		
+        $tagPage = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
+        $tagPerPage = 60;
+        $tagId = (int)$get_tags['id'];
+        $tagPhrase = trim((string)preg_replace('/\\s+games?$/i', '', (string)$get_tags['name']));
+        $tagGamesTotal = 0;
+        $useNameFallback = false;
+
+        $tagCountQuery = $GameMonetizeConnect->query(
+            "SELECT COUNT(*) AS total FROM " . GAMES . " WHERE tags_ids LIKE '%\"" . $tagId . "\"%' AND published='1'"
+        );
+        if ($tagCountQuery && ($tagCountRow = $tagCountQuery->fetch_assoc())) {
+            $tagGamesTotal = max(0, (int)($tagCountRow['total'] ?? 0));
+        }
+        if ($tagGamesTotal === 0 && mb_strlen($tagPhrase, 'UTF-8') >= 3) {
+            $escapedTagPhrase = $GameMonetizeConnect->real_escape_string($tagPhrase);
+            $fallbackCountQuery = $GameMonetizeConnect->query(
+                "SELECT COUNT(*) AS total FROM " . GAMES . " WHERE name LIKE '%{$escapedTagPhrase}%' AND published='1'"
+            );
+            if ($fallbackCountQuery && ($fallbackCountRow = $fallbackCountQuery->fetch_assoc())) {
+                $tagGamesTotal = max(0, (int)($fallbackCountRow['total'] ?? 0));
+                $useNameFallback = $tagGamesTotal > 0;
+            }
+        }
+        $tagTotalPages = max(1, (int)ceil($tagGamesTotal / $tagPerPage));
+        if ($tagPage > $tagTotalPages) $tagPage = $tagTotalPages;
+        $tagOffset = ($tagPage - 1) * $tagPerPage;
+
+        if ($useNameFallback) {
+            $escapedTagPhrase = $GameMonetizeConnect->real_escape_string($tagPhrase);
+            $sql_c_games_query = $GameMonetizeConnect->query(
+                "SELECT * FROM " . GAMES . " WHERE name LIKE '%{$escapedTagPhrase}%' AND published='1' ORDER BY featured DESC, plays DESC, game_id ASC LIMIT {$tagPerPage} OFFSET {$tagOffset}"
+            );
+        } else {
+            $sql_c_games_query = $GameMonetizeConnect->query(
+                "SELECT * FROM " . GAMES . " WHERE tags_ids LIKE '%\"" . $tagId . "\"%' AND published='1' ORDER BY featured DESC, plays DESC, game_id ASC LIMIT {$tagPerPage} OFFSET {$tagOffset}"
+            );
+        }
+
 		$themeData['tags_name'] = ucwords($get_tags['name']);
 		$themeData['tags_games_title'] = preg_match('/\bgames$/i', $themeData['tags_name'])
 			? $themeData['tags_name']
