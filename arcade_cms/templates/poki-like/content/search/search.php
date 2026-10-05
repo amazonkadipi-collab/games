@@ -1,19 +1,22 @@
-<script language="javascript">var PageType ="{{NEW_GAME_PAGE}}"; var ids ="{{NEW_GAME_IDS}}";</script>
-<div class="ad728list">
-{{ADS_TOP}}
+<div id="content" class="poki-public-page poki-search-page">
+    <div class="poki-page-heading">
+        <h1 class="poki-search-title">Search results for “{{SEARCH_PARAMETER}}”</h1>
+        <p class="poki-page-intro">Find and play free online games matching your search.</p>
+    </div>
+
+    <div class="poki-ad-slot ad728list">
+        {{ADS_TOP}}
+    </div>
+
+    <section class="poki-section">
+        <div class="game-list-grid-container poki-game-list">
+            {{SEARCH_RESULT}}
+        </div>
+    </section>
 </div>
 
-<div style="text-align:center;font-size:20px;margin-bottom:10px;margin-top:20px;">
-		@search_to@ 
-		<strong style="color:#d60000">{{SEARCH_PARAMETER}}</strong>
-</div>
-
-<div class="content" style="text-align:center;">
-	{{SEARCH_RESULT}}
-</div>
-
-<div class="bgs bottomtext fn-clear" style="min-height: 100px;padding:20px; width:90% !important;">
-	{{FOOTER_DESCRIPTION}}
+<div class="bgs bottomtext fn-clear">
+    {{FOOTER_DESCRIPTION}}
 </div>
 
 {{FOOTER_CONTENT}}
