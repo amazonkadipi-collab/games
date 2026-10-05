@@ -5,7 +5,7 @@
 	</div>
 </div>
 
-<div class="game-list-grid-container">
+<div class="game-list-grid-container poki-tag-games-list">
     <div class="home-search-container">
         <a href="/" class="logo-home hide-text" aria-label="home">
             Home
