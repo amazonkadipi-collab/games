@@ -99,6 +99,18 @@ if (!empty($_GET['tag'])) {
 		$themeData['footer_description_modified'] = $descriptionParts['footer'];
 
 
+        $tagLinks = '';
+        $tagStart = max(1, $tagPage - 2);
+        $tagEnd = min($tagTotalPages, $tagPage + 2);
+        if ($tagPage > 1) $tagLinks .= '<a href="' . siteUrl() . '/tag/' . $get_tags['url'] . '?page=' . ($tagPage - 1) . '" rel="prev">Previous</a>';
+        for ($tagI = $tagStart; $tagI <= $tagEnd; $tagI++) {
+            $tagLinks .= ($tagI === $tagPage)
+                ? '<span class="active" aria-current="page">' . $tagI . '</span>'
+                : '<a href="' . siteUrl() . '/tag/' . $get_tags['url'] . '?page=' . $tagI . '">' . $tagI . '</a>';
+        }
+        if ($tagPage < $tagTotalPages) $tagLinks .= '<a href="' . siteUrl() . '/tag/' . $get_tags['url'] . '?page=' . ($tagPage + 1) . '" rel="next">Next</a>';
+        $themeData['tags_pagination'] = '<nav class="poki-pagination" aria-label="Tag games pages">' . $tagLinks . '</nav>';
+        $themeData['tags_page_label'] = 'Page ' . $tagPage . ' of ' . $tagTotalPages . ($tagGamesTotal > 0 ? ' · ' . number_format($tagGamesTotal) . ' games' : '');
 		$themeData['tags_content'] = \GameMonetize\UI::view('category/tags-games');
 	} else {
 		$themeData['tags_content'] = \GameMonetize\UI::view('category/category-notfound');
