@@ -1,7 +1,7 @@
 <div id="content" class="poki-public-page poki-search-page">
     <div class="poki-page-heading">
         <h1 class="poki-search-title">Search results for “{{SEARCH_PARAMETER}}”</h1>
-        <p class="poki-page-intro">Find and play free online games matching your search.</p>
+        <p class="poki-page-intro">Find and play free online games matching your search. Try a title, genre, theme or gameplay style.</p>
     </div>
 
     <div class="poki-ad-slot ad728list">
