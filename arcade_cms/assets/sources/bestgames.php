@@ -81,9 +81,9 @@ if (gps_theme_is('y8-like') || gps_theme_is('poki-like')) {
 	while ($category = $sql_cat_query->fetch_array()) {
 		$themeData['category_id'] = $category['id'];
 		$themeData['category_name'] = $category['name'];
-		$themeData['category_image'] = $category['image'];
+		$themeData['category_image'] = gps_discovery_category_image((string)$category['name'], (string)($category['image'] ?? ''));
 
-		$numbergames = $GameMonetizeConnect->query("SELECT COUNT(*) FROM " . GAMES . " where category=" . $category['id']);
+		$numbergames = $GameMonetizeConnect->query("SELECT COUNT(*) FROM " . GAMES . " WHERE category=" . (int)$category['id'] . " AND published='1');
 		$numbergames = $numbergames->fetch_array()[0];
 
 		$themeData['category_number'] = $numbergames;
@@ -94,7 +94,7 @@ if (gps_theme_is('y8-like') || gps_theme_is('poki-like')) {
 	$themeData['categories_list_home'] = $ct_r;
 	$themeData['category_content'] = \GameMonetize\UI::view('category/categories-list-home');
 
-	$sql_tag_query = $GameMonetizeConnect->query("SELECT * FROM " . TAGS . " WHERE show_home='1'");
+	$sql_tag_query = $GameMonetizeConnect->query("SELECT * FROM " . TAGS . " WHERE total_games > 0 ORDER BY total_games DESC, name ASC LIMIT 16");
 	$tag_r = '';
 	while ($tag = $sql_tag_query->fetch_array()) {
 		$themeData['tag_id'] = $tag['id'];
