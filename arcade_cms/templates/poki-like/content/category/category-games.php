@@ -6,12 +6,13 @@
 
     <section class="poki-section">
         <div class="section-title">
-            <h2>{{CATEGORY_NAME}} games</h2>
+            <h2>{{CATEGORY_NAME}} games</h2><span>{{CATEGORY_PAGE_LABEL}}</span>
             <a href="{{CONFIG_SITE_URL}}/categories">Categories</a>
         </div>
         <div class="game-list-grid-container poki-game-list">
             {{CATEGORY_GAMES_LIST}}
         </div>
+        {{CATEGORY_PAGINATION}}
     </section>
 </div>
 
