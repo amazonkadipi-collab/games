@@ -130,6 +130,10 @@ if (($_GET['p'] ?? '') === 'home') {
 	$themeData['header_metatags'] .= '<meta name="google-site-verification" content="WkXRsZNaG77qk0yXebhvc_3VAHqFVP7NsvdVhtFSO5A">';
 }
 
+if ($cmsRequestedPath === 'popular') {
+	$themeData['title_tag'] = 'Popular Games - ' . $config['site_name'];
+}
+
 if ($_GET['p'] != 'login') {
 	if (
 		$userData['admin'] == 0 
