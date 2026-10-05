@@ -14,4 +14,4 @@
 	
 	$themeData['new_games'] = \GameMonetize\UI::view('game/privacy');
 
-	$themeData['page_content'] = \GameMonetize\UI::view('home/content');
+	$themeData['page_content'] = \GameMonetize\UI::view('game/privacy');
