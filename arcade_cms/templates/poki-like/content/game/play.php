@@ -124,48 +124,7 @@
 </div>
 </div>
 
-<script type="text/javascript">
-    var objGameFlash = null;
-    var percentage = 0;
-    t1 = setInterval("getPercentage()", 200);
-
-    function getPercentage() {
-        if (objGameFlash == null) objGameFlash = getGameFlashObj();
-        if (objGameFlash) {
-            try {
-                percentage = objGameFlash.PercentLoaded();
-                if (percentage < 0 || typeof(percentage) == 'undefined') percentage = 100;
-            } catch (e) {
-                percentage = 100;
-            }
-        } else {
-            percentage = 100;
-        }
-        if (percentage == 100) {
-            clearInterval(t1);
-        }
-        return percentage;
-    }
-
-    function getGameFlashObj() {
-        if (window.document.GameEmbedSWF) return window.document.GameEmbedSWF;
-    }
-
-    function showGame() {
-        $("#loader_container").css({
-            visibility: "hidden",
-            display: "none"
-
-        });
-        $("#gameDiv").css({
-            visibility: "visible",
-            display: "block",
-            height: "100%"
-        });
-        showGameBox();
-        u3dplay();
-    }
-</script>
+<!-- Legacy Flash/U3D polling removed: modern embeds load on user interaction. -->
 
 {{FOOTER_CONTENT}}
 
@@ -206,9 +165,9 @@
         }
         setcookie("playedgames", playedgames, 25920000000, "/");
     }
-    $(document).ready(function() {
+    window.addEventListener('load', function () {
         PlayedGames({{PLAY_GAME_ID}});
-    });
+    }, { once: true });
 
     window.setTimeout(function() {
         __upGame_rx8({{PLAY_GAME_ID}})
@@ -245,26 +204,10 @@
         });
     });
 
-    $(function() {
+    window.addEventListener('load', function () {
         $('.ad300').eq(0).show();
-        if ($('.ad300').size() > 1) {
-            setInterval(function() {
-                var first = $('.ad300').eq(0);
-                first.hide();
-                $('.ad300').last().after(first);
-                $('.ad300').eq(0).fadeIn();
-            }, 3000);
-        }
         $('.adsmall').eq(0).show();
-        if ($('.adsmall').size() > 1) {
-            setInterval(function() {
-                var first = $('.adsmall').eq(0);
-                first.hide();
-                $('.adsmall').last().after(first);
-                $('.adsmall').eq(0).fadeIn();
-            }, 3000);
-        }
-    })
+    }, { once: true });
 </script>
 
 {{IMA_SDK}}
@@ -272,7 +215,7 @@
 <!-- <div id="BackTop"></div> -->
 </div>
 
-<script src="{{CONFIG_THEME_PATH}}/js/libs/jquery.show-more.js"></script>
+<script src="{{CONFIG_THEME_PATH}}/js/libs/jquery.show-more.js" defer></script>
 <script>
 	if (window.innerWidth <= 768) {
 		$('#play-game-desc').showMore({
