@@ -54,7 +54,7 @@ if ($path === 'sitemap.xml') {
 }
 
 if ($path === 'sitemaps/static.xml') {
-    $urls = ['/', '/categories', '/new-games', '/best-games', '/popular', '/random', '/featured-games', '/about', '/privacy', '/terms', '/tags'];
+    $urls = ['/', '/categories', '/new-games', '/popular', '/all-games', '/random', '/featured-games', '/about', '/privacy', '/terms', '/tags'];
 
     if (isset($GameMonetizeConnect)) {
         $catResult = $GameMonetizeConnect->query("SELECT name FROM " . CATEGORIES . " ORDER BY id ASC");
