@@ -31,7 +31,9 @@ if (!function_exists('categoryCardImage')) {
 			}
 
 			$storedPath = ltrim($storedImage, '/\\');
-			if (is_file(ABSPATH . $storedPath)) {
+			// Ignore legacy /cat/* fallbacks: those paths are not real static assets
+			// on Vercel and get routed back through the CMS.
+			if (!preg_match('#^cat(?:/|$)#i', $storedPath) && is_file(ABSPATH . $storedPath)) {
 				return '/' . str_replace('\\', '/', $storedPath);
 			}
 		}
