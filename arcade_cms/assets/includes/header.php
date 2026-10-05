@@ -18,6 +18,9 @@ $themeData['header_class_access_menu'] = (is_logged()) ? '_rP5' : '';
 
 $themeData['header_panel_menu_admin'] = (is_logged() && $userData['admin'] == 1) ? \GameMonetize\UI::view('header/header_panel_menu_admin') : '';
 
+$isPokiPublicTheme = in_array((string)($config['site_theme'] ?? ''), ['poki-like', 'poki-pro'], true)
+	|| (function_exists('gps_theme_is') && (gps_theme_is('poki-like') || gps_theme_is('poki-pro')));
+
 
 if ($_GET['p'] != 'login') {
 	if (
@@ -101,7 +104,7 @@ if ($_GET['p'] != 'login') {
 
 		$keepY8MenuHeader = $config['site_theme'] === 'y8-pro' && $themeData['pro_menu_design'] !== '';
 		// Poki Pro reuses the Poki public header; never replace it with the legacy sidebar.
-		if ($settingData['is_sidebar_enabled'] && !gps_theme_is('poki-like') && !$keepY8MenuHeader) {
+		if ($settingData['is_sidebar_enabled'] && !$isPokiPublicTheme && !$keepY8MenuHeader) {
 			$themeData['header'] = "";
 
 			// Get sidebar data
