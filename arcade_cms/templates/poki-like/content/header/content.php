@@ -25,7 +25,7 @@ body{background:var(--ui-bg)!important;background-image:none!important;color:var
 .gamemonetize-container{max-width:var(--ui-max)!important;margin:0 auto!important;padding:126px 14px 42px!important;min-height:0!important}
 .content{max-width:var(--ui-max)!important;margin:0 auto!important;padding:0!important}
 #content{max-width:100%!important;margin:0 auto!important}
-.game-list-grid-container{display:grid!important;grid-template-columns:repeat(6,minmax(0,1fr))!important;grid-auto-flow:row!important;grid-auto-rows:auto!important;grid-template-areas:none!important;gap:16px!important;width:100%!important;max-width:100%!important;padding:0!important}
+.game-list-grid-container{display:grid!important;grid-template-columns:repeat(7,minmax(0,1fr))!important;grid-auto-flow:row!important;grid-auto-rows:auto!important;grid-template-areas:none!important;gap:16px!important;width:100%!important;max-width:100%!important;padding:0!important}
 .game-list-grid-container>*{grid-area:auto!important;min-width:0!important}
 .post{position:relative!important;display:block!important;width:100%!important;aspect-ratio:auto!important;background:#fff!important;border:0!important;border-radius:12px!important;box-shadow:none!important;overflow:hidden!important}
 .post .game-item{display:flex!important;flex-direction:column!important;width:100%!important;background:#fff!important;border:0!important;border-radius:12px!important;overflow:hidden!important;text-decoration:none!important;box-shadow:0 1px 0 rgba(18,32,51,.03)!important}
@@ -52,8 +52,8 @@ body{background:var(--ui-bg)!important;background-image:none!important;color:var
 .home-search-container,#search-left{display:none!important}
 .hide-text{position:absolute!important;left:-10000px!important;width:1px!important;height:1px!important;overflow:hidden!important}
 .bottomtext{max-width:var(--ui-max)!important;margin:24px auto 50px!important;background:#fff!important;border:1px solid #edf0f3!important;border-radius:14px!important;box-shadow:none!important}
-@media (min-width:1100px) and (max-width:1199px){.game-list-grid-container,.poki-game-grid{grid-template-columns:repeat(5,minmax(0,1fr))!important}.poki-category-grid{grid-template-columns:repeat(5,minmax(0,1fr))}}
-@media (min-width:900px) and (max-width:1099px){.game-list-grid-container,.poki-game-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important}.poki-category-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media (min-width:1100px) and (max-width:1199px){.game-list-grid-container,.poki-game-grid{grid-template-columns:repeat(6,minmax(0,1fr))!important}.poki-category-grid{grid-template-columns:repeat(5,minmax(0,1fr))}}
+@media (min-width:900px) and (max-width:1099px){.game-list-grid-container,.poki-game-grid{grid-template-columns:repeat(5,minmax(0,1fr))!important}.poki-category-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
 @media (min-width:600px) and (max-width:899px){.game-list-grid-container,.poki-game-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:12px!important}.poki-category-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media (max-width:599px){
 #header{height:58px!important}.h-head{height:58px!important}.head-inner{height:58px!important;padding:0 10px!important;gap:8px!important}
@@ -125,7 +125,7 @@ body{background:var(--ui-bg)!important;background-image:none!important;color:var
         </div>
         <div class="search-form">
             <form id="search-data-form" method="GET" action="{{CONFIG_SITE_URL}}/search" autocomplete="off">
-                <input type="text" class="txt fn-left search-input" id="Search-InArea" name="search_parameter" placeholder="@search_games@" aria-label="@search_games@">
+                <input type="text" class="txt fn-left search-input" id="Search-InArea" name="q" placeholder="@search_games@" aria-label="@search_games@">
                 <input type="submit" class="btn" value="" aria-label="Search">
             </form>
         </div>
