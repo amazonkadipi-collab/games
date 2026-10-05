@@ -50,6 +50,24 @@ while ($newGames = $newGames_query->fetch_array()) {
 	}
 }
 
+$themeData['discovery_pagination'] = '';
+$themeData['discovery_pagination_label'] = '';
+
+$pageLabel = 'Page ' . $page . ' of ' . $totalPages . ($total > 0 ? ' · ' . number_format($total) . ' games' : '');
+$pageLabelLinks = '';
+if ($page > 1) $pageLabelLinks .= '<a href="' . siteUrl() . '/featured-games?page=' . ($page - 1) . '" rel="prev">Previous</a>';
+$pageLabelStart = max(1, $page - 2);
+$pageLabelEnd = min($totalPages, $page + 2);
+for ($i = $pageLabelStart; $i <= $pageLabelEnd; $i++) {
+    $pageLabelLinks .= ($i === $page)
+        ? '<span class="active" aria-current="page">' . $i . '</span>'
+        : '<a href="' . siteUrl() . '/featured-games?page=' . $i . '">' . $i . '</a>';
+}
+if ($page < $totalPages) $pageLabelLinks .= '<a href="' . siteUrl() . '/featured-games?page=' . ($page + 1) . '" rel="next">Next</a>';
+$themeData['discovery_pagination_label'] = $pageLabel;
+$themeData['discovery_pagination'] = '<nav class="poki-pagination" aria-label="Game pages">' . $pageLabelLinks . '</nav>';
+
+
 if (gps_theme_is('y8-like') || gps_theme_is('poki-like')) {
 	$sql_cat_query = $GameMonetizeConnect->query("SELECT * FROM " . CATEGORIES . " WHERE show_home='1'");
 	$ct_r = '';
