@@ -103,7 +103,7 @@
 	while($category = $sql_cat_query->fetch_array()) {
 		$themeData['category_id'] = $category['id'];
 		$themeData['category_name'] = $category['name'];
-		$themeData['category_thumb'] = siteUrl() . $category['image'];
+		$themeData['category_thumb'] = gps_discovery_category_image((string)$category['name'], (string)($category['image'] ?? ''));
 
 		$categorySlug = !empty($category['category_pilot']) ? $category['category_pilot'] : slugify($category['name']);
 
