@@ -121,6 +121,17 @@
     </div>
     
 
+<section class="pg-game-info-grid" aria-label="Game information">
+    <div class="pg-info-card">
+        <h2>About this game</h2>
+        <div class="pg-info-copy">{{PLAY_GAME_DESC}}</div>
+    </div>
+    <div class="pg-info-card pg-controls-card">
+        <h2>How to play</h2>
+        <div class="pg-info-copy">{{PLAY_GAME_INST}}</div>
+    </div>
+</section>
+
 <div class="tags-walkthrough-container">
     <div class="game-walkthrough bgs fn-clear">
         <p>Play {{PLAY_GAME_NAME}} {{PLAY_GAME_WALKTHROUGH}}</p>
