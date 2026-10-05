@@ -19,6 +19,9 @@ $themeData['header_class_access_menu'] = (is_logged()) ? '_rP5' : '';
 
 $themeData['header_panel_menu_admin'] = (is_logged() && $userData['admin'] == 1) ? \GameMonetize\UI::view('header/header_panel_menu_admin') : '';
 
+$isPokiPublicTheme = in_array((string)($config['site_theme'] ?? ''), ['poki-like', 'poki-pro'], true)
+	|| (function_exists('gps_theme_is') && (gps_theme_is('poki-like') || gps_theme_is('poki-pro')));
+
 $publicProBootstrap = ABSPATH . 'assets/includes/license/bootstrap.php';
 if (is_file($publicProBootstrap)) {
 	require_once $publicProBootstrap;
@@ -74,7 +77,7 @@ if ($_GET['p'] != 'login') {
 		|| is_page('home')
 	) {
 
-        		if (gps_theme_is('poki-like') || gps_theme_is('y8-like')) {
+        		if ($isPokiPublicTheme || gps_theme_is('y8-like') || gps_theme_is('y8-pro')) {
 			$sql_cat_query = $GameMonetizeConnect->query("SELECT * FROM " . CATEGORIES);
 			$ct_r = '';
 			while ($category = $sql_cat_query->fetch_array()) {
@@ -250,7 +253,7 @@ if ($_GET['p'] != 'login') {
 		$settingData = $settingData->fetch_array();
 
 		$keepY8MenuHeader = $config['site_theme'] === 'y8-pro' && $themeData['pro_menu_design'] !== '';
-		if ($settingData['is_sidebar_enabled'] && ($config['site_theme'] ?? '') !== 'poki-like' && !gps_theme_is('crazygames-like') && !gps_theme_is('poki-like') && !$keepY8MenuHeader) {
+		if ($settingData['is_sidebar_enabled'] && !$isPokiPublicTheme && !gps_theme_is('crazygames-like') && !$keepY8MenuHeader) {
 			$themeData['header'] = "";
 
 			// Get sidebar data
@@ -372,7 +375,7 @@ $pageData = getPageTitleAndDescription();
 $themeData['page_title'] = $pageData['title'];
 $themeData['page_description'] = $pageData['description'];
 
-if (gps_theme_is('poki-like')) {
+if ($isPokiPublicTheme) {
 	$bestGames_query = $GameMonetizeConnect->query("SELECT * FROM " . GAMES . " WHERE published='1' ORDER BY plays DESC LIMIT 6");
 	$bgm_r = '';
 	$ids = '';
