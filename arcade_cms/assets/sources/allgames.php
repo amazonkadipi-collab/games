@@ -5,6 +5,7 @@ $perPage = 60;
 $offset = ($page - 1) * $perPage;
 
 $total = 0;
+$themeData['all_games_list'] = '';
 if (isset($GameMonetizeConnect)) {
     $countResult = $GameMonetizeConnect->query("SELECT COUNT(*) AS total FROM " . GAMES . " WHERE published='1' AND game_id IS NOT NULL AND name IS NOT NULL AND TRIM(name) <> ''");
     if ($countResult && ($countRow = $countResult->fetch_assoc())) {
