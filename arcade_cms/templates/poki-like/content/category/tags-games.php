@@ -26,7 +26,7 @@
             </div>
             <div class="search-form">
                 <form id="search-data-form" onsubmit="return false;">
-                    <img src="/templates/poki-like/image/poki-circle-logo.png" class="poki-circle-logo" alt="poki-circle-logo">
+                    
                     <div class="divider"></div>
                     <input type="text" class="txt fn-left search-input" id="Search-InArea" name="search_parameter" type="text" placeholder="What are you playing today?">
                     <input type="submit" class="btn" value="" id="search" aria-label="search-button">
