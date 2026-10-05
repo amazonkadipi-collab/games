@@ -250,7 +250,7 @@ if ($_GET['p'] != 'login') {
 		$settingData = $settingData->fetch_array();
 
 		$keepY8MenuHeader = $config['site_theme'] === 'y8-pro' && $themeData['pro_menu_design'] !== '';
-		if ($settingData['is_sidebar_enabled'] && !gps_theme_is('crazygames-like') && !gps_theme_is('poki-like') && !$keepY8MenuHeader) {
+		if ($settingData['is_sidebar_enabled'] && ($config['site_theme'] ?? '') !== 'poki-like' && !gps_theme_is('crazygames-like') && !gps_theme_is('poki-like') && !$keepY8MenuHeader) {
 			$themeData['header'] = "";
 
 			// Get sidebar data
