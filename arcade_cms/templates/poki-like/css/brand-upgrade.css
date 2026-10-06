@@ -14,15 +14,16 @@ html{background:var(--pg-paper)}
 body{background:var(--pg-paper);color:var(--pg-ink)}
 #header{background:rgba(16,24,39,.96)!important;border-bottom:1px solid rgba(255,255,255,.08)!important;box-shadow:0 8px 30px rgba(16,24,39,.12)!important}
 .head-inner{max-width:var(--pg-max)!important;height:70px!important;padding:0 22px!important;gap:18px!important}
-.pg-brand{position:relative!important;display:inline-flex!important;align-items:center!important;gap:10px!important;min-width:184px!important;height:70px!important;color:#fff!important;text-decoration:none!important}
-.pg-brand-name{font-family:Oswald,"Arial Narrow",sans-serif!important;font-size:22px!important;letter-spacing:.02em!important;text-transform:uppercase!important;line-height:1!important;color:#fff!important}
-.pg-brand-name:after{content:"ARCADE";display:block;margin-top:4px;color:var(--pg-lime);font:800 8px/1 "Open Sans",Arial,sans-serif;letter-spacing:.24em}
-.pg-brand-mark{position:relative!important;display:grid!important;grid-template-columns:repeat(2,13px)!important;grid-template-rows:repeat(2,13px)!important;gap:4px!important;width:30px!important;height:30px!important;transform:rotate(-8deg)!important}
-.pg-brand-mark:before{content:"";position:absolute;inset:-5px;border:1px solid rgba(215,255,79,.55);border-radius:10px;transform:rotate(16deg)}
-.pg-brand-mark i{display:block!important;width:13px!important;height:13px!important;border-radius:4px 7px 4px 7px!important;background:var(--pg-lime)!important;box-shadow:none!important}
-.pg-brand-mark i:nth-child(2){background:var(--pg-coral)!important;border-radius:7px 4px 7px 4px!important}
-.pg-brand-mark i:nth-child(3){background:var(--pg-cyan)!important;border-radius:7px 4px 7px 4px!important}
-.pg-brand-mark i:nth-child(4){background:#fff!important;border-radius:4px 7px 4px 7px!important}
+.pg-brand{position:relative!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;width:46px!important;min-width:46px!important;height:70px!important;color:#fff!important;text-decoration:none!important}
+.pg-brand-name{display:none!important}
+.pg-brand-name:after{display:none!important}
+.pg-brand-mark{display:none!important}
+.pg-brand-mark:before,.pg-brand-mark i{display:none!important}
+.pg-brand-logo{display:grid!important;place-items:center!important;width:42px!important;height:42px!important;filter:drop-shadow(0 7px 14px rgba(0,0,0,.2))}
+.pg-brand-logo svg{display:block!important;width:42px!important;height:42px!important;overflow:visible!important}
+.pg-brand-logo svg rect{fill:var(--pg-lime)!important;stroke:rgba(255,255,255,.9)!important;stroke-width:1.5!important}
+.pg-brand-logo svg path{fill:var(--pg-night)!important}
+.pg-brand-logo svg circle{fill:var(--pg-coral)!important}
 .search-form{flex:1!important;max-width:630px!important}
 .search-form form{height:44px!important;background:#26344b!important;border:1px solid rgba(255,255,255,.1)!important;border-radius:14px!important;box-shadow:none!important}
 .search-form input{color:#fff!important;font-size:14px!important}
@@ -73,3 +74,8 @@ footer a{color:#eef4fa!important}
 @media(max-width:599px){.head-inner{height:62px!important;padding:0 12px!important;gap:8px!important}.pg-brand{min-width:150px!important;height:62px!important}.pg-brand-name{font-size:18px!important}.pg-brand-name:after{font-size:7px!important}.pg-brand-mark{transform:scale(.86) rotate(-8deg)!important;margin-left:-2px}.poki-top-nav{top:62px!important;height:42px!important}.poki-top-nav-inner{height:42px!important;padding:0 10px!important}.poki-top-nav a{height:30px!important;padding:0 10px!important;font-size:11px!important}.h-head{height:104px!important}.poki-home-content{padding:0 10px 42px!important}.poki-home-content .arcade-home-hero{padding:23px 17px!important;border-radius:20px!important}.poki-home-content .arcade-hero-copy h1{font-size:47px!important}.poki-home-content .arcade-hero-copy>p:not(.arcade-kicker){font-size:14px!important}.poki-home-content .arcade-search button{min-width:94px!important;padding:11px 10px!important;font-size:12px!important}.poki-home-content .arcade-section-head h2,.poki-home-content .section-title h2{font-size:21px!important}.poki-home-content .arcade-games-grid,.poki-home-content .arcade-featured-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:8px!important}}
 
 .poki-home-content .arcade-trust-row{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:10px!important;margin:-12px 0 36px!important;padding:0 2px!important}.poki-home-content .arcade-trust-row span{display:flex!important;align-items:center!important;gap:8px!important;min-height:42px!important;padding:0 12px!important;border-bottom:1px solid var(--pg-line)!important;color:var(--pg-muted)!important;font-size:11px!important;font-weight:700!important}.poki-home-content .arcade-trust-row b{color:var(--pg-coral)!important;font-family:Oswald,"Arial Narrow",sans-serif!important;font-size:16px!important}@media(max-width:599px){.poki-home-content .arcade-trust-row{grid-template-columns:repeat(2,minmax(0,1fr))!important;margin:-8px 0 26px!important}.poki-home-content .arcade-trust-row span{font-size:10px!important;padding:0 7px!important}}
+
+
+/* Single site-wide search: keep the header search and remove the duplicate homepage search. */
+.poki-home-content .arcade-search{display:none!important}
+@media(max-width:599px){.pg-brand{width:42px!important;min-width:42px!important;height:62px!important}.pg-brand-logo,.pg-brand-logo svg{width:38px!important;height:38px!important}.pg-brand-name{display:none!important}}
