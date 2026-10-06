@@ -85,6 +85,58 @@ if (!empty($_GET['id'])) {
             $themeData['play_game_walkthrough'] = "<a href='".$get_game['video_url']."' target='_blank'>Walkthrough</a>";
         }
 
+        // Real related-games rail: keep the full published catalog, prioritising the current game's category.
+        // No invented safety flag is applied; the site keeps every published game available.
+        $relatedGamesHtml = '';
+        $relatedSeen = array((int)$get_game['game_id']);
+        $relatedQuery = $GameMonetizeConnect->query(
+            "SELECT * FROM " . GAMES . " WHERE published='1' AND game_id != " . (int)$get_game['game_id'] . " AND category=" . (int)$get_game['category'] . " ORDER BY plays DESC, date_added DESC LIMIT 8"
+        );
+        if ($relatedQuery) {
+            while ($relatedGame = $relatedQuery->fetch_array()) {
+                $relatedId = (int)$relatedGame['game_id'];
+                if (in_array($relatedId, $relatedSeen, true)) continue;
+                $relatedSeen[] = $relatedId;
+                $relatedData = gameData($relatedGame);
+                $relatedName = htmlspecialchars((string)$relatedData['name'], ENT_QUOTES, 'UTF-8');
+                $relatedUrl = htmlspecialchars((string)$relatedData['game_url'], ENT_QUOTES, 'UTF-8');
+                $relatedImage = htmlspecialchars((string)$relatedData['image_url'], ENT_QUOTES, 'UTF-8');
+                $relatedPlays = numberFormat((int)($relatedGame['plays'] ?? 0));
+                $relatedCategory = htmlspecialchars((string)$get_game['category_name'], ENT_QUOTES, 'UTF-8');
+                $relatedGamesHtml .= '<a class="pg-related-card" href="' . $relatedUrl . '">'
+                    . '<span class="pg-related-image"><img src="' . $relatedImage . '" alt="' . $relatedName . '" loading="lazy" decoding="async"></span>'
+                    . '<span class="pg-related-copy"><strong>' . $relatedName . '</strong><span>' . $relatedCategory . ' · ' . $relatedPlays . ' plays</span></span>'
+                    . '</a>';
+            }
+        }
+        if (count($relatedSeen) < 5) {
+            $fallbackQuery = $GameMonetizeConnect->query(
+                "SELECT * FROM " . GAMES . " WHERE published='1' AND game_id != " . (int)$get_game['game_id'] . " ORDER BY plays DESC, date_added DESC LIMIT 12"
+            );
+            if ($fallbackQuery) {
+                while ($relatedGame = $fallbackQuery->fetch_array()) {
+                    $relatedId = (int)$relatedGame['game_id'];
+                    if (in_array($relatedId, $relatedSeen, true)) continue;
+                    $relatedSeen[] = $relatedId;
+                    $relatedData = gameData($relatedGame);
+                    $relatedName = htmlspecialchars((string)$relatedData['name'], ENT_QUOTES, 'UTF-8');
+                    $relatedUrl = htmlspecialchars((string)$relatedData['game_url'], ENT_QUOTES, 'UTF-8');
+                    $relatedImage = htmlspecialchars((string)$relatedData['image_url'], ENT_QUOTES, 'UTF-8');
+                    $relatedPlays = numberFormat((int)($relatedGame['plays'] ?? 0));
+                    $relatedCategory = htmlspecialchars((string)($relatedGame['category_name'] ?? ''), ENT_QUOTES, 'UTF-8');
+                    $relatedGamesHtml .= '<a class="pg-related-card" href="' . $relatedUrl . '">'
+                        . '<span class="pg-related-image"><img src="' . $relatedImage . '" alt="' . $relatedName . '" loading="lazy" decoding="async"></span>'
+                        . '<span class="pg-related-copy"><strong>' . $relatedName . '</strong><span>' . $relatedCategory . ' · ' . $relatedPlays . ' plays</span></span>'
+                        . '</a>';
+                    if (count($relatedSeen) >= 9) break;
+                }
+            }
+        }
+        $themeData['play_related_games'] = $relatedGamesHtml;
+        $themeData['play_game_controls_block'] = trim((string)$get_game_data['instructions']) !== ''
+            ? '<div class="pg-controls-copy">' . $get_game_data['instructions'] . '</div>'
+            : '<p class="pg-empty-note">Controls are shown inside the game when available.</p>';
+
         $similarGames = getSidebarWidget('similar-name', $get_game_data['name']);
         $themeData['play_sidebar_widgets'] = $similarGames[0];
         
