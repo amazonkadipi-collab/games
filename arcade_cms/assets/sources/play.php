@@ -111,7 +111,7 @@ if (!empty($_GET['id'])) {
         }
         if (count($relatedSeen) < 5) {
             $fallbackQuery = $GameMonetizeConnect->query(
-                "SELECT * FROM " . GAMES . " WHERE published='1' AND game_id != " . (int)$get_game['game_id'] . " ORDER BY plays DESC, date_added DESC LIMIT 12"
+                "SELECT g.*, c.name AS category_name FROM " . GAMES . " g LEFT JOIN " . CATEGORIES . " c ON c.id=g.category WHERE g.published='1' AND g.game_id != " . (int)$get_game['game_id'] . " ORDER BY g.plays DESC, g.date_added DESC LIMIT 12"
             );
             if ($fallbackQuery) {
                 while ($relatedGame = $fallbackQuery->fetch_array()) {
