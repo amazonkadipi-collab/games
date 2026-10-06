@@ -272,3 +272,6 @@ if ($gpsSeoPublicPaths) {
     }
     $themeData['header_metatags'] = $gpsSeoMeta;
 }
+// Re-render after the public SEO layer mutates header_metatags; otherwise the
+// earlier assembled header_tags would silently omit canonical/social tags.
+$themeData['header_tags'] = \GameMonetize\UI::view('global/header/all');
