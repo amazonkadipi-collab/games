@@ -80,6 +80,33 @@ if (!empty($_GET['id'])) {
         $themeData['play_game_category_name'] = $get_game['category_name'];
         $themeData['play_game_category_image'] = $get_game['category_image'];
         $themeData['play_game_category_url'] = slugify($get_game['category_name']);
+        $gameCanonicalUrl = siteUrl() . '/game/' . slugify($get_game_data['name']);
+        $schemaDescription = trim(preg_replace('/\\s+/', ' ', strip_tags((string)$get_game_data['description'])));
+        $themeData['play_game_schema'] = '<script type="application/ld+json">' . json_encode(array(
+            '@context' => 'https://schema.org',
+            '@type' => 'VideoGame',
+            'name' => (string)$get_game_data['name'],
+            'url' => $gameCanonicalUrl,
+            'image' => (string)$get_game_data['image_url'],
+            'description' => $schemaDescription,
+            'genre' => (string)$get_game['category_name'],
+            'applicationCategory' => 'Game',
+            'offers' => array('@type' => 'Offer', 'price' => '0', 'priceCurrency' => 'USD')
+        ), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . '</script>';
+        $themeData['play_game_breadcrumb'] = '<nav class="pg-breadcrumb" aria-label="Breadcrumb">'
+            . '<a href="' . htmlspecialchars(siteUrl(), ENT_QUOTES, 'UTF-8') . '">Home</a><span aria-hidden="true">›</span>'
+            . '<a href="' . htmlspecialchars(siteUrl() . '/category/' . slugify($get_game['category_name']), ENT_QUOTES, 'UTF-8') . '">' . htmlspecialchars((string)$get_game['category_name'], ENT_QUOTES, 'UTF-8') . '</a><span aria-hidden="true">›</span>'
+            . '<span aria-current="page">' . htmlspecialchars((string)$get_game_data['name'], ENT_QUOTES, 'UTF-8') . '</span></nav>';
+        $themeData['play_game_schema'] .= '<script type="application/ld+json">' . json_encode(array(
+            '@context' => 'https://schema.org',
+            '@type' => 'BreadcrumbList',
+            'itemListElement' => array(
+                array('@type' => 'ListItem', 'position' => 1, 'name' => 'Home', 'item' => siteUrl() . '/'),
+                array('@type' => 'ListItem', 'position' => 2, 'name' => (string)$get_game['category_name'], 'item' => siteUrl() . '/category/' . slugify($get_game['category_name'])),
+                array('@type' => 'ListItem', 'position' => 3, 'name' => (string)$get_game_data['name'], 'item' => $gameCanonicalUrl)
+            )
+        ), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . '</script>';
+
         $themeData['play_game_walkthrough'] = "";
         if(strlen($get_game['video_url'])){
             $themeData['play_game_walkthrough'] = "<a href='".$get_game['video_url']."' target='_blank'>Walkthrough</a>";
