@@ -4,7 +4,9 @@
     var ids = "";
 </script>
 
+{{PLAY_GAME_SCHEMA}}
 <div id="content" class="fn-clear poki-public-page poki-game-page">
+    {{PLAY_GAME_BREADCRUMB}}
     <div class="play-game-list-grid-container poki-game-player-section">
     <div class="game-container game-col">
         <div class="game-info">
