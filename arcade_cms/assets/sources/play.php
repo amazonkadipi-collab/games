@@ -64,7 +64,9 @@ if (!empty($_GET['id'])) {
 		}
         $themeData['play_game_url'] = $get_game_data['game_url'];
         $themeData['play_game_date'] = is_numeric($get_game_data['date_added'] ?? null) ? date('F j, Y', (int)$get_game_data['date_added']) : (string)($get_game_data['date_added'] ?? '');
-        $themeData['play_game_plays'] = numberFormat((int)($get_game_data['plays'] ?? 0));
+        $playCount = (int)($get_game_data['plays'] ?? 0);
+        $themeData['play_game_plays'] = $playCount > 0 ? numberFormat($playCount) : '';
+        $themeData['play_game_plays_meta'] = $playCount > 0 ? '<span><i class="fa-solid fa-gamepad" aria-hidden="true"></i><strong>' . numberFormat($playCount) . '</strong> plays</span>' : '';
             $themeData['play_game_likes'] = isset($get_game['like_count']) ? (int)$get_game['like_count'] : 0;
             $themeData['play_game_dislikes'] = isset($get_game['dislike_count']) ? (int)$get_game['dislike_count'] : 0;
             $themeData['play_game_favorites'] = isset($get_game['favorite_count']) ? (int)$get_game['favorite_count'] : 0;
@@ -160,12 +162,14 @@ if (!empty($_GET['id'])) {
             }
         }
         $themeData['play_related_games'] = $relatedGamesHtml;
-        $themeData['play_game_controls_block'] = trim((string)$get_game_data['instructions']) !== ''
-            ? '<div class="pg-controls-copy">' . $get_game_data['instructions'] . '</div>'
-            : '<p class="pg-empty-note">Controls are shown inside the game when available.</p>';
+        $themeData['play_more_category_games'] = '';
+        $instructions = trim((string)$get_game_data['instructions']);
+        $themeData['play_game_controls_block'] = $instructions !== '' ? '<section class="pg-info-card pg-controls-card"><h2>How to Play</h2><div class="pg-controls-copy">' . $instructions . '</div></section>' : '';
+        $descriptionText = trim((string)$themeData['play_game_desc']);
+        $themeData['play_game_about_block'] = $descriptionText !== '' ? '<section class="pg-info-card"><h2>About this game</h2><div class="pg-info-copy">' . $themeData['play_game_desc'] . '</div></section>' : '';
 
         $similarGames = getSidebarWidget('similar-name', $get_game_data['name']);
-        $themeData['play_sidebar_widgets'] = $similarGames[0];
+        $themeData['play_sidebar_widgets'] = '';
         
         if (!gps_theme_is('poki-like')) {
             $anotherSimilarGames = getSidebarWidget('similar-name', $get_game_data['name'], $similarGames[1]);
