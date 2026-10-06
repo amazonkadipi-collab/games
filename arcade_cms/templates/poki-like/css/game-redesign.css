@@ -47,3 +47,29 @@
 .poki-game-page .close-fullscreen{z-index:20!important}
 @media(max-width:899px){.poki-game-player-section{grid-template-columns:1fr!important}.poki-game-page .poki-game-meta{order:2!important}.poki-game-page .pg-game-info-grid{grid-template-columns:1fr!important}}
 @media(max-width:599px){.poki-game-page{padding:0 10px 35px!important}.poki-game-page #ava-game_container{aspect-ratio:16/9!important;border-radius:13px!important}.poki-game-page .gamePlay-icon{width:58px!important;height:58px!important;border-radius:14px!important}.poki-game-page .gamePlay-title{font-size:18px!important;max-width:92%!important}.poki-game-page .gamePlay-button{min-height:42px!important;padding:10px 19px!important}.poki-game-page #game-bottom{padding:19px 17px!important;border-radius:15px!important}.poki-game-page .game-title{font-size:24px!important}.poki-game-page .pg-info-card{padding:18px!important;border-radius:15px!important}.poki-game-page .pg-game-info-grid{gap:10px!important}.poki-game-page .game-zoom-info{padding:15px!important}.poki-game-page .poki-game-meta .flex{padding:11px!important}}
+
+
+/* Child-friendly player-first additions: simple metadata, readable controls and real related games. */
+.poki-game-page .pg-game-quick-meta{display:flex!important;flex-wrap:wrap!important;gap:8px!important;padding:12px 14px!important;border-bottom:1px solid #edf0f3!important;background:#fbfcfd!important;color:#526174!important;font-size:12px!important;font-weight:700!important}
+.poki-game-page .pg-game-quick-meta span{display:inline-flex!important;align-items:center!important;gap:7px!important}
+.poki-game-page .pg-game-quick-meta i{color:#0f8f77!important}
+.poki-game-page .pg-game-info-grid{margin-top:18px!important}
+.poki-game-page .pg-controls-copy{color:#667487!important;font-size:13px!important;line-height:1.8!important}
+.poki-game-page .pg-controls-copy br{content:""!important;display:block!important;margin-bottom:5px!important}
+.poki-game-page .pg-empty-note{margin:0!important;color:#7a8797!important;font-size:13px!important}
+.poki-game-page .pg-related-section{margin-top:22px!important;padding:22px!important;border:1px solid #e5eaee!important;border-radius:18px!important;background:#fff!important}
+.poki-game-page .pg-section-heading{display:flex!important;align-items:end!important;justify-content:space-between!important;gap:16px!important;margin-bottom:14px!important}
+.poki-game-page .pg-section-kicker{display:block!important;margin-bottom:5px!important;color:#0f8f77!important;font-size:10px!important;font-weight:900!important;letter-spacing:.12em!important}
+.poki-game-page .pg-section-heading h2{margin:0!important;color:#172033!important;font-size:22px!important;line-height:1.2!important}
+.poki-game-page .pg-section-heading>a{color:#0f8f77!important;font-size:12px!important;font-weight:800!important;text-decoration:none!important;white-space:nowrap!important}
+.poki-game-page .pg-related-grid{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:12px!important}
+.poki-game-page .pg-related-card{display:flex!important;flex-direction:column!important;min-width:0!important;overflow:hidden!important;border:1px solid #e6ebef!important;border-radius:14px!important;background:#fff!important;text-decoration:none!important;transition:transform .16s ease,box-shadow .16s ease,border-color .16s ease!important}
+.poki-game-page .pg-related-card:hover{transform:translateY(-2px)!important;border-color:#cfe2dc!important;box-shadow:0 8px 20px rgba(15,23,42,.08)!important}
+.poki-game-page .pg-related-image{display:block!important;aspect-ratio:4/3!important;background:#edf1f4!important;overflow:hidden!important}
+.poki-game-page .pg-related-image img{display:block!important;width:100%!important;height:100%!important;object-fit:cover!important}
+.poki-game-page .pg-related-copy{display:flex!important;flex-direction:column!important;gap:4px!important;padding:10px!important}
+.poki-game-page .pg-related-copy strong{overflow:hidden!important;color:#172033!important;font-size:12px!important;line-height:1.35!important;display:-webkit-box!important;-webkit-line-clamp:2!important;-webkit-box-orient:vertical!important}
+.poki-game-page .pg-related-copy span{color:#7a8797!important;font-size:10px!important;line-height:1.3!important}
+.poki-game-page #pre-count{display:none!important}
+@media(max-width:899px){.poki-game-page .pg-related-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}}
+@media(max-width:599px){.poki-game-page .pg-related-section{padding:16px!important;border-radius:15px!important}.poki-game-page .pg-section-heading{align-items:flex-start!important;flex-direction:column!important;gap:8px!important}.poki-game-page .pg-related-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}.poki-game-page .pg-related-copy{padding:9px!important}.poki-game-page .pg-related-copy strong{font-size:11px!important}.poki-game-page .pg-related-copy span{font-size:9px!important}}
