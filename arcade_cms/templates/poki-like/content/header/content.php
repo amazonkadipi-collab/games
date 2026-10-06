@@ -8,8 +8,13 @@
             <i class="material-icons-outlined material-symbols-outlined fn-hide">close</i>
         </div>
         <a href="{{CONFIG_SITE_URL}}/" class="pg-brand" aria-label="{{CONFIG_SITE_NAME}}">
-            <span class="pg-brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
-            <span class="pg-brand-name">{{CONFIG_SITE_NAME}}</span>
+            <span class="pg-brand-logo" aria-hidden="true">
+                <svg viewBox="0 0 44 44" role="img" focusable="false">
+                    <rect x="2" y="2" width="40" height="40" rx="13"></rect>
+                    <path d="M17 12.5v19l15-9.5-15-9.5Z"></path>
+                    <circle cx="31.5" cy="12.5" r="3"></circle>
+                </svg>
+            </span>
         </a>
         <div class="search-form">
             <form id="search-data-form" method="GET" action="{{CONFIG_SITE_URL}}/search" autocomplete="off">
