@@ -49,40 +49,10 @@
         </div>
         
 
-<div class="flex items-center w-full bg-white p-3 rounded-b-xl">
-    
- 
-
-    <div class="flex items-center gap-3 ml-auto">
-        
-        <div class="play-info-blue">
-            <i class="fa-solid fa-gamepad"></i>
-            <span id="play-count">{{PLAY_GAME_PLAYS}} plays</span>
-        </div>
-
-        <button class="vote-btn" data-type="like" data-id="{{PLAY_GAME_ID}}">
-            <i class="fa-regular fa-thumbs-up"></i>
-            <span>{{PLAY_GAME_LIKES}}</span>
-        </button>
-
-        <button class="vote-btn" data-type="dislike" data-id="{{PLAY_GAME_ID}}">
-            <i class="fa-regular fa-thumbs-down"></i>
-            <span>{{PLAY_GAME_DISLIKES}}</span>
-        </button>
-
-        <button class="vote-btn" data-type="favorite" data-id="{{PLAY_GAME_ID}}" aria-label="Add to favorites" title="Add to favorites">
-            <i class="fa-regular fa-heart" aria-hidden="true"></i>
-            <span>{{PLAY_GAME_FAVORITES}}</span>
-        </button>
-        <a class="vote-btn game-report-link" href="{{CONFIG_SITE_URL}}/contact?game={{PLAY_GAME_ID}}" title="Report a problem with this game" aria-label="Report a problem with this game">
-            <i class="fa-regular fa-flag" aria-hidden="true"></i><span>Report</span>
-        </a>
-
-         
-    </div>
+<div class="pg-game-quick-meta" aria-label="Game information">
+    <span><i class="fa-solid fa-gamepad" aria-hidden="true"></i><strong>{{PLAY_GAME_PLAYS}}</strong> plays</span>
+    <span><i class="fa-solid fa-layer-group" aria-hidden="true"></i>{{PLAY_GAME_CATEGORY_NAME}}</span>
 </div>
-
-
         <div>
             <div class="game-zoom-btn">
                 <a href="#" id="gameFull" title="Play game fullscreen" onclick="GameFullscreen();return false;"></a>
@@ -101,9 +71,6 @@
 {{TAGS_LIST_GRID}}
 <div id="game-bottom" class="bgs poki-game-content">
         <h1 class="pl game-title" style="font-size: 25px !important;">{{PLAY_GAME_NAME}}</h1>
-        <div id="play-game-desc" class="d-text" style="margin-top:15px;font-size:14px;position:relative;">
-            {{PLAY_GAME_DESC}}
-        </div>
         <div class="game-tags">
             {{PLAY_GAME_TAGS}}
         </div>
@@ -122,7 +89,7 @@
     </div>
     <div class="pg-info-card pg-controls-card">
         <h2>How to play</h2>
-        <div class="pg-info-copy">{{PLAY_GAME_INST}}</div>
+        {{PLAY_GAME_CONTROLS_BLOCK}}
     </div>
 </section>
 
