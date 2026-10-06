@@ -162,7 +162,22 @@ if (!empty($_GET['id'])) {
             }
         }
         $themeData['play_related_games'] = $relatedGamesHtml;
-        $themeData['play_more_category_games'] = '';
+        $categoryMoreHtml = '';
+        $categoryMoreQuery = $GameMonetizeConnect->query("SELECT * FROM " . GAMES . " WHERE published='1' AND game_id != " . (int)$get_game['game_id'] . " AND category=" . (int)$get_game['category'] . " ORDER BY plays DESC, date_added DESC LIMIT 8 OFFSET 8");
+        if ($categoryMoreQuery) {
+            while ($categoryGame = $categoryMoreQuery->fetch_array()) {
+                $categoryData = gameData($categoryGame);
+                $categoryName = htmlspecialchars((string)$categoryData['name'], ENT_QUOTES, 'UTF-8');
+                $categoryUrl = htmlspecialchars((string)$categoryData['game_url'], ENT_QUOTES, 'UTF-8');
+                $categoryImage = htmlspecialchars((string)$categoryData['image_url'], ENT_QUOTES, 'UTF-8');
+                $categoryPlays = (int)($categoryGame['plays'] ?? 0);
+                $categoryMeta = $categoryPlays > 0 ? ' · ' . numberFormat($categoryPlays) . ' plays' : '';
+                $categoryMoreHtml .= '<a class="pg-related-card" href="' . $categoryUrl . '"><span class="pg-related-image"><img src="' . $categoryImage . '" alt="' . $categoryName . '" loading="lazy" decoding="async"></span><span class="pg-related-copy"><strong>' . $categoryName . '</strong><span>' . htmlspecialchars((string)$get_game['category_name'], ENT_QUOTES, 'UTF-8') . $categoryMeta . '</span></span></a>';
+            }
+        }
+        $themeData['play_more_category_section'] = $categoryMoreHtml !== ''
+            ? '<section class="pg-related-section pg-more-category-section" aria-labelledby="pg-category-heading"><div class="pg-section-heading"><div><span class="pg-section-kicker">EXPLORE</span><h2 id="pg-category-heading">More from ' . htmlspecialchars((string)$get_game['category_name'], ENT_QUOTES, 'UTF-8') . '</h2></div></div><div class="pg-related-grid">' . $categoryMoreHtml . '</div></section>'
+            : '';
         $instructions = trim((string)$get_game_data['instructions']);
         $themeData['play_game_controls_block'] = $instructions !== '' ? '<section class="pg-info-card pg-controls-card"><h2>How to Play</h2><div class="pg-controls-copy">' . $instructions . '</div></section>' : '';
         $descriptionText = trim((string)$themeData['play_game_desc']);
