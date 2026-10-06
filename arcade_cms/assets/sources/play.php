@@ -157,14 +157,7 @@ if (!empty($_GET['id'])) {
         $gameImage = explode("/", $themeData['game_meta_image']);
         $themeData['game_unique_id'] = $gameImage[3];
         $themeData['game_video_url'] = $get_game_data['wt_video'];
-		$themeData['play_game_video_block'] = '<div class="description" id="gamemonetize-video"></div><script type="text/javascript">window.VIDEO_OPTIONS={gameid:"' . addslashes((string)$themeData['game_unique_id']) . '",width:"100%",height:"480px",color:"#3f007e"};(function(a,b,c){var d=a.getElementsByTagName(b)[0];a.getElementById(c)||(a=a.createElement(b),a.id=c,a.src="https://api.gamemonetize.com/video.js?v="+Date.now(),d.parentNode.insertBefore(a,d))})(document,"script","gamemonetize-video-api");</script>';
-		if (($config['site_theme'] ?? '') === 'poki-pro' && function_exists('gps_other_fixes_poki_walkthrough_markup')) {
-			$themeData['play_game_video_block'] = gps_other_fixes_poki_walkthrough_markup(
-				(string)$themeData['game_unique_id'],
-				(string)$themeData['play_game_name'],
-				(string)$themeData['play_game_image']
-			);
-		}
+		$themeData['play_game_video_block'] = '';
 
         preg_match('/([^\/]+\.mp4)$/', $get_game_data['wt_video'], $matches);
         $baseVideoThumbPath = $_SERVER['DOCUMENT_ROOT'] . '/games-thumb-video/' . $matches[1];
