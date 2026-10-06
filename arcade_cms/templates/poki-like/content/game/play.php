@@ -93,6 +93,14 @@
     </div>
 </section>
 
+<section class="pg-related-section" aria-labelledby="pg-related-heading">
+    <div class="pg-section-heading">
+        <div><span class="pg-section-kicker">KEEP PLAYING</span><h2 id="pg-related-heading">More Games to Play</h2></div>
+        <a href="{{CONFIG_SITE_URL}}/category/{{PLAY_GAME_CATEGORY_URL}}">More {{PLAY_GAME_CATEGORY_NAME}}</a>
+    </div>
+    <div class="pg-related-grid">{{PLAY_RELATED_GAMES}}</div>
+</section>
+
 <div class="tags-walkthrough-container">
     <div class="game-walkthrough bgs fn-clear">
         <p>Play {{PLAY_GAME_NAME}} {{PLAY_GAME_WALKTHROUGH}}</p>
