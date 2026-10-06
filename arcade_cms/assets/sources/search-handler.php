@@ -2,6 +2,23 @@
 if (isset($_GET['q']) && !empty($_GET['q'])) {
     $search_parameter = secureEncode($_GET['q']);
     $search_query = searchGames($search_parameter, $config['site_theme']);
+    // Keep autocomplete focused on exact/prefix title matches before broader metadata matches.
+    if (is_array($search_query) && count($search_query) > 1) {
+        $searchTerm = strtolower(trim((string)$search_parameter));
+        $scoreSearchResult = static function ($game) use ($searchTerm) {
+            $data = gameData($game);
+            $name = strtolower(trim((string)($data['name'] ?? $game['name'] ?? '')));
+            $score = 0;
+            if ($name === $searchTerm) $score += 10000;
+            elseif ($name !== '' && strpos($name, $searchTerm) === 0) $score += 7000;
+            elseif ($name !== '' && strpos($name, $searchTerm) !== false) $score += 4500;
+            $score += min(500, (int)floor(log(1 + max(0, (int)($game['plays'] ?? 0)), 2)) * 10);
+            return $score;
+        };
+        usort($search_query, static function ($a, $b) use ($scoreSearchResult) {
+            return $scoreSearchResult($b) <=> $scoreSearchResult($a);
+        });
+    }
 	if (gps_theme_is('poki-like')) {
 		$search_query = array_slice($search_query, 0, 12);
 	}
