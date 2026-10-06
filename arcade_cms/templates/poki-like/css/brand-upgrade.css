@@ -21,9 +21,10 @@ body{background:var(--pg-paper);color:var(--pg-ink)}
 .pg-brand-mark:before,.pg-brand-mark i{display:none!important}
 .pg-brand-logo{display:grid!important;place-items:center!important;width:42px!important;height:42px!important;filter:drop-shadow(0 7px 14px rgba(0,0,0,.2))}
 .pg-brand-logo svg{display:block!important;width:42px!important;height:42px!important;overflow:visible!important}
-.pg-brand-logo svg rect{fill:var(--pg-lime)!important;stroke:rgba(255,255,255,.9)!important;stroke-width:1.5!important}
-.pg-brand-logo svg path{fill:var(--pg-night)!important}
-.pg-brand-logo svg circle{fill:var(--pg-coral)!important}
+.pg-brand-logo svg{overflow:visible!important}
+.pg-brand-logo .pg-logo-shape{fill:var(--pg-lime)!important;stroke:rgba(255,255,255,.95)!important;stroke-width:1.2!important}
+.pg-brand-logo .pg-logo-cut{fill:var(--pg-night)!important}
+.pg-brand-logo .pg-logo-dot{fill:var(--pg-coral)!important}
 .search-form{flex:1!important;max-width:630px!important}
 .search-form form{height:44px!important;background:#26344b!important;border:1px solid rgba(255,255,255,.1)!important;border-radius:14px!important;box-shadow:none!important}
 .search-form input{color:#fff!important;font-size:14px!important}
