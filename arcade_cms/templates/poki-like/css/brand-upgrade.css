@@ -80,3 +80,10 @@ footer a{color:#eef4fa!important}
 /* Single site-wide search: keep the header search and remove the duplicate homepage search. */
 .poki-home-content .arcade-search{display:none!important}
 @media(max-width:599px){.pg-brand{width:42px!important;min-width:42px!important;height:62px!important}.pg-brand-logo,.pg-brand-logo svg{width:38px!important;height:38px!important}.pg-brand-name{display:none!important}}
+/* Shared PlayGrid logo asset: header + footer stay visually identical. */
+.pg-brand-logo img{display:block!important;width:42px!important;height:42px!important;object-fit:contain!important}
+.pg-footer-brand{display:inline-flex!important;align-items:center!important;gap:10px!important;text-decoration:none!important}
+.pg-footer-logo{display:inline-grid!important;place-items:center!important;width:44px!important;height:44px!important;flex:0 0 44px!important}
+.pg-footer-logo img{display:block!important;width:44px!important;height:44px!important;object-fit:contain!important}
+.pg-footer-name{font-weight:900!important;letter-spacing:-.02em!important}
+@media(max-width:599px){.pg-brand-logo img{width:38px!important;height:38px!important}.pg-footer-logo,.pg-footer-logo img{width:38px!important;height:38px!important}.pg-footer-logo{flex-basis:38px!important}}
