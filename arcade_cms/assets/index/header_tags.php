@@ -40,9 +40,8 @@ if (is_page('play')) {
 			$themeData['header_metatags'] = \GameMonetize\UI::view('global/header/metatags2');
 			} else {
 				$themeData['title_tag'] = 'Free Online Games - ' . $config['site_name'];
-				$themeData['header_title'] = \GameMonetize\UI::view('global/header/title');
-				$themeData['header_metatags'] = \GameMonetize\UI::view('global/header/metatags');
-				$themeData['header_metatags'] .= '<link rel="canonical" href="' . htmlspecialchars(rtrim(siteUrl(), '/') . '/', ENT_QUOTES, 'UTF-8') . '">';
+				$themeData['header_title'] = '';
+				$themeData['header_metatags'] = \GameMonetize\UI::view('global/header/metatags-home');
 			}
 	} 
 	else if ($_GET['p'] == 'tagspage'){
