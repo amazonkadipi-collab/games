@@ -60,12 +60,7 @@
         <div class="pg-related-grid">{{PLAY_RELATED_GAMES}}</div>
     </section>
 
-    <section class="pg-related-section pg-more-category-section" aria-labelledby="pg-category-heading">
-        <div class="pg-section-heading">
-            <div><span class="pg-section-kicker">EXPLORE</span><h2 id="pg-category-heading">More from {{PLAY_GAME_CATEGORY_NAME}}</h2></div>
-        </div>
-        <div class="pg-related-grid">{{PLAY_MORE_CATEGORY_GAMES}}</div>
-    </section>
+    {{PLAY_MORE_CATEGORY_SECTION}}
 </div>
 
 {{FOOTER_CONTENT}}
