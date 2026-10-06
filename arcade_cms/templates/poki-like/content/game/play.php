@@ -114,44 +114,6 @@
 <script type="text/javascript">
     var PreGameAdURL = "{{ADS_VIDEO}}";
 
-    function getcookie(name) {
-        var cookie_start = document.cookie.indexOf(name);
-        var cookie_end = document.cookie.indexOf(";", cookie_start);
-        return cookie_start == -1 ? '' : unescape(document.cookie.substring(cookie_start + name.length + 1, (cookie_end > cookie_start ? cookie_end : document.cookie.length)));
-    }
-
-    function setcookie(cookieName, cookieValue, seconds, path, domain, secure) {
-        var expires = new Date();
-        expires.setTime(expires.getTime() + seconds);
-        document.cookie = escape(cookieName) + '=' + escape(cookieValue) +
-            (expires ? '; expires=' + expires.toGMTString() : '') +
-            (path ? '; path=' + path : '/') +
-            (domain ? '; domain=' + domain : '') +
-            (secure ? '; secure' : '');
-    }
-
-    function ClearPlayedGames() {
-        setcookie("lastplayedgames", "", -360000, "/");
-        return false;
-    }
-
-    function PlayedGames(game_id) {
-        var playedgames = getcookie("playedgames");
-        if (playedgames.indexOf("," + game_id + ",") > -1) {
-            playedgames = playedgames.replace("," + game_id + ",", '');
-        } else {
-            if (playedgames == "" || playedgames == ",") {
-                playedgames = "," + game_id + ",";
-            } else {
-                playedgames = "," + game_id + "," + playedgames;
-            }
-        }
-        setcookie("playedgames", playedgames, 25920000000, "/");
-    }
-    window.addEventListener('load', function () {
-        PlayedGames({{PLAY_GAME_ID}});
-    }, { once: true });
-
     window.setTimeout(function() {
         __upGame_rx8({{PLAY_GAME_ID}})
     }, 2000);
