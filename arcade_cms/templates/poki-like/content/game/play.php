@@ -25,12 +25,7 @@
                             <span class="play-text">Play Now!</span>
                         </button>
                     </div>
-                </div>
-                <div id="pre-count">
-                    <font lib="game-loading">Game loading..</font>
-                    <div id="pre-count-num">25</div>
-                </div>
-                <div id="game-preloading"></div>
+                </div><div id="game-preloading"></div>
                 <div id="game-preloader"></div>
                 <div id="game-box"></div>
 
