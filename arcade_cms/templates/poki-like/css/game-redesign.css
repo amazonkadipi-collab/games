@@ -113,3 +113,10 @@
   .poki-game-page .gamePlay-title{font-size:17px!important}
   .poki-game-page .gamePlay-button{min-width:112px!important;min-height:46px!important;font-size:15px!important}
 }
+
+/* Game pages: keep the global category rail out of the first-play viewport. */
+body:has(.poki-game-page) .poki-top-nav,
+body:has(.poki-game-page) .new-games-pop-up-mobile{display:none!important}
+body:has(.poki-game-page) .h-head{display:none!important}
+body:has(.poki-game-page) .pg-breadcrumb{margin-top:8px!important;margin-bottom:8px!important}
+body:has(.poki-game-page) .pg-player-first{margin-top:0!important}
