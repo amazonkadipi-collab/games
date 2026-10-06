@@ -62,7 +62,7 @@
         
         <div class="play-info-blue">
             <i class="fa-solid fa-gamepad"></i>
-            <span>{{PLAY_GAME_PLAYS}} plays</span>
+            <span id="play-count">{{PLAY_GAME_PLAYS}} plays</span>
         </div>
 
         <button class="vote-btn" data-type="like" data-id="{{PLAY_GAME_ID}}">
