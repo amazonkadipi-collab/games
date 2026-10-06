@@ -38,10 +38,12 @@ if (is_page('play')) {
 			$themeData['game_meta_description2'] = "Play " . $cat . " Free Online at PlayGrid Games! We have chosen top " . $cat . " games which you can play online for free. enjoy! ";
 			$themeData['header_title'] = \GameMonetize\UI::view('global/header/title');
 			$themeData['header_metatags'] = \GameMonetize\UI::view('global/header/metatags2');
-		} else {
-			$themeData['header_title'] = \GameMonetize\UI::view('global/header/title');
-			$themeData['header_metatags'] = \GameMonetize\UI::view('global/header/metatags');
-		}
+			} else {
+				$themeData['title_tag'] = 'Free Online Games - ' . $config['site_name'];
+				$themeData['header_title'] = \GameMonetize\UI::view('global/header/title');
+				$themeData['header_metatags'] = \GameMonetize\UI::view('global/header/metatags');
+				$themeData['header_metatags'] .= '<link rel="canonical" href="' . htmlspecialchars(rtrim(siteUrl(), '/') . '/', ENT_QUOTES, 'UTF-8') . '">';
+			}
 	} 
 	else if ($_GET['p'] == 'tagspage'){
 		$tags_data = getTagsByTitle($_GET['tag']);
