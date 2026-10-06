@@ -114,48 +114,78 @@ if (!empty($_GET['id'])) {
             $themeData['play_game_walkthrough'] = "<a href='".$get_game['video_url']."' target='_blank'>Walkthrough</a>";
         }
 
-        // Real related-games rail: keep the full published catalog, prioritising the current game's category.
-        // No invented safety flag is applied; the site keeps every published game available.
+        // Smart related-games rail: keep every published game in the catalog.
+        // Discovery is ranked, not filtered: same category/tags/type are preferred,
+        // then popularity/recency. Missing metadata simply receives a lower score.
         $relatedGamesHtml = '';
         $relatedSeen = array((int)$get_game['game_id']);
-        $relatedQuery = $GameMonetizeConnect->query(
-            "SELECT * FROM " . GAMES . " WHERE published='1' AND game_id != " . (int)$get_game['game_id'] . " AND category=" . (int)$get_game['category'] . " ORDER BY plays DESC, date_added DESC LIMIT 8"
+        $currentCategory = (int)$get_game['category'];
+        $currentType = strtolower(trim((string)($get_game_data['game_type'] ?? $get_game['game_type'] ?? '')));
+        $currentTagIds = is_string($get_game['tags_ids'] ?? '') ? json_decode($get_game['tags_ids'], true) : ($get_game['tags_ids'] ?? array());
+        $currentTagIds = is_array($currentTagIds) ? array_values(array_filter(array_map('intval', $currentTagIds), static function ($id) { return $id > 0; })) : array();
+
+        $relatedPool = array();
+        $poolQuery = $GameMonetizeConnect->query(
+            "SELECT * FROM " . GAMES . " WHERE published='1' AND game_id != " . (int)$get_game['game_id']
+            . " AND (category=" . $currentCategory . " OR game_type='" . $GameMonetizeConnect->real_escape_string((string)($get_game_data['game_type'] ?? $get_game['game_type'] ?? '')) . "')"
+            . " ORDER BY plays DESC, date_added DESC LIMIT 80"
         );
-        if ($relatedQuery) {
-            while ($relatedGame = $relatedQuery->fetch_array()) {
-                $relatedId = (int)$relatedGame['game_id'];
-                if (in_array($relatedId, $relatedSeen, true)) continue;
-                $relatedSeen[] = $relatedId;
-                $relatedData = gameData($relatedGame);
-                $relatedName = htmlspecialchars((string)$relatedData['name'], ENT_QUOTES, 'UTF-8');
-                $relatedUrl = htmlspecialchars((string)$relatedData['game_url'], ENT_QUOTES, 'UTF-8');
-                $relatedImage = htmlspecialchars((string)$relatedData['image_url'], ENT_QUOTES, 'UTF-8');
-                $relatedPlays = (int)($relatedGame['plays'] ?? 0);
-                $relatedCategory = htmlspecialchars((string)$get_game['category_name'], ENT_QUOTES, 'UTF-8');
-                $relatedMeta = $relatedPlays > 0 ? ' · ' . numberFormat($relatedPlays) . ' plays' : '';
-                $relatedGamesHtml .= '<a class="pg-related-card" href="' . $relatedUrl . '">' . '<span class="pg-related-image"><img src="' . $relatedImage . '" alt="' . $relatedName . '" loading="lazy" decoding="async"></span>' . '<span class="pg-related-copy"><strong>' . $relatedName . '</strong><span>' . $relatedCategory . $relatedMeta . '</span></span>' . '</a>';
-            }
+        if ($poolQuery) {
+            while ($candidate = $poolQuery->fetch_array()) $relatedPool[] = $candidate;
         }
+
+        $scoreRelated = static function ($candidate) use ($currentCategory, $currentType, $currentTagIds) {
+            $score = 0;
+            if ((int)($candidate['category'] ?? 0) === $currentCategory) $score += 100;
+            $candidateType = strtolower(trim((string)($candidate['game_type'] ?? '')));
+            if ($currentType !== '' && $candidateType !== '' && $candidateType === $currentType) $score += 30;
+            $candidateTags = is_string($candidate['tags_ids'] ?? '') ? json_decode($candidate['tags_ids'], true) : ($candidate['tags_ids'] ?? array());
+            $candidateTags = is_array($candidateTags) ? array_map('intval', $candidateTags) : array();
+            if ($currentTagIds && $candidateTags) {
+                $overlap = count(array_intersect($currentTagIds, $candidateTags));
+                $score += min(45, $overlap * 15);
+            }
+            $plays = max(0, (int)($candidate['plays'] ?? 0));
+            $score += min(25, (int)floor(log(1 + $plays, 2)));
+            return $score;
+        };
+        usort($relatedPool, static function ($a, $b) use ($scoreRelated) {
+            return $scoreRelated($b) <=> $scoreRelated($a);
+        });
+
+        $renderRelated = static function ($relatedGame) use (&$relatedSeen, &$relatedGamesHtml, $get_game) {
+            $relatedId = (int)$relatedGame['game_id'];
+            if (in_array($relatedId, $relatedSeen, true)) return false;
+            $relatedSeen[] = $relatedId;
+            $relatedData = gameData($relatedGame);
+            $relatedName = htmlspecialchars((string)$relatedData['name'], ENT_QUOTES, 'UTF-8');
+            $relatedUrl = htmlspecialchars((string)$relatedData['game_url'], ENT_QUOTES, 'UTF-8');
+            $relatedImage = htmlspecialchars((string)$relatedData['image_url'], ENT_QUOTES, 'UTF-8');
+            $relatedPlays = (int)($relatedGame['plays'] ?? 0);
+            $relatedCategory = htmlspecialchars((string)($relatedData['category_name'] ?? $get_game['category_name'] ?? ''), ENT_QUOTES, 'UTF-8');
+            $relatedMeta = $relatedPlays > 0 ? ' · ' . numberFormat($relatedPlays) . ' plays' : '';
+            $relatedGamesHtml .= '<a class="pg-related-card" href="' . $relatedUrl . '">'
+                . '<span class="pg-related-image"><img src="' . $relatedImage . '" alt="' . $relatedName . '" loading="lazy" decoding="async"></span>'
+                . '<span class="pg-related-copy"><strong>' . $relatedName . '</strong><span>' . $relatedCategory . $relatedMeta . '</span></span></a>';
+            return true;
+        };
+
+        foreach ($relatedPool as $candidate) {
+            if (count($relatedSeen) >= 9) break;
+            $renderRelated($candidate);
+        }
+
+        // Final fallback guarantees a populated recommendation rail without removing
+        // any published game from discovery.
         if (count($relatedSeen) < 5) {
             $fallbackQuery = $GameMonetizeConnect->query(
-                "SELECT g.*, c.name AS category_name FROM " . GAMES . " g LEFT JOIN " . CATEGORIES . " c ON c.id=g.category WHERE g.published='1' AND g.game_id != " . (int)$get_game['game_id'] . " ORDER BY g.plays DESC, g.date_added DESC LIMIT 12"
+                "SELECT * FROM " . GAMES . " WHERE published='1' AND game_id != " . (int)$get_game['game_id']
+                . " ORDER BY plays DESC, date_added DESC LIMIT 40"
             );
             if ($fallbackQuery) {
-                while ($relatedGame = $fallbackQuery->fetch_array()) {
-                    $relatedId = (int)$relatedGame['game_id'];
-                    if (in_array($relatedId, $relatedSeen, true)) continue;
-                    $relatedSeen[] = $relatedId;
-                    $relatedData = gameData($relatedGame);
-                    $relatedName = htmlspecialchars((string)$relatedData['name'], ENT_QUOTES, 'UTF-8');
-                    $relatedUrl = htmlspecialchars((string)$relatedData['game_url'], ENT_QUOTES, 'UTF-8');
-                    $relatedImage = htmlspecialchars((string)$relatedData['image_url'], ENT_QUOTES, 'UTF-8');
-                    $relatedPlays = (int)($relatedGame['plays'] ?? 0);
-                    $relatedCategory = htmlspecialchars((string)($relatedGame['category_name'] ?? ''), ENT_QUOTES, 'UTF-8');
-                    $relatedMeta = $relatedPlays > 0 ? ' · ' . numberFormat($relatedPlays) . ' plays' : '';
-                    $relatedGamesHtml .= '<a class="pg-related-card" href="' . $relatedUrl . '">'
-                        . '<span class="pg-related-image"><img src="' . $relatedImage . '" alt="' . $relatedName . '" loading="lazy" decoding="async"></span>'
-                        . '<span class="pg-related-copy"><strong>' . $relatedName . '</strong><span>' . $relatedCategory . $relatedMeta . '</span></span></a>';
+                while ($candidate = $fallbackQuery->fetch_array()) {
                     if (count($relatedSeen) >= 9) break;
+                    $renderRelated($candidate);
                 }
             }
         }
