@@ -9,10 +9,10 @@
         </div>
         <a href="{{CONFIG_SITE_URL}}/" class="pg-brand" aria-label="{{CONFIG_SITE_NAME}}">
             <span class="pg-brand-logo" aria-hidden="true">
-                <svg viewBox="0 0 44 44" role="img" focusable="false">
-                    <rect x="2" y="2" width="40" height="40" rx="13"></rect>
-                    <path d="M17 12.5v19l15-9.5-15-9.5Z"></path>
-                    <circle cx="31.5" cy="12.5" r="3"></circle>
+                <svg viewBox="0 0 48 48" role="img" focusable="false">
+                    <path class="pg-logo-shape" d="M24 2C11.85 2 4 10.1 4 22.7c0 12.5 7.6 23.3 20 23.3 11.6 0 20-9.1 20-22.2C44 11 36.2 2 24 2Z"></path>
+                    <path class="pg-logo-cut" d="M18 13v24h6V29h3.3c6.2 0 9.7-3.1 9.7-8.2S33.5 13 27.3 13H18Zm6 5h3c2.6 0 4 1 4 3s-1.4 3-4 3h-3v-6Z"></path>
+                    <circle class="pg-logo-dot" cx="34.5" cy="10.5" r="3.2"></circle>
                 </svg>
             </span>
         </a>
