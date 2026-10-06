@@ -130,12 +130,10 @@ if (!empty($_GET['id'])) {
                 $relatedName = htmlspecialchars((string)$relatedData['name'], ENT_QUOTES, 'UTF-8');
                 $relatedUrl = htmlspecialchars((string)$relatedData['game_url'], ENT_QUOTES, 'UTF-8');
                 $relatedImage = htmlspecialchars((string)$relatedData['image_url'], ENT_QUOTES, 'UTF-8');
-                $relatedPlays = numberFormat((int)($relatedGame['plays'] ?? 0));
+                $relatedPlays = (int)($relatedGame['plays'] ?? 0);
                 $relatedCategory = htmlspecialchars((string)$get_game['category_name'], ENT_QUOTES, 'UTF-8');
-                $relatedGamesHtml .= '<a class="pg-related-card" href="' . $relatedUrl . '">'
-                    . '<span class="pg-related-image"><img src="' . $relatedImage . '" alt="' . $relatedName . '" loading="lazy" decoding="async"></span>'
-                    . '<span class="pg-related-copy"><strong>' . $relatedName . '</strong><span>' . $relatedCategory . ' · ' . $relatedPlays . ' plays</span></span>'
-                    . '</a>';
+                $relatedMeta = $relatedPlays > 0 ? ' · ' . numberFormat($relatedPlays) . ' plays' : '';
+                $relatedGamesHtml .= '<a class="pg-related-card" href="' . $relatedUrl . '">' . '<span class="pg-related-image"><img src="' . $relatedImage . '" alt="' . $relatedName . '" loading="lazy" decoding="async"></span>' . '<span class="pg-related-copy"><strong>' . $relatedName . '</strong><span>' . $relatedCategory . $relatedMeta . '</span></span>' . '</a>';
             }
         }
         if (count($relatedSeen) < 5) {
@@ -151,12 +149,12 @@ if (!empty($_GET['id'])) {
                     $relatedName = htmlspecialchars((string)$relatedData['name'], ENT_QUOTES, 'UTF-8');
                     $relatedUrl = htmlspecialchars((string)$relatedData['game_url'], ENT_QUOTES, 'UTF-8');
                     $relatedImage = htmlspecialchars((string)$relatedData['image_url'], ENT_QUOTES, 'UTF-8');
-                    $relatedPlays = numberFormat((int)($relatedGame['plays'] ?? 0));
+                    $relatedPlays = (int)($relatedGame['plays'] ?? 0);
                     $relatedCategory = htmlspecialchars((string)($relatedGame['category_name'] ?? ''), ENT_QUOTES, 'UTF-8');
+                    $relatedMeta = $relatedPlays > 0 ? ' · ' . numberFormat($relatedPlays) . ' plays' : '';
                     $relatedGamesHtml .= '<a class="pg-related-card" href="' . $relatedUrl . '">'
                         . '<span class="pg-related-image"><img src="' . $relatedImage . '" alt="' . $relatedName . '" loading="lazy" decoding="async"></span>'
-                        . '<span class="pg-related-copy"><strong>' . $relatedName . '</strong><span>' . $relatedCategory . ' · ' . $relatedPlays . ' plays</span></span>'
-                        . '</a>';
+                        . '<span class="pg-related-copy"><strong>' . $relatedName . '</strong><span>' . $relatedCategory . $relatedMeta . '</span></span></a>';
                     if (count($relatedSeen) >= 9) break;
                 }
             }
