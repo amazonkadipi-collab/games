@@ -201,7 +201,10 @@ function getPageTitleAndDescription()
 	$pageTitle = explode(" - ", td_title())[0];
 	$pageDescription = "";
 
-	if ($page == "new-games") {
+	if ($page === '' || $page === 'index.php') {
+		$pageTitle = "Free Online Games - PlayGrid Games";
+		$pageDescription = "Play free online browser games instantly on PlayGrid Games. Discover popular hits, fresh releases, multiplayer challenges and hidden gems with no download.";
+	} elseif ($page == "new-games") {
 		$pageTitle = "New Games";
 		$pageDescription = "Discover the latest free online games!";
 	} elseif ($page == "best-games") {

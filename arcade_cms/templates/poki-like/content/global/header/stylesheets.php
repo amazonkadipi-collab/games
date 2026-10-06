@@ -4,3 +4,4 @@
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700;800&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@3.6.12/dist/css/splide.min.css">
 <link rel="stylesheet" href="{{CONFIG_THEME_PATH}}/css/custom-theme.css?ver={{DATE_CUSTOM_THEME_CSS}}">
+<link rel="stylesheet" href="{{CONFIG_THEME_PATH}}/css/brand-upgrade.css?ver=20261006" media="all">
