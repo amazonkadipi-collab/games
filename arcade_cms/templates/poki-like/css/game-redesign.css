@@ -73,3 +73,7 @@
 .poki-game-page #pre-count{display:none!important}
 @media(max-width:899px){.poki-game-page .pg-related-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}}
 @media(max-width:599px){.poki-game-page .pg-related-section{padding:16px!important;border-radius:15px!important}.poki-game-page .pg-section-heading{align-items:flex-start!important;flex-direction:column!important;gap:8px!important}.poki-game-page .pg-related-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}.poki-game-page .pg-related-copy{padding:9px!important}.poki-game-page .pg-related-copy strong{font-size:11px!important}.poki-game-page .pg-related-copy span{font-size:9px!important}}
+
+.poki-game-page .pg-breadcrumb{display:flex!important;align-items:center!important;gap:7px!important;min-height:36px!important;margin:0 0 10px!important;color:#7a8797!important;font-size:11px!important;font-weight:700!important;overflow:hidden!important;white-space:nowrap!important}
+.poki-game-page .pg-breadcrumb a{color:#0f8f77!important;text-decoration:none!important}
+.poki-game-page .pg-breadcrumb span:last-child{overflow:hidden!important;text-overflow:ellipsis!important}
