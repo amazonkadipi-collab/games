@@ -101,14 +101,9 @@
     <div class="pg-related-grid">{{PLAY_RELATED_GAMES}}</div>
 </section>
 
-<div class="tags-walkthrough-container">
-    <div class="game-walkthrough bgs fn-clear">
-        <p>Play {{PLAY_GAME_NAME}} {{PLAY_GAME_WALKTHROUGH}}</p>
-        {{PLAY_GAME_VIDEO_BLOCK}}
-    </div>
 </div>
 </div>
-
+</div>
 </div>
 </div>
 
