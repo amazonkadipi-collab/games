@@ -3,6 +3,31 @@ $themeData['ads_top'] = getADS('728x90_main');
 if (isset($_GET['q']) && !empty($_GET['q'])) {
 	$themeData['search_parameter'] = secureEncode($_GET['q']);
 	$search_query = searchGames($themeData['search_parameter'], '');
+	// Rank returned results for player intent: exact title > title prefix > title contains > metadata/popularity.
+	if (is_array($search_query) && count($search_query) > 1) {
+		$searchTerm = strtolower(trim((string)$themeData['search_parameter']));
+		$searchQueryWords = preg_split('/\\s+/', $searchTerm, -1, PREG_SPLIT_NO_EMPTY);
+		$scoreSearchResult = static function ($game) use ($searchTerm, $searchQueryWords) {
+			$data = gameData($game);
+			$name = strtolower(trim((string)($data['name'] ?? $game['name'] ?? '')));
+			$slug = strtolower(trim((string)($data['slug'] ?? '')));
+			$description = strtolower(trim((string)($data['description'] ?? '')));
+			$score = 0;
+			if ($name === $searchTerm) $score += 10000;
+			elseif ($name !== '' && strpos($name, $searchTerm) === 0) $score += 7000;
+			elseif ($name !== '' && strpos($name, $searchTerm) !== false) $score += 4500;
+			if ($slug !== '' && strpos($slug, $searchTerm) !== false) $score += 1500;
+			if ($description !== '' && strpos($description, $searchTerm) !== false) $score += 250;
+			foreach ($searchQueryWords as $word) {
+				if ($word !== '' && strpos($name, $word) !== false) $score += 500;
+			}
+			$score += min(500, (int)floor(log(1 + max(0, (int)($game['plays'] ?? 0)), 2)) * 10);
+			return $score;
+		};
+		usort($search_query, static function ($a, $b) use ($scoreSearchResult) {
+			return $scoreSearchResult($b) <=> $scoreSearchResult($a);
+		});
+	}
 	$srchgm_r = '';
 	foreach ($search_query as $game_search) {
 		$get_game_data_search = gameData($game_search);
