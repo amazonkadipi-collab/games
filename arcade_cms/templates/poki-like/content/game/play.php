@@ -63,7 +63,7 @@
         </div> -->
     </div>
 </div>
-{{PLAY_SIDEBAR_WIDGETS}}
+
 
 <div class="game-name-mobile">
     {{PLAY_GAME_NAME}}
