@@ -1,6 +1,10 @@
 <?php
 $themeData['title_tag'] = title_tag();
 $cmsRequestedPath = trim((string)parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH), '/');
+if (($cmsRequestedPath === '' || (string)($_GET['p'] ?? '') === 'home') && trim((string)($_GET['cat'] ?? '')) === '') {
+    $themeData['title_tag'] = 'Pokicrazygames - Free Online Games, No Download';
+}
+$cmsRequestedPath = trim((string)parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH), '/');
 $descriptionPixelChar = 135;
 $cmsRequestedPath = trim((string)parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH), '/');
 $themeData['config_site_description'] = substr($themeData['config_site_description'], 0, $descriptionPixelChar);
