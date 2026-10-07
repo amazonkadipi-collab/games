@@ -95,8 +95,8 @@ $(function () {
 
         if (this.querySelector('.video-container')) return; // Cegah duplikasi video
 
-        const videoUrl = this.getAttribute('data-wt-video');
-        if (videoUrl.includes('/games-thumb')) {
+        const videoUrl = this.getAttribute('data-wt-video') || '';
+        if (/\/games-thumb(?:[\/?#]|$)/i.test(videoUrl)) {
             const videoContainer = document.createElement('div');
             videoContainer.className = "game-item-video";
 
