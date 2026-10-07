@@ -1,27 +1,20 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="x-dns-prefetch-control" content="on" />
-<title>Free Online Games - {{CONFIG_SITE_NAME}}</title>
-<meta name="description" content="{{CONFIG_SITE_DESCRIPTION}}">
-<meta name="keywords" content="{{CONFIG_SITE_KEYWORDS}}">
-<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+<meta name="description" content="Play free online games instantly in your browser. Discover action, puzzle, racing, arcade and multiplayer games with no download required.">
+<meta name="robots" content="index, follow, max-image-preview:large">
 <link rel="canonical" href="{{CONFIG_SITE_URL}}/">
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="{{CONFIG_SITE_NAME}}">
-<meta property="og:title" content="PlayGrid Games — Play something brilliant">
-<meta property="og:description" content="Fast, free browser games for every mood. Discover fresh drops, popular hits and hidden gems with no download.">
+<meta property="og:title" content="Pokicrazygames - Free Online Games, No Download">
+<meta property="og:description" content="Play free online games instantly in your browser. Discover action, puzzle, racing, arcade and multiplayer games with no download required.">
 <meta property="og:url" content="{{CONFIG_SITE_URL}}/">
-<meta property="og:image" content="{{CONFIG_SITE_URL}}/static/logo/crazygames-like/og-image.webp">
+<meta property="og:site_name" content="Pokicrazygames">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="PlayGrid Games — Play something brilliant">
-<meta name="twitter:description" content="Fast, free browser games for every mood. Discover fresh drops, popular hits and hidden gems with no download.">
-<meta name="twitter:image" content="{{CONFIG_SITE_URL}}/static/logo/crazygames-like/og-image.webp">
-<meta name="theme-color" content="#101827">
+<meta name="twitter:title" content="Pokicrazygames - Free Online Games, No Download">
+<meta name="twitter:description" content="Play free online games instantly in your browser.">
 <script type="application/ld+json">{
   "@context":"https://schema.org",
   "@type":"WebSite",
-  "name":"PlayGrid Games",
-  "url":"{{CONFIG_SITE_URL}}/",
-  "description":"Fast, free browser games for every mood.",
-  "potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"{{CONFIG_SITE_URL}}/search?q={search_term_string}"},"query-input":"required name=search_term_string"}
+  "name":"Pokicrazygames",
+  "url":"{{CONFIG_SITE_URL}}/"
 }</script>
