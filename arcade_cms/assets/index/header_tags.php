@@ -39,7 +39,7 @@ if (is_page('play')) {
 			$themeData['header_title'] = \GameMonetize\UI::view('global/header/title');
 			$themeData['header_metatags'] = \GameMonetize\UI::view('global/header/metatags2');
 			} else {
-				$themeData['title_tag'] = 'Free Online Games - ' . $config['site_name'];
+				$themeData['title_tag'] = 'Pokicrazygames - Free Online Games, No Download';
 				$themeData['header_title'] = '';
 				$themeData['header_metatags'] = \GameMonetize\UI::view('global/header/metatags-home');
 			}
