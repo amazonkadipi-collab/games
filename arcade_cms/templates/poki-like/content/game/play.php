@@ -71,46 +71,51 @@
     var descriptionURL = "{{DESCRIPTION_URL}}";
     var iframe = '{{PLAY_GAME_EMBED}}';
 
+    var gameHasStarted = false;
+
     function SkipAdAndShowGame() {
         var shell = document.getElementById("ava-game_container");
         var gameBox = document.getElementById("game-box");
         var poster = document.getElementById("gamePlay-content");
         var ads = document.getElementById("adsContainer");
-        if (!gameBox || !shell) return;
+        if (!gameBox || !shell || gameHasStarted) return;
 
+        gameHasStarted = true;
         if (ads) ads.style.display = "none";
         if (poster) poster.style.display = "none";
+
         gameBox.innerHTML = iframe;
 
         var playable = gameBox.querySelector("iframe, embed, object, canvas");
-        if (playable) {
-            playable.style.width = "100%";
-            playable.style.height = "100%";
-            playable.style.display = "block";
-            playable.style.border = "0";
-            playable.style.maxWidth = "100%";
-            playable.style.maxHeight = "100%";
-            playable.style.position = "absolute";
-            playable.style.inset = "0";
-            playable.style.zIndex = "5";
-            playable.style.pointerEvents = "auto";
-            playable.setAttribute("allow", "autoplay; fullscreen; gamepad; accelerometer; gyroscope; picture-in-picture");
-            playable.setAttribute("allowfullscreen", "");
-            if (playable.tagName === "IFRAME") {
-                playable.setAttribute("scrolling", "no");
-                playable.setAttribute("title", document.getElementById("game-title")?.textContent?.trim() || "Game");
-            }
+        if (!playable) {
+            gameHasStarted = false;
+            if (poster) poster.style.display = "";
+            return;
+        }
+
+        playable.style.width = "100%";
+        playable.style.height = "100%";
+        playable.style.display = "block";
+        playable.style.border = "0";
+        playable.style.maxWidth = "100%";
+        playable.style.maxHeight = "100%";
+        playable.style.position = "absolute";
+        playable.style.inset = "0";
+        playable.style.zIndex = "5";
+        playable.style.pointerEvents = "auto";
+        playable.style.touchAction = "auto";
+        playable.setAttribute("allow", "autoplay; fullscreen; gamepad; accelerometer; gyroscope; picture-in-picture");
+        playable.setAttribute("allowfullscreen", "");
+        if (playable.tagName === "IFRAME") {
+            playable.setAttribute("scrolling", "no");
+            playable.setAttribute("title", document.getElementById("game-title")?.textContent?.trim() || "Game");
         }
 
         shell.classList.add("pg-game-playing");
-        if (window.innerWidth < 768) {
-            document.documentElement.style.width = "100%";
-            document.body.style.width = "100%";
-            document.documentElement.style.maxWidth = "100%";
-            document.body.style.maxWidth = "100%";
-            document.documentElement.style.overflowX = "hidden";
-            document.body.style.overflowX = "hidden";
-        }
+        document.documentElement.style.maxWidth = "100%";
+        document.body.style.maxWidth = "100%";
+        document.documentElement.style.overflowX = "hidden";
+        document.body.style.overflowX = "hidden";
     }
 
     function startGameFromTouch(e) {
@@ -124,9 +129,18 @@
     document.addEventListener("DOMContentLoaded", function() {
         var playButton = document.querySelector(".gamePlay-button");
         if (!playButton) return;
+
+        var launch = function(e) {
+            if (e && e.type === "pointerup" && e.pointerType === "mouse") return;
+            startGameFromTouch(e);
+        };
+
         playButton.addEventListener("click", startGameFromTouch, {passive:false});
-        playButton.addEventListener("pointerup", startGameFromTouch, {passive:false});
-        playButton.addEventListener("touchend", startGameFromTouch, {passive:false});
+        if (window.PointerEvent) {
+            playButton.addEventListener("pointerup", launch, {passive:false});
+        } else {
+            playButton.addEventListener("touchend", startGameFromTouch, {passive:false});
+        }
     });
 </script>
 
