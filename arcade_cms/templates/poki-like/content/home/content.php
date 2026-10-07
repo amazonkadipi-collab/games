@@ -4,9 +4,7 @@
     <section class="arcade-home-hero" aria-labelledby="home-title">
         <div class="arcade-hero-main">
             <div class="arcade-hero-copy">
-                <p class="arcade-kicker">PLAY FREE • INSTANT BROWSER ARCADE</p>
-                <h1 id="home-title">Play something<br>brilliant.</h1>
-                <p>Fast games, fresh drops and hidden gems for every kind of player. No downloads, no waiting — just pick a mood and press play.</p>
+                <h1 id="home-title">Free Online Games</h1>
                 <form class="arcade-search" method="GET" action="{{CONFIG_SITE_URL}}/search" role="search">
                     <label class="sr-only" for="home-game-search">Search games</label>
                     <input id="home-game-search" type="search" name="q" placeholder="Search games, genres, themes..." aria-label="Search games, genres or themes" autocomplete="off">
@@ -25,9 +23,6 @@
             </div>
         </div>
     </section>
-    <div class="arcade-trust-row" aria-label="PlayGrid benefits">
-        <span><b>01</b> Instant play</span><span><b>02</b> Curated picks</span><span><b>03</b> Works on every screen</span><span><b>04</b> New games every week</span>
-    </div>
     {{NEW_GAMES}}
     {{DISCOVERY_PAGINATION}}
 </div>
