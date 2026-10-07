@@ -120,3 +120,9 @@ body:has(.poki-game-page) .new-games-pop-up-mobile{display:none!important}
 body:has(.poki-game-page) .h-head{display:none!important}
 body:has(.poki-game-page) .pg-breadcrumb{margin-top:8px!important;margin-bottom:8px!important}
 body:has(.poki-game-page) .pg-player-first{margin-top:0!important}
+
+/* Mobile runtime fix: preserve touch input and keep the real game above the shell. */
+.poki-game-page #ava-game_container.pg-game-playing{touch-action:none!important;-webkit-user-select:none!important;user-select:none!important}
+.poki-game-page #game-box{touch-action:auto!important;pointer-events:auto!important}
+.poki-game-page #game-box iframe,.poki-game-page #game-box embed,.poki-game-page #game-box object,.poki-game-page #game-box canvas{touch-action:auto!important;pointer-events:auto!important;-webkit-user-select:none!important;user-select:none!important}
+.poki-game-page .gamePlay-button{touch-action:manipulation!important;-webkit-tap-highlight-color:transparent!important;position:relative!important;z-index:10!important}
