@@ -20,7 +20,7 @@
                             <div class="gamePlay-icon-btn" role="button" tabindex="0" aria-label="Play {{PLAY_GAME_NAME}}">
                                 <div class="gamePlay-icon" style="background-image:url({{PLAY_GAME_IMAGE}});background-size:cover;background-position:center;"></div>
                                 <div class="gamePlay-title">{{PLAY_GAME_NAME}}</div>
-                                <button type="button" class="gamePlay-button" aria-label="Play {{PLAY_GAME_NAME}}" ontouchstart="return false;">Play</button>
+                                <button type="button" class="gamePlay-button" aria-label="Play {{PLAY_GAME_NAME}}">Play</button>
                             </div>
                         </div>
                         <div id="game-preloading"></div>
@@ -118,11 +118,8 @@
         document.body.style.overflowX = "hidden";
     }
 
-    function startGameFromTouch(e) {
-        if (e) {
-            e.preventDefault();
-            e.stopPropagation();
-        }
+    function startGame(e) {
+        if (e) e.stopPropagation();
         SkipAdAndShowGame();
     }
 
@@ -131,28 +128,19 @@
         var playSurface = document.querySelector(".gamePlay-icon-btn");
         if (!playButton || !playSurface) return;
 
-        var launch = function(e) {
-            if (e && e.type && e.pointerType === "mouse" && e.type !== "click") return;
-            startGameFromTouch(e);
-        };
-
-        /* Mobile Safari/Chrome: launch on the first real touch/pointer event.
-           The gameHasStarted guard makes click/pointer events idempotent. */
+        /* One canonical mobile/desktop path:
+           pointerup gives touch devices a reliable activation without
+           cancelling the browser's click synthesis or iframe focus. */
         if (window.PointerEvent) {
-            playButton.addEventListener("pointerdown", launch, {passive:false});
-            playButton.addEventListener("pointerup", launch, {passive:false});
-            playSurface.addEventListener("pointerup", launch, {passive:false});
+            playButton.addEventListener("pointerup", startGame, {passive:true});
         } else {
-            playButton.addEventListener("touchstart", startGameFromTouch, {passive:false});
-            playButton.addEventListener("touchend", startGameFromTouch, {passive:false});
-            playSurface.addEventListener("touchend", startGameFromTouch, {passive:false});
+            playButton.addEventListener("touchend", startGame, {passive:true});
         }
 
-        playButton.addEventListener("click", startGameFromTouch, {passive:false});
-        playSurface.addEventListener("click", startGameFromTouch, {passive:false});
+        playButton.addEventListener("click", startGame, {passive:true});
 
         playSurface.addEventListener("keydown", function(e) {
-            if (e.key === "Enter" || e.key === " ") startGameFromTouch(e);
+            if (e.key === "Enter" || e.key === " ") startGame(e);
         });
     });
 </script>
