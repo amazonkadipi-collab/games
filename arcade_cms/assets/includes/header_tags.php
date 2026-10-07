@@ -115,7 +115,7 @@ if (is_page('play')) {
 }
 
 /* Homepage SEO: concise, factual metadata only. Keep dynamic SEO for other routes. */
-if (is_page('home') && trim((string)($_GET['cat'] ?? '')) === '') {
+if ((is_page('home') || $cmsRequestedPath === '') && trim((string)($_GET['cat'] ?? '')) === '') {
     $themeData['title_tag'] = 'Pokicrazygames - Free Online Games, No Download';
     $themeData['header_metatags'] = '<meta http-equiv="Content-Type" content="text/html; charset=utf-8">'
         . '<meta name="viewport" content="width=device-width, initial-scale=1.0">'
