@@ -3,7 +3,6 @@
         <div class="footer-brand">
             <a href="{{CONFIG_SITE_URL}}/" class="logo-home-footer pg-footer-brand" aria-label="{{CONFIG_SITE_NAME}}">
                 <span class="pg-footer-logo" aria-hidden="true"><img src="{{CONFIG_SITE_URL}}/static/logo/playgrid-mark.svg" alt=""></span>
-                <span class="pg-footer-name">{{CONFIG_SITE_NAME}}</span>
             </a>
         </div>
         <nav class="footer-links" aria-label="Footer">
