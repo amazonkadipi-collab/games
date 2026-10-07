@@ -72,24 +72,61 @@
     var iframe = '{{PLAY_GAME_EMBED}}';
 
     function SkipAdAndShowGame() {
-        $("#adsContainer").hide();
-        $("#gamePlay-content").hide();
-        $("#game-box").html(iframe);
-        $("#game-box iframe, #game-box embed, #game-box object, #game-box canvas").css({
-            width: "100%", height: "100%", display: "block", border: "0"
-        });
+        var shell = document.getElementById("ava-game_container");
+        var gameBox = document.getElementById("game-box");
+        var poster = document.getElementById("gamePlay-content");
+        var ads = document.getElementById("adsContainer");
+        if (!gameBox || !shell) return;
+
+        if (ads) ads.style.display = "none";
+        if (poster) poster.style.display = "none";
+        gameBox.innerHTML = iframe;
+
+        var playable = gameBox.querySelector("iframe, embed, object, canvas");
+        if (playable) {
+            playable.style.width = "100%";
+            playable.style.height = "100%";
+            playable.style.display = "block";
+            playable.style.border = "0";
+            playable.style.maxWidth = "100%";
+            playable.style.maxHeight = "100%";
+            playable.style.position = "absolute";
+            playable.style.inset = "0";
+            playable.style.zIndex = "5";
+            playable.style.pointerEvents = "auto";
+            playable.setAttribute("allow", "autoplay; fullscreen; gamepad; accelerometer; gyroscope; picture-in-picture");
+            playable.setAttribute("allowfullscreen", "");
+            if (playable.tagName === "IFRAME") {
+                playable.setAttribute("scrolling", "no");
+                playable.setAttribute("title", document.getElementById("game-title")?.textContent?.trim() || "Game");
+            }
+        }
+
+        shell.classList.add("pg-game-playing");
         if (window.innerWidth < 768) {
-            $("html, body").css({width:"100%", maxWidth:"100%", overflowX:"hidden"});
-            $(".close-fullscreen").hide();
+            document.documentElement.style.width = "100%";
+            document.body.style.width = "100%";
+            document.documentElement.style.maxWidth = "100%";
+            document.body.style.maxWidth = "100%";
+            document.documentElement.style.overflowX = "hidden";
+            document.body.style.overflowX = "hidden";
         }
     }
 
-    $(document).ready(function() {
-        $("#game-box").empty();
-        $(".gamePlay-button").off("click.gameStart").on("click.gameStart", function(e) {
+    function startGameFromTouch(e) {
+        if (e) {
             e.preventDefault();
-            SkipAdAndShowGame();
-        });
+            e.stopPropagation();
+        }
+        SkipAdAndShowGame();
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        var playButton = document.querySelector(".gamePlay-button");
+        if (!playButton) return;
+        playButton.addEventListener("click", startGameFromTouch, {passive:false});
+        playButton.addEventListener("pointerup", startGameFromTouch, {passive:false});
+        playButton.addEventListener("touchend", startGameFromTouch, {passive:false});
     });
 </script>
 
