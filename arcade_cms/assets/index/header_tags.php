@@ -1,5 +1,6 @@
 <?php
-$descriptionPixelChar = 135;
+$descriptionPixelChar = 155;
+$cmsPage = (string)($cmsPage ?? 'home');
 $cmsRequestedPath = trim((string)parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH), '/');
 $themeData['config_site_description'] = substr($themeData['config_site_description'], 0, $descriptionPixelChar);
 $themeData['date_all_css'] = date("Y-m-d\TH-i", filemtime($_SERVER["DOCUMENT_ROOT"] . '/templates/' . $config['site_theme'] . '/css/' . 'all.css'));
@@ -30,12 +31,12 @@ if (is_page('play')) {
 	$themeData['header_metatags'] .= '<link rel="canonical" href="' . $game_info['game_url'] . '">';
 } else {
 	$themeData['title_tag'] = title_tag();
-	if ($_GET['p'] == 'home') {
+	if ($cmsPage == 'home') {
 		$cat = $_GET["cat"];
 		if ($cat <> "") {
 			$cat = str_replace('-', '.', $cat);
 			$cat = ucfirst($cat);
-			$themeData['game_meta_description2'] = "Play " . $cat . " Free Online at PlayGrid Games! We have chosen top " . $cat . " games which you can play online for free. enjoy! ";
+			$themeData['game_meta_description2'] = "Play " . $cat . " Free Online at " . $config['site_name'] . "! Discover top " . $cat . " games you can play online for free.";
 			$themeData['header_title'] = \GameMonetize\UI::view('global/header/title');
 			$themeData['header_metatags'] = \GameMonetize\UI::view('global/header/metatags2');
 			} else {
@@ -44,7 +45,7 @@ if (is_page('play')) {
 				$themeData['header_metatags'] = \GameMonetize\UI::view('global/header/metatags-home');
 			}
 	} 
-	else if ($_GET['p'] == 'tagspage'){
+	else if ($cmsPage == 'tagspage'){
 		$tags_data = getTagsByTitle($_GET['tag']);
 		$tagPageName = ucwords($tags_data['name']);
 		$tagPageName = preg_match('/\bgames$/i', $tagPageName) ? $tagPageName : $tagPageName . ' Games';
@@ -53,7 +54,7 @@ if (is_page('play')) {
 		$themeData['header_metatags'] .= \GameMonetize\UI::view('global/header/category_tags_metatags');
 		$themeData['header_metatags'] .= '<link rel="canonical" href="' . siteUrl() . "/tag/" . $tags_data['url'] . '">';
 	}
-	else if ($_GET['p'] == 'blogs'){
+	else if ($cmsPage == 'blogs'){
 		if(!isset($_GET['blog'])){
 			$blogs_footer_description = getFooterDescription('blogs');
 			$themeData['category_tags_meta_title'] = "Our Blogs - Play Online Games Free";
@@ -62,13 +63,13 @@ if (is_page('play')) {
 			$themeData['header_metatags'] .= '<link rel="canonical" href="' . siteUrl() . '/blogs">';
 		} else {
 			$blog_data = getBlogByUrl($_GET['blog']);
-			$themeData['category_tags_meta_title'] = substr(ucwords($blog_data['title']), 0, 20) . " - Play Online Games Free";
+			$themeData['category_tags_meta_title'] = substr(ucwords($blog_data['title']), 0, 70) . " - Play Online Games Free";
 			$themeData['category_tags_meta_description'] = substr(strip_tags(htmlspecialchars_decode($blog_data["post"])), 0, $descriptionPixelChar);
 			$themeData['header_metatags'] .= \GameMonetize\UI::view('global/header/category_tags_metatags');
 			$themeData['header_metatags'] .= '<link rel="canonical" href="' . siteUrl() . "/blog/" . $blog_data['url'] . '">';
 		}
 	}
-	else if ($_GET['p'] == 'categories'){
+	else if ($cmsPage == 'categories'){
 		if(!isset($_GET['category'])){
 			$themeData['category_tags_meta_title'] = "Categories - Play Online Games Free";
 			$category_footer_description = getFooterDescription('categories');
@@ -83,9 +84,9 @@ if (is_page('play')) {
 			$themeData['header_metatags'] .= '<link rel="canonical" href="' . siteUrl() . "/category/" . $category_data['category_pilot'] . '">';
 
 		}
-	} else if (in_array($_GET['p'], $specialPage)) {
-		$isFavoritePage = $_GET['p'] === 'favorite-games';
-		$footer_description = getFooterDescription($_GET['p']);
+	} else if (in_array($cmsPage, $specialPage)) {
+		$isFavoritePage = $cmsPage === 'favorite-games';
+		$footer_description = getFooterDescription($cmsPage);
 		$footerMetaText = trim(strip_tags(htmlspecialchars_decode((string)($footer_description->description ?? ''))));
 		if ($isFavoritePage) {
 			$favoriteDefaultDescription = 'Save your favorite free online games in one place, return anytime, and discover popular, new, and recommended arcade games to play instantly.';
@@ -102,7 +103,7 @@ if (is_page('play')) {
 				: substr($footerMetaText, 0, $descriptionPixelChar);
 		}
 		$themeData['header_metatags'] .= \GameMonetize\UI::view('global/header/category_tags_metatags');
-		$canonicalSlug = ($cmsRequestedPath === 'popular') ? 'popular' : (string)$_GET['p'];
+		$canonicalSlug = ($cmsRequestedPath === 'popular') ? 'popular' : (string)$cmsPage;
 		$canonicalUrl = rtrim(siteUrl(), '/') . '/' . ltrim($canonicalSlug, '/');
 		$themeData['header_metatags'] .= '<link rel="canonical" href="' . htmlspecialchars($canonicalUrl, ENT_QUOTES, 'UTF-8') . '">';
 		if ($isFavoritePage) {
@@ -136,8 +137,8 @@ $gpsStaticTitleMap = [
     'categories' => 'Categories - ' . $config['site_name'],
     'tags' => 'Game Tags - ' . $config['site_name'],
     'search' => 'Search - ' . $config['site_name'],
-    'about' => 'About PlayGrid Games - ' . $config['site_name'],
-    'contact' => 'Contact PlayGrid Games - ' . $config['site_name'],
+    'about' => 'About ' . $config['site_name'],
+    'contact' => 'Contact ' . $config['site_name'],
     'privacy' => 'Privacy - ' . $config['site_name'],
     'terms' => 'Terms of Use - ' . $config['site_name']
 ];
@@ -148,7 +149,7 @@ if (isset($gpsStaticTitleMap[$cmsRequestedPath])) {
 $themeData['header_favicon'] = \GameMonetize\UI::view('global/header/favicon');
 
 // Google Search Console site verification for the production homepage.
-if (($_GET['p'] ?? '') === 'home') {
+if (($cmsPage ?? '') === 'home') {
 	$themeData['header_metatags'] .= '<meta name="google-site-verification" content="WkXRsZNaG77qk0yXebhvc_3VAHqFVP7NsvdVhtFSO5A">';
 }
 
@@ -156,24 +157,24 @@ if ($cmsRequestedPath === 'popular') {
 	$themeData['title_tag'] = 'Popular Games - ' . $config['site_name'];
 }
 
-if ($_GET['p'] != 'login') {
+if ($cmsPage != 'login') {
 	if (
 		$userData['admin'] == 0 
-		|| $_GET['p'] == 'play' 
-		|| $_GET['p'] == 'new-games' 
-		|| $_GET['p'] == 'search' 
-		|| $_GET['p'] == 'terms' 
-		|| $_GET['p'] == 'privacy' 
-		|| $_GET['p'] == 'about' 
-		|| $_GET['p'] == 'categories' 
-		|| $_GET['p'] == 'best-games' 
-		|| $_GET['p'] == 'featured-games' 
-		|| $_GET['p'] == 'played-games'
-		|| $_GET['p'] == 'favorite-games'
-		|| $_GET['p'] == 'tags' 
-		|| $_GET['p'] == 'tagspage' 
-		|| $_GET['p'] == 'contact' 
-		|| $_GET['p'] == 'blogs' 
+		|| $cmsPage == 'play' 
+		|| $cmsPage == 'new-games' 
+		|| $cmsPage == 'search' 
+		|| $cmsPage == 'terms' 
+		|| $cmsPage == 'privacy' 
+		|| $cmsPage == 'about' 
+		|| $cmsPage == 'categories' 
+		|| $cmsPage == 'best-games' 
+		|| $cmsPage == 'featured-games' 
+		|| $cmsPage == 'played-games'
+		|| $cmsPage == 'favorite-games'
+		|| $cmsPage == 'tags' 
+		|| $cmsPage == 'tagspage' 
+		|| $cmsPage == 'contact' 
+		|| $cmsPage == 'blogs' 
 		|| is_page('home')
 	) {
 		$themeData['header_stylesheets'] = \GameMonetize\UI::view('global/header/stylesheets');
@@ -181,7 +182,7 @@ if ($_GET['p'] != 'login') {
 		$themeData['header_stylesheets'] .= \GameMonetize\UI::view('global/header/admin-stylesheets');
 	}
 }
-if ($_GET['p'] == 'login') {
+if ($cmsPage == 'login') {
 	$themeData['header_stylesheets'] .= \GameMonetize\UI::view('global/header/admin-stylesheets');
 }
 
@@ -236,13 +237,13 @@ function cleanText($text)
 
 
 /* Consistent public SEO controls: one canonical, strong social metadata, and noindex for search URLs. */
-$gpsSeoPublicPaths = !in_array((string)($_GET['p'] ?? ''), ['login', 'admin', 'setting', 'error'], true) && !is_page('play');
+$gpsSeoPublicPaths = !in_array((string)($cmsPage ?? ''), ['login', 'admin', 'setting', 'error'], true) && !is_page('play');
 if ($gpsSeoPublicPaths) {
     $gpsSeoPath = trim((string)$cmsRequestedPath, '/');
     $gpsSeoTitle = trim(strip_tags(htmlspecialchars_decode((string)($themeData['page_title'] ?? ''))));
     if ($gpsSeoTitle === '') $gpsSeoTitle = trim(strip_tags(htmlspecialchars_decode((string)($themeData['category_tags_meta_title'] ?? ''))));
     if ($gpsSeoTitle === '') $gpsSeoTitle = trim(strip_tags(htmlspecialchars_decode((string)($themeData['title_tag'] ?? ''))));
-    if ($gpsSeoTitle === '') $gpsSeoTitle = (string)($config['site_name'] ?? 'PlayGrid Games');
+    if ($gpsSeoTitle === '') $gpsSeoTitle = (string)($config['site_name'] ?? $config['site_name']);
 
     $gpsSeoDescription = trim(strip_tags(htmlspecialchars_decode((string)($themeData['page_description'] ?? ''))));
     if ($gpsSeoDescription === '') $gpsSeoDescription = trim(strip_tags(htmlspecialchars_decode((string)($themeData['category_tags_meta_description'] ?? ''))));
