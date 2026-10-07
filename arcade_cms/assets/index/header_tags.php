@@ -1,6 +1,6 @@
 <?php
 $descriptionPixelChar = 155;
-$cmsPage = (string)($cmsPage ?? 'home');
+$cmsPage = (string)($_GET['p'] ?? 'home');
 $cmsRequestedPath = trim((string)parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH), '/');
 $themeData['config_site_description'] = substr($themeData['config_site_description'], 0, $descriptionPixelChar);
 $themeData['date_all_css'] = date("Y-m-d\TH-i", filemtime($_SERVER["DOCUMENT_ROOT"] . '/templates/' . $config['site_theme'] . '/css/' . 'all.css'));
@@ -243,12 +243,12 @@ if ($gpsSeoPublicPaths) {
     $gpsSeoTitle = trim(strip_tags(htmlspecialchars_decode((string)($themeData['page_title'] ?? ''))));
     if ($gpsSeoTitle === '') $gpsSeoTitle = trim(strip_tags(htmlspecialchars_decode((string)($themeData['category_tags_meta_title'] ?? ''))));
     if ($gpsSeoTitle === '') $gpsSeoTitle = trim(strip_tags(htmlspecialchars_decode((string)($themeData['title_tag'] ?? ''))));
-    if ($gpsSeoTitle === '') $gpsSeoTitle = (string)($config['site_name'] ?? $config['site_name']);
+    if ($gpsSeoTitle === '') $gpsSeoTitle = (string)($config['site_name'] ?? 'PlayGrid Games');
 
     $gpsSeoDescription = trim(strip_tags(htmlspecialchars_decode((string)($themeData['page_description'] ?? ''))));
     if ($gpsSeoDescription === '') $gpsSeoDescription = trim(strip_tags(htmlspecialchars_decode((string)($themeData['category_tags_meta_description'] ?? ''))));
     if ($gpsSeoDescription === '') $gpsSeoDescription = trim(strip_tags(htmlspecialchars_decode((string)($config['site_description'] ?? ''))));
-    if ($gpsSeoDescription === '') $gpsSeoDescription = 'Play free online browser games instantly on ' . (string)($config['site_name'] ?? 'PlayGrid Games') . '.';
+    if ($gpsSeoDescription === '') $gpsSeoDescription = 'Play free online browser games instantly on ' . (string)($config['site_name'] ?? (string)($config['site_name'] ?? 'PlayGrid Games')) . '.';
 
     $gpsSeoCanonical = rtrim(siteUrl(), '/') . ($gpsSeoPath === '' ? '/' : '/' . ltrim($gpsSeoPath, '/'));
     $gpsSeoRobots = (strpos($gpsSeoPath, 'search') === 0)
