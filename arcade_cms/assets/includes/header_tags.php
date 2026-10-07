@@ -1,10 +1,6 @@
 <?php
 $themeData['title_tag'] = title_tag();
 $cmsRequestedPath = trim((string)parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH), '/');
-if (($cmsRequestedPath === '' || (string)($_GET['p'] ?? '') === 'home') && trim((string)($_GET['cat'] ?? '')) === '') {
-    $themeData['title_tag'] = 'Pokicrazygames - Free Online Games, No Download';
-}
-$cmsRequestedPath = trim((string)parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH), '/');
 $descriptionPixelChar = 135;
 $cmsRequestedPath = trim((string)parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH), '/');
 $themeData['config_site_description'] = substr($themeData['config_site_description'], 0, $descriptionPixelChar);
@@ -116,30 +112,6 @@ if (is_page('play')) {
 		$themeData['header_title'] = \GameMonetize\UI::view('global/header/title');
 		$themeData['header_metatags'] = \GameMonetize\UI::view('global/header/metatags');
 	}
-}
-
-/* Homepage SEO: concise, factual metadata only. Keep dynamic SEO for other routes. */
-if ((is_page('home') || $cmsRequestedPath === '') && trim((string)($_GET['cat'] ?? '')) === '') {
-    $themeData['title_tag'] = 'Pokicrazygames - Free Online Games, No Download';
-    $themeData['header_metatags'] = '<meta http-equiv="Content-Type" content="text/html; charset=utf-8">'
-        . '<meta name="viewport" content="width=device-width, initial-scale=1.0">'
-        . '<meta name="description" content="Play free online games instantly in your browser. Discover action, puzzle, racing, arcade and multiplayer games with no download required.">'
-        . '<meta name="robots" content="index, follow, max-image-preview:large">'
-        . '<link rel="canonical" href="' . htmlspecialchars(rtrim(siteUrl(), '/') . '/', ENT_QUOTES, 'UTF-8') . '">'
-        . '<meta property="og:type" content="website">'
-        . '<meta property="og:title" content="Pokicrazygames - Free Online Games, No Download">'
-        . '<meta property="og:description" content="Play free online games instantly in your browser. Discover action, puzzle, racing, arcade and multiplayer games with no download required.">'
-        . '<meta property="og:url" content="' . htmlspecialchars(rtrim(siteUrl(), '/') . '/', ENT_QUOTES, 'UTF-8') . '">'
-        . '<meta property="og:site_name" content="' . htmlspecialchars((string)$config['site_name'], ENT_QUOTES, 'UTF-8') . '">'
-        . '<meta name="twitter:card" content="summary_large_image">'
-        . '<meta name="twitter:title" content="Pokicrazygames - Free Online Games, No Download">'
-        . '<meta name="twitter:description" content="Play free online games instantly in your browser.">'
-        . '<script type="application/ld+json">' . json_encode([
-            '@context' => 'https://schema.org',
-            '@type' => 'WebSite',
-            'name' => (string)$config['site_name'],
-            'url' => rtrim(siteUrl(), '/') . '/'
-        ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . '</script>';
 }
 
 $themeData['header_favicon'] = \GameMonetize\UI::view('global/header/favicon');
