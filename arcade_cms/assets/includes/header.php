@@ -218,6 +218,16 @@ function getPageTitleAndDescription()
 	} elseif ($page == "tags") {
 		$pageTitle = "ALL FREE GAMES CATEGORIES. <br />CHOOSE ANY GAME TAG AND START PLAYING NOW!";
 		$pageDescription = "Looking for a game of a certain type? Check out the extensive list of game categories. We have been labeling games using tags and categories for more than a decade. This page list hundreds of different tags representing entire collections of games that can be played in a browser.";
+	} elseif (strpos($path, '/category/') === 0) {
+		$categoryName = ucwords(str_replace('-', ' ', $page));
+		$pageTitle = $categoryName . " - Free Online Games";
+		$pageDescription = "Play free " . strtolower($categoryName) . " online games instantly in your browser. Discover new releases, popular picks and fun challenges on PlayGrid Games, with no download required.";
+	} elseif ($page === "categories") {
+		$pageTitle = "Game Categories - Free Online Games";
+		$pageDescription = "Browse free online games by category, including action, racing, puzzle, sports, arcade, strategy and multiplayer games. Pick a category and start playing instantly in your browser.";
+	} elseif ($page === "all-games") {
+		$pageTitle = "All Free Online Games - PlayGrid Games";
+		$pageDescription = "Explore the full collection of free browser games on PlayGrid Games. Find action, racing, puzzle, arcade, sports and multiplayer games to play instantly with no download.";
 	}
 
 	return [
