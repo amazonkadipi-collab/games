@@ -43,17 +43,19 @@ if ($_GET['p'] != 'login') {
 		|| is_page('home')
 	) {
 
-		$sql_cat_query = $GameMonetizeConnect->query("SELECT * FROM " . CATEGORIES);
+		// Fetch categories and counts together to avoid one COUNT query per category
+		// on every public request (the previous loop created an N+1 query pattern).
+		$sql_cat_query = $GameMonetizeConnect->query(
+			"SELECT c.*, COUNT(g.game_id) AS game_count FROM " . CATEGORIES . " c " .
+			"LEFT JOIN " . GAMES . " g ON g.category = c.id " .
+			"GROUP BY c.id ORDER BY c.id"
+		);
 		$ct_r = '';
 		while ($category = $sql_cat_query->fetch_array()) {
 			$themeData['category_id'] = $category['id'];
 			$themeData['category_name'] = $category['name'];
 			$themeData['category_image'] = $category['image'];
-
-			$numbergames = $GameMonetizeConnect->query("SELECT COUNT(*) FROM " . GAMES . " where category=" . $category['id']);
-			$numbergames = $numbergames->fetch_array()[0];
-
-			$themeData['category_number'] = $numbergames;
+			$themeData['category_number'] = (int)($category['game_count'] ?? 0);
 			$themeData['category_url'] = siteUrl() . '/category/'	. slugify($category['name']);
 			$ct_r .= \GameMonetize\UI::view('category/categories-list-2');
 		}
