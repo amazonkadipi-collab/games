@@ -65,11 +65,13 @@
 
 {{FOOTER_CONTENT}}
 
+<template id="pg-game-embed">{{PLAY_GAME_EMBED}}</template>
+
 <script type="text/javascript">
     var PreGameAdURL = "{{ADS_VIDEO}}";
     window.setTimeout(function() { __upGame_rx8({{PLAY_GAME_ID}}); }, 2000);
     var descriptionURL = "{{DESCRIPTION_URL}}";
-    var iframe = '{{PLAY_GAME_EMBED}}';
+    var embedTemplate = document.getElementById('pg-game-embed');
 
     var gameHasStarted = false;
 
@@ -84,7 +86,7 @@
         if (ads) ads.style.display = "none";
         if (poster) poster.style.display = "none";
 
-        gameBox.innerHTML = iframe;
+        gameBox.innerHTML = embedTemplate ? embedTemplate.innerHTML : '';
 
         var playable = gameBox.querySelector("iframe, embed, object, canvas");
         if (!playable) {
