@@ -252,4 +252,12 @@ if ($gpsSeoPublicPaths) {
 }
 
 
-$themeData['header_tags'] = \GameMonetize\UI::view('global/header/all');
+$themeData['header_tags'] = \\GameMonetize\\UI::view('global/header/all');
+if (!empty($gpsSeoPublicPaths)) {
+    $gpsSeoFinalDescription = htmlspecialchars((string)($gpsSeoDescription ?? ''), ENT_QUOTES, 'UTF-8');
+    $gpsSeoFinalHead = (string)$themeData['header_tags'];
+    $gpsSeoFinalHead = preg_replace('~<meta\\s+name="description"\\s+content="[^"]*"[^>]*>~i', '<meta name="description" content="' . $gpsSeoFinalDescription . '">', $gpsSeoFinalHead);
+    $gpsSeoFinalHead = preg_replace('~<meta\\s+property="og:description"\\s+content="[^"]*"[^>]*>~i', '<meta property="og:description" content="' . $gpsSeoFinalDescription . '">', $gpsSeoFinalHead);
+    $gpsSeoFinalHead = preg_replace('~<meta\\s+name="twitter:description"\\s+content="[^"]*"[^>]*>~i', '<meta name="twitter:description" content="' . $gpsSeoFinalDescription . '">', $gpsSeoFinalHead);
+    $themeData['header_tags'] = $gpsSeoFinalHead;
+}
