@@ -207,6 +207,28 @@ if ($gpsSeoPublicPaths) {
         : 'index,follow,max-image-preview:large';
 
     $gpsSeoMeta = $themeData['header_metatags'] ?? '';
+
+    // Repair empty/short template metadata instead of leaving blank description
+    // tags in place just because a template already emitted the tag.
+    $gpsSeoDescription = trim(preg_replace('/\\s+/', ' ', $gpsSeoDescription));
+    $gpsSeoDescription = mb_substr($gpsSeoDescription, 0, 160);
+    $gpsSeoEscapedDescription = htmlspecialchars($gpsSeoDescription, ENT_QUOTES, 'UTF-8');
+    $gpsSeoEscapedTitle = htmlspecialchars($gpsSeoTitle, ENT_QUOTES, 'UTF-8');
+    $gpsSeoMeta = preg_replace(
+        '~<meta\\s+name=["\\']description["\\']\\s+content=["\\'][^"\\']*["\\']\\s*/?>~i',
+        '<meta name="description" content="' . $gpsSeoEscapedDescription . '">',
+        $gpsSeoMeta
+    );
+    $gpsSeoMeta = preg_replace(
+        '~<meta\\s+property=["\\']og:description["\\']\\s+content=["\\'][^"\\']*["\\']\\s*/?>~i',
+        '<meta property="og:description" content="' . $gpsSeoEscapedDescription . '">',
+        $gpsSeoMeta
+    );
+    $gpsSeoMeta = preg_replace(
+        '~<meta\\s+name=["\\']twitter:description["\\']\\s+content=["\\'][^"\\']*["\\']\\s*/?>~i',
+        '<meta name="twitter:description" content="' . $gpsSeoEscapedDescription . '">',
+        $gpsSeoMeta
+    );
     if (stripos($gpsSeoMeta, 'rel="canonical"') === false) {
         $gpsSeoMeta .= '<link rel="canonical" href="' . htmlspecialchars($gpsSeoCanonical, ENT_QUOTES, 'UTF-8') . '">';
     }
