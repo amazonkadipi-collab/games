@@ -213,19 +213,18 @@ if ($gpsSeoPublicPaths) {
     $gpsSeoDescription = trim(preg_replace('/\\s+/', ' ', $gpsSeoDescription));
     $gpsSeoDescription = mb_substr($gpsSeoDescription, 0, 160);
     $gpsSeoEscapedDescription = htmlspecialchars($gpsSeoDescription, ENT_QUOTES, 'UTF-8');
-    $gpsSeoEscapedTitle = htmlspecialchars($gpsSeoTitle, ENT_QUOTES, 'UTF-8');
     $gpsSeoMeta = preg_replace(
-        '~<meta\\s+name=["\\']description["\\']\\s+content=["\\'][^"\\']*["\\']\\s*/?>~i',
+        '~<meta\\s+name="description"\\s+content="[^"]*"[^>]*>~i',
         '<meta name="description" content="' . $gpsSeoEscapedDescription . '">',
         $gpsSeoMeta
     );
     $gpsSeoMeta = preg_replace(
-        '~<meta\\s+property=["\\']og:description["\\']\\s+content=["\\'][^"\\']*["\\']\\s*/?>~i',
+        '~<meta\\s+property="og:description"\\s+content="[^"]*"[^>]*>~i',
         '<meta property="og:description" content="' . $gpsSeoEscapedDescription . '">',
         $gpsSeoMeta
     );
     $gpsSeoMeta = preg_replace(
-        '~<meta\\s+name=["\\']twitter:description["\\']\\s+content=["\\'][^"\\']*["\\']\\s*/?>~i',
+        '~<meta\\s+name="twitter:description"\\s+content="[^"]*"[^>]*>~i',
         '<meta name="twitter:description" content="' . $gpsSeoEscapedDescription . '">',
         $gpsSeoMeta
     );
