@@ -178,7 +178,7 @@ if (function_exists('gps_showcase_runtime_assets')) {
 	$themeData['header_scripts'] .= gps_showcase_runtime_assets();
 }
 
-$themeData['header_tags'] = \GameMonetize\UI::view('global/header/all');
+/* Final header rendering is intentionally deferred until SEO metadata is repaired. */
 
 function cleanText($text)
 {
@@ -199,6 +199,10 @@ if ($gpsSeoPublicPaths) {
     $gpsSeoDescription = trim(strip_tags(htmlspecialchars_decode((string)($themeData['page_description'] ?? ''))));
     if ($gpsSeoDescription === '') $gpsSeoDescription = trim(strip_tags(htmlspecialchars_decode((string)($themeData['category_tags_meta_description'] ?? ''))));
     if ($gpsSeoDescription === '') $gpsSeoDescription = trim(strip_tags(htmlspecialchars_decode((string)($config['site_description'] ?? ''))));
+    if ($gpsSeoDescription === '' && strpos($gpsSeoPath, 'category/') === 0) {
+        $gpsSeoCategory = ucwords(str_replace('-', ' ', basename($gpsSeoPath)));
+        $gpsSeoDescription = 'Play free ' . strtolower($gpsSeoCategory) . ' online games instantly in your browser. Discover new releases, popular picks and fun challenges on PlayGrid Games, with no download required.';
+    }
     if ($gpsSeoDescription === '') $gpsSeoDescription = 'Play free online browser games instantly on ' . (string)($config['site_name'] ?? 'PlayGrid Games') . '.';
 
     $gpsSeoCanonical = rtrim(siteUrl(), '/') . ($gpsSeoPath === '' ? '/' : '/' . ltrim($gpsSeoPath, '/'));
@@ -246,3 +250,6 @@ if ($gpsSeoPublicPaths) {
     }
     $themeData['header_metatags'] = $gpsSeoMeta;
 }
+
+
+$themeData['header_tags'] = \GameMonetize\UI::view('global/header/all');
